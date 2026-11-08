@@ -3,10 +3,12 @@
 // Live:  POST {CHECK_ENDPOINT}  body { url }  →  { verdict: 'good_fit' | 'probably_not' | 'blocked', reasons: [string] }
 // Mock:  same answer shape, picked from the URL so every verdict can be tried (see mockVerdict below).
 //
-// Mode:  mock until the endpoint exists. Switch with VITE_CHECK_MODE=live in web/.env,
-//        or add ?check=live / ?check=mock to the page address. The endpoint can be changed with VITE_CHECK_URL.
+// Mode:  live (the real check) by default. For demos without the API, use VITE_CHECK_MODE=mock in web/.env
+//        or add ?check=mock to the page address. The endpoint can be changed with VITE_CHECK_URL.
 
 export const CHECK_ENDPOINT = import.meta.env?.VITE_CHECK_URL || 'http://localhost:8000/check';
+// The Facade API (api/main.py): /check, /runs. Same server as the check.
+export const API_BASE = CHECK_ENDPOINT.replace(/\/check\/?$/, '');
 const TIMEOUT_MS = 30000; // the check can take ~20s; give it some headroom
 
 export function checkMode() {
@@ -14,7 +16,7 @@ export function checkMode() {
     const q = new URLSearchParams(window.location.search).get('check');
     if (q === 'live' || q === 'mock') return q;
   } catch { /* no window */ }
-  return import.meta.env?.VITE_CHECK_MODE === 'live' ? 'live' : 'mock';
+  return import.meta.env?.VITE_CHECK_MODE === 'mock' ? 'mock' : 'live';   // the real check by default
 }
 
 /** Format check before calling anything. Returns { ok, url, error }. */
@@ -56,7 +58,7 @@ export async function checkUrl(url, { signal } = {}) {
     } catch (e) {
       if (signal && signal.aborted) throw e;
       if (ctrl.signal.reason === 'timeout') throw new CheckError('The URL check took longer than 30 seconds.');
-      throw new CheckError(`Couldn’t reach the URL checker at ${CHECK_ENDPOINT}. Is it running?`);
+      throw new CheckError(`Couldn’t reach the site checker at ${CHECK_ENDPOINT}. Start it from the Facade folder: uvicorn api.main:app --port 8000`);
     }
     if (!res.ok) throw new CheckError(`The URL checker answered with an error (${res.status}).`);
     let body;

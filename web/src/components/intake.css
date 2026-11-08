@@ -59,3 +59,5 @@
   .verdict { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+.check-note { margin: 10px 0 0; font: 400 11.5px/1.5 var(--mono); color: var(--mute); }

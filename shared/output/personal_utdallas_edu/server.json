@@ -1,0 +1,222 @@
+{
+  "site": "https://personal.utdallas.edu/~John.cole/",
+  "api": "http://127.0.0.1:8001",
+  "docs": "http://127.0.0.1:8001/docs",
+  "mcp": "http://127.0.0.1:8001/mcp",
+  "source": "SpacetimeDB https://maincloud.spacetimedb.com/facade",
+  "records": 29,
+  "passed": 18,
+  "tested": 20,
+  "seconds": 0.2,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/professors/{id}",
+      "name": "get_professor",
+      "request": "/professors/~John.cole",
+      "ok": true,
+      "status": 200,
+      "total": null,
+      "expected": null,
+      "ms": 7.1,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/facultymembers/{id}",
+      "name": "get_facultymember",
+      "request": "/facultymembers/d2f00fffdcc2",
+      "ok": true,
+      "status": 200,
+      "total": null,
+      "expected": null,
+      "ms": 4.6,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/programmingtips/{id}",
+      "name": "get_programmingtip",
+      "request": "/programmingtips/AndroidFileIO.html",
+      "ok": true,
+      "status": 200,
+      "total": null,
+      "expected": null,
+      "ms": 2.0,
+      "first": "Android Programming Android File I/O examples Android File I/O problem and solution Code snippets for animation using a thread on a timer Low-Pass Filter Array Adapter for ListView"
+    },
+    {
+      "method": "GET",
+      "path": "/databaseconnections",
+      "name": "list_databaseconnections",
+      "request": "/databaseconnections?limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 0,
+      "expected": 0,
+      "ms": 1.8,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/databaseconnections/{id}",
+      "name": "get_databaseconnection",
+      "request": "/databaseconnections/",
+      "ok": true,
+      "status": 200,
+      "total": 0,
+      "expected": null,
+      "ms": 2.0,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/fibonacci",
+      "name": "list_fibonacci",
+      "request": "/fibonacci?limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 0,
+      "expected": 0,
+      "ms": 1.4,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/fibonacci/{id}",
+      "name": "get_fibonacci",
+      "request": "/fibonacci/",
+      "ok": true,
+      "status": 200,
+      "total": 0,
+      "expected": null,
+      "ms": 1.9,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/professors",
+      "name": "list_professors",
+      "request": "/professors?class_list=Classes+Office+Notes+for+Students+Links+Announcements+Projects+Reading+List+Teaching+Philosophy+ACM+at+UTD+%2A&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 1,
+      "expected": 1,
+      "ms": 1.4,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/faculty_members",
+      "name": "list_faculty_members",
+      "request": "/faculty_members?limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 1,
+      "expected": 1,
+      "ms": 1.5,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/programming_tips",
+      "name": "list_programming_tips",
+      "request": "/programming_tips?limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 10,
+      "expected": 10,
+      "ms": 2.1,
+      "first": "C# Programming Maximizing the screen and adjusting controls Comparator Class for ListView Capturing keystrokes at the Form level C++ Programming Example of \"friend\" classes MIPS Assembly Language Fibo"
+    }
+  ],
+  "tools": [
+    {
+      "name": "get_professor",
+      "args": {
+        "id": "~John.cole"
+      },
+      "ok": true,
+      "total": null,
+      "description": "Retrieve a single professor by its legacy ID."
+    },
+    {
+      "name": "get_facultymember",
+      "args": {
+        "id": "d2f00fffdcc2"
+      },
+      "ok": true,
+      "total": null,
+      "description": "Retrieve a single faculty member by its legacy ID."
+    },
+    {
+      "name": "get_programmingtip",
+      "args": {
+        "id": "AndroidFileIO.html"
+      },
+      "ok": true,
+      "total": null,
+      "description": "Retrieve a single programming tip by its legacy ID."
+    },
+    {
+      "name": "list_databaseconnections",
+      "args": {
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 0,
+      "description": "List database connection records (currently none)."
+    },
+    {
+      "name": "get_databaseconnection",
+      "args": {},
+      "ok": false,
+      "total": null,
+      "description": "Retrieve a single database connection by its legacy ID."
+    },
+    {
+      "name": "list_fibonacci",
+      "args": {
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 0,
+      "description": "List Fibonacci records (currently none)."
+    },
+    {
+      "name": "get_fibonacci",
+      "args": {},
+      "ok": false,
+      "total": null,
+      "description": "Retrieve a single Fibonacci record by its legacy ID."
+    },
+    {
+      "name": "list_professors",
+      "args": {
+        "class_list": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 1,
+      "description": "List Professor records, with filters"
+    },
+    {
+      "name": "list_faculty_members",
+      "args": {
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 1,
+      "description": "List FacultyMember records, with filters"
+    },
+    {
+      "name": "list_programming_tips",
+      "args": {
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 10,
+      "description": "List ProgrammingTip records, with filters"
+    }
+  ]
+}

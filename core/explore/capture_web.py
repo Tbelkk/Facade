@@ -149,7 +149,7 @@ EXTRACT_JS = r"""
   // Data tables. Handles legacy layouts: no header row, and records spread over several rows
   // (e.g. a title row + a details row + a spacer row, repeating).
   const ACTION = /vote|hide|flag|delete|remove|logout|log out|[?&](how|action|act|op|do|cmd)=/i;
-  const tables = Array.from(document.querySelectorAll('table')).filter(vis).map((t, i) => {
+  let tables = Array.from(document.querySelectorAll('table')).filter(vis).map((t, i) => {
     if (t.querySelector('input, select, textarea, table')) return null;     // forms / layout wrappers
     const rows = Array.from(t.rows).filter(r => vis(r));
     if (rows.length < 2) return null;
@@ -190,6 +190,47 @@ EXTRACT_JS = r"""
       link_column: null,
     };
   }).filter(Boolean);
+
+  // Repeated blocks that aren't tables (book lists, course lists, cards): a container whose children mostly
+  // share the same tag + class. Each child becomes a record; its lines of text become columns. Menus are skipped.
+  const inChrome = el => !!el.closest('nav, header, footer, aside, [role=navigation], [role=banner], [role=contentinfo]');
+  const sigOf = el => el.tagName + '.' + (typeof el.className === 'string' ? el.className.trim().split(/\s+/).sort().join('.') : '');
+  const listCands = [];
+  for (const box of document.querySelectorAll('ul, ol, div, section, main, article, dl')) {
+    if (!vis(box) || inChrome(box) || box.closest('table')) continue;
+    const kids = Array.from(box.children).filter(k => vis(k) && txt(k.innerText).length > 2);
+    if (kids.length < 3) continue;
+    const counts = {};
+    for (const k of kids) counts[sigOf(k)] = (counts[sigOf(k)] || 0) + 1;
+    const [sig, n] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+    if (n < 3 || n / kids.length < 0.7) continue;
+    const items = kids.filter(k => sigOf(k) === sig);
+    // a menu: every item is one short link
+    const linkOnly = items.every(k => k.querySelectorAll('a').length === 1 && txt(k.innerText).length < 30 && txt(k.innerText) === txt(k.querySelector('a').innerText));
+    if (linkOnly && items.length < 12) continue;
+    if (items.some(k => k.querySelector('input, select, textarea'))) continue;
+    listCands.push({ box, items });
+  }
+  // keep the outermost useful containers, biggest first, at most 3
+  const lists = listCands
+    .filter(c => !listCands.some(o => o !== c && o.box.contains(c.box) && o.items.length >= c.items.length))
+    .sort((a, b) => b.items.length - a.items.length).slice(0, 3)
+    .map(({ box, items }, j) => {
+      const recs = items.map(k => ({
+        cells: (k.innerText || '').split(/\n+/).map(x => txt(x)).filter(Boolean).slice(0, 5).map(x => x.slice(0, 200)),
+        links: Array.from(k.querySelectorAll('a[href]')).map(a => [txt(a.innerText).slice(0, 60), a.href])
+          .filter(([tx, h]) => tx && !h.startsWith('javascript:') && !ACTION.test(h + ' ' + tx)).slice(0, 10),
+      })).filter(r => r.cells.length);
+      const width = Math.max(1, ...recs.slice(0, 20).map(r => r.cells.length));
+      return {
+        index: tables.length + j, kind: 'list', css: cssFor(box), headers: Array.from({ length: width }, (_, k) => `col${k + 1}`),
+        has_header: false, rows_per_record: 1, row_count: recs.length,
+        sample_rows: recs.slice(0, 5).map(r => r.cells.map(c => c.slice(0, 80))),
+        sample_links: recs.slice(0, 3).map(r => r.links),
+        rows: recs.slice(0, 500).map(r => r.cells), row_links: recs.slice(0, 500).map(r => r.links), link_column: null,
+      };
+    }).filter(t => t.row_count >= 3);
+  tables.push(...lists);
 
   const sameSite = h => { try { return new URL(h).host === location.host; } catch { return false; } };
   const allLinks = Array.from(document.querySelectorAll('a[href]')).filter(vis)

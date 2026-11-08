@@ -1,0 +1,149 @@
+{
+  "site": "https://personal.utdallas.edu/~John.cole/",
+  "entities": [
+    {
+      "name": "Professor",
+      "record_count": 18,
+      "fields": [
+        {
+          "name": "class_list",
+          "label": "Classes Office Notes for Students Links Announcements Projects Reading List Teac",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "welcome_message",
+          "label": "Welcome to my online home. I'm a Professor of Instruction in the Compu",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "professor_name",
+          "label": "John Cole",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "professor_title",
+          "label": "Professor of Instruction in the Compu",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "photo_url",
+          "label": "John Cole photo",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "department_url",
+          "label": "Computer Science Department",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "university_url",
+          "label": "University of Texas at Dallas",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "note",
+          "label": "Some general notes for anyone taking my classes These are general guidelines. Some, such as attendance or grading policy, may differ from what is in any course syllabus. The syllabus always takes precedence.",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "note_detail",
+          "label": "I believe in you. I believe you are here at UTD because you are capable of doing excellent work. Please show me that this is true. Here are some guidelines for success.",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": []
+    },
+    {
+      "name": "FacultyMember",
+      "record_count": 1,
+      "fields": [
+        {
+          "name": "navigation_items",
+          "label": "navigation_items",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "welcome_message",
+          "label": "welcome_message",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": []
+    },
+    {
+      "name": "ProgrammingTip",
+      "record_count": 10,
+      "fields": [
+        {
+          "name": "title",
+          "label": "col1",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "description",
+          "label": "Random-access file example program in C++.",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "author",
+          "label": "John Cole",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "university",
+          "label": "The University of Texas at Dallas",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "date",
+          "label": "November 1, 2016",
+          "type": "date",
+          "required": false
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": []
+    },
+    {
+      "name": "DatabaseConnection",
+      "record_count": 0,
+      "fields": [],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": []
+    },
+    {
+      "name": "Fibonacci",
+      "record_count": 0,
+      "fields": [],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": []
+    }
+  ]
+}

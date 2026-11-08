@@ -24,20 +24,28 @@ def run(url, login=False, headed=False, offline_design=False, full=False, live=T
     from operator_agent import run as operator
     from store.load_run import load
 
+    from facade.events import emit
     t0 = time.time()
+    emit({"stage": "run", "kind": "start", "site": url})
     print("== 1/5  Explore + extract ==")
     r = agent.run(url, login=login, headed=headed, full=full, live=live)
     if not r.records:
         raise SystemExit("No records were extracted, so there is nothing to design an API for. See the run log above.")
 
     print("\n== 2/5  Design the API (operator agent) ==")
-    operator.run(r.dir, use_nemotron=False if offline_design else None)
+    emit({"stage": "operator", "kind": "start"})
+    doc = operator.run(r.dir, use_nemotron=False if offline_design else None)
+    meta = doc.get("designed_by") or {}
+    emit({"stage": "operator", "kind": "proposed", "operations": doc["operations"], "problems": meta.get("problems_found") or []})
+    if meta.get("problems_found"):
+        emit({"stage": "operator", "kind": "fixed", "problems": meta.get("problems_after_fix") or []})
+    emit({"stage": "operator", "kind": "done", "operations": doc["operations"], "designed_by": meta})
 
     print("\n== 3/5  Publish ==")
     dest = publish(r.dir)
 
     print("\n== 4/5  Load into SpacetimeDB ==")
-    load(dest)
+    load(dest, progress=lambda tables: emit({"stage": "database", "target": "SpacetimeDB", "tables": tables}))
 
     print(f"\n== 5/5  Start the API + MCP server ==   (steps 1-4 took {(time.time() - t0) / 60:.1f} min, output: {dest})")
     from serve.run import run as serve_run

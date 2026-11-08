@@ -191,11 +191,10 @@ export function createRunDriver(D) {
       }
       if (evt.stage === 'operator') {
         if (evt.kind === 'start') {
-          D.feed('operator', { phase: 'reading', model: modelCard() });
+          D.feed('operator', { phase: 'drafting', model: modelCard() });
           D.set('operator', { status: 'working', progress: 0.1, stat: null });
           const m = modelCard();
           note('operator', m ? `Reading what the Explorer found: ${n0(m.rows)} ${plural(m.name.toLowerCase())}, each with ${m.fields.length} fields (${m.fields.map((f) => f.name).join(', ')}). Asking Nemotron to design an API for it.` : 'Asking Nemotron to design an API for the extracted data.', 'Started designing');
-          setTimeout(() => D.feed('operator', { phase: 'drafting' }), 0);
         } else if (evt.kind === 'proposed') {
           const ops = evt.operations || [];
           const flagged = (evt.problems || []).map((p) => String(p).split(':')[0].trim());

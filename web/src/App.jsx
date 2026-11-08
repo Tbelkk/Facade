@@ -12,6 +12,7 @@ import { createDashboard } from './lib/dashboard.js';
 import { createRunDriver, loadRecordedRun, replayRun } from './lib/runDriver.js';
 import DevPanel from './components/DevPanel.jsx';
 import { facadeSettings } from './lib/settings.js';
+import { API_BASE } from './lib/checkUrl.js';
 import { useSettings } from './lib/hooks.js';
 
 export default function App() {
@@ -44,9 +45,13 @@ export default function App() {
   useEffect(() => { document.body.classList.toggle('running', running); }, [running]);
   useEffect(() => { if (window.facade && window.facade.platform === 'darwin') document.body.classList.add('mac'); }, []);
 
+  const liveRun = useRef(null);   // { stop } while following a real run from the API
+
   const stopRun = () => {
     replay.current && replay.current.stop();
     replay.current = null;
+    liveRun.current && liveRun.current.stop();
+    liveRun.current = null;
     driver.stop();
     setRunning(false);
     setReplaying(false);
@@ -65,19 +70,39 @@ export default function App() {
     setRunning(true);
   };
 
-  // Start exploring: the URL has already passed the fit-check and the authorization box (see Intake.jsx).
-  // A connected back end starts a real run and pushes events through window.facadeEvent;
-  // until then the recorded run plays so the dashboard still shows the real flow.
-  const startExploring = (checkedUrl) => {
+  // Start exploring (the URL already passed the site check, see Intake.jsx): ask the Facade API to run the
+  // real agents on it (POST /runs), then follow their events live (GET /runs/{id}/events) into the tiles.
+  const startExploring = async (checkedUrl) => {
     const u = new URL(checkedUrl);
+    stopRun();
+    setUrl(u.href);
     setHost(u.host);
-    if (window.facade && typeof window.facade.runAgents === 'function') {
-      driver.begin({ site: u.href });
-      window.facade.runAgents(u.href);
-      setRunning(true);
+    let id;
+    try {
+      const res = await fetch(`${API_BASE}/runs`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: u.href }) });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) { setPhase(body.detail || `Couldn’t start the agents (${res.status})`); return; }
+      id = body.id;
+    } catch {
+      setPhase(`Couldn’t reach the Facade API at ${API_BASE}. Start it from the Facade folder: uvicorn api.main:app --port 8000`);
       return;
     }
-    startReplay(1);
+    driver.begin({ site: u.href });
+    setRunning(true);
+    let after = 0, stopped = false, timer = null;
+    const poll = async () => {
+      if (stopped) return;
+      try {
+        const r = await fetch(`${API_BASE}/runs/${id}/events?after=${after}`);
+        const d = await r.json();
+        for (const e of d.events || []) driver.handle(e);
+        after = d.next ?? after;
+        if (d.status === 'failed') { stopped = true; setRunning(false); setPhase(`The run stopped: ${d.error || 'unknown error'}`); return; }
+      } catch { /* API briefly unreachable: keep trying */ }
+      timer = setTimeout(poll, 600);
+    };
+    liveRun.current = { stop() { stopped = true; clearTimeout(timer); } };
+    poll();
   };
 
   // status line + clock
@@ -88,7 +113,7 @@ export default function App() {
       const s = Math.floor(driver.elapsed());
       setClock(`${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`);
       const active = dashboard.find('working');
-      const tag = replaying || (replay.current && !window.facade?.runAgents) ? 'Recorded run · ' : '';
+      const tag = replaying ? 'Recorded run · ' : '';
       setPhase(tag + (active
         ? `${active.name} working · ${host}`
         : dashboard.find('live') ? `Live · API + MCP ready for ${host}` : `Starting · ${host}`));

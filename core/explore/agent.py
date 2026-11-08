@@ -32,6 +32,7 @@ from collections import deque
 from pathlib import Path
 from urllib.parse import urlparse
 
+from facade.events import emit
 from ingest import nemotron
 from ingest.paths import CACHE_DIR, PROMPTS_DIR
 
@@ -46,7 +47,7 @@ UNSAFE = re.compile(
     r"|[?&](how|action|act|op|do|cmd|method)=", re.I)
 # Note: viewing /edit or /new pages is fine (they only SHOW a form, and we never submit).
 NO_DATA = re.compile(r"log\s*in|sign\s*in|signin|login|register|sign\s*up|signup|forgot|password|captcha|/auth", re.I)
-SKIP_EXT = re.compile(r"\.(pdf|zip|jpg|jpeg|png|gif|docx?|xlsx?|csv|mp4|mp3)(\?|$)", re.I)
+SKIP_EXT = re.compile(r"(\.(pdf|zip|jpg|jpeg|png|gif|svg|docx?|xlsx?|pptx?|csv|mp4|mp3|epub\d*|mobi|azw3?|kf8|kindle|rdf|exe|dmg|tar|gz)(\.\w+)*(\?|$))|\.txt\.utf-8$|/files/\d+/", re.I)
 
 
 def page_context(snap, learned, visited_patterns):
@@ -63,7 +64,7 @@ def page_context(snap, learned, visited_patterns):
     links = uniq[:40]
     ctx = {
         "url": w["url"], "title": w["title"], "messages": w["alerts"],
-        "tables": [{"table_index": i, "headers": t["headers"], "has_header_row": t.get("has_header"),
+        "tables": [{"table_index": i, "kind": t.get("kind", "table"), "headers": t["headers"], "has_header_row": t.get("has_header"),
                     "rows_per_record": t.get("rows_per_record", 1), "record_count": t["row_count"],
                     # each record as {header: value} so column names can't be miscounted
                     "sample_records": [dict(zip(t["headers"], row)) for row in t["sample_rows"][:3]],
@@ -297,6 +298,7 @@ def snake(s):
 class Run:
     def __init__(self, start_url, live=None):
         self.live = live       # store.live.Live or None: mirrors everything into SpacetimeDB as it happens
+        self.page_rows = []    # records first seen on the current page
         self.dir = CACHE_DIR / "extract" / time.strftime("%Y%m%d-%H%M%S")
         (self.dir / "records").mkdir(parents=True, exist_ok=True)
         self.start = start_url
@@ -310,6 +312,11 @@ class Run:
         row = {"ts": time.time(), "kind": kind, **data}
         self.log_f.write(json.dumps(row, ensure_ascii=False) + "\n")
         self.log_f.flush()
+        evt = {"stage": "explore", **row}
+        if kind == "page":
+            evt["rows"] = [{k: v for k, v in r.items()} for r in self.page_rows[:14]]
+            self.page_rows = []
+        emit(evt)
         if self.live:
             if kind == "page":
                 how = "reused mapping" if data.get("reused_mapping") else f"Nemotron {data.get('nemotron_ms', 0) / 1000:.1f}s"
@@ -349,6 +356,8 @@ class Run:
         merged = {**bucket.get(key, {}), **rec}   # detail pages enrich rows from list pages
         new = key not in bucket
         bucket[key] = merged
+        if new:
+            self.page_rows.append(merged)   # shown on the dashboard for the page that produced them
         if self.live:
             from operator_agent.inputs import legacy_id_of
             self.live.record(entity, legacy_id_of({"_key": key}) or key, self.typed(entity, merged))
@@ -388,6 +397,7 @@ class Run:
              "fields": [{"name": k, **v} for k, v in e["fields"].items()], "rules": sorted(e["rules"])}
             for n, e in self.learned.items()]}
         (self.dir / "data_model.json").write_text(json.dumps(model, indent=2, ensure_ascii=False), encoding="utf-8")
+        emit({"stage": "model", "entities": model["entities"]})
         (self.dir / "site_map.json").write_text(json.dumps({"site": self.start, "pages": self.pages}, indent=2,
                                                            ensure_ascii=False), encoding="utf-8")
         if self.live:  # the Console draws the site map + data model from these as they grow
@@ -462,6 +472,9 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
                     pass
                 snap = capture_page(page)
             except Exception as e:
+                if "Download is starting" in str(e):   # a file link, not a page: skip quietly
+                    r.log("skipped_download", url=norm)
+                    continue
                 r.log("error", url=norm, error=str(e)[:200])
                 print(f"  ✗ {norm}: {str(e)[:80]}")
                 continue

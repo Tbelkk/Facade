@@ -1,0 +1,148 @@
+{
+  "site": "https://personal.utdallas.edu/~John.cole/",
+  "pages": [
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/",
+      "url_pattern": "/~John.cole/",
+      "page_type": "other",
+      "entity": "Professor",
+      "next_page_link": null,
+      "purpose": "Display a faculty profile with navigation links and course listings.",
+      "reached_by": "start",
+      "nemotron_ms": 22722,
+      "records_new": 1
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/NotesForStudents.html",
+      "url_pattern": "/~John.cole/NotesForStudents.html",
+      "page_type": "list",
+      "entity": "Professor",
+      "next_page_link": null,
+      "purpose": "Provide general notes and guidelines for students about the professor's courses and expectations.",
+      "reached_by": "View notes for students.",
+      "nemotron_ms": 11370,
+      "records_new": 2
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/Projects/Projects.html",
+      "url_pattern": "/~John.cole/Projects/Projects.html",
+      "page_type": "list",
+      "entity": "Professor",
+      "next_page_link": null,
+      "purpose": "Provide general notes and guidelines for students about the professor's courses and expectations.",
+      "reached_by": "Explore projects page.",
+      "nemotron_ms": 0,
+      "records_new": 4
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/2026Fall/CS3162Fall2026.htm",
+      "url_pattern": "/~John.cole/2026Fall/CS3162Fall2026.htm",
+      "page_type": "list",
+      "entity": "Professor",
+      "next_page_link": null,
+      "purpose": "Provide general notes and guidelines for students about the professor's courses and expectations.",
+      "reached_by": "Open a specific course detail page.",
+      "nemotron_ms": 0,
+      "records_new": 11
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/index.htm",
+      "url_pattern": "/~John.cole/index.htm",
+      "page_type": "list",
+      "entity": "FacultyMember",
+      "next_page_link": null,
+      "purpose": "Provide navigation and listings of courses, resources, and personal information for John Cole.",
+      "reached_by": "Homepage may contain professor bio, contact info, and links to other relevant pa",
+      "nemotron_ms": 8484,
+      "records_new": 1
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/index.html",
+      "url_pattern": "/~John.cole/ProgrammingTips/index.html",
+      "page_type": "list",
+      "entity": "ProgrammingTip",
+      "next_page_link": null,
+      "purpose": "Browse programming tips and code snippets across various topics.",
+      "reached_by": "Likely contains course-specific tips or assignments for a different entity.",
+      "nemotron_ms": 18029,
+      "records_new": 3
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/CSScreenSize.html",
+      "url_pattern": "/~John.cole/ProgrammingTips/CSScreenSize.html",
+      "page_type": "other",
+      "entity": "ProgrammingTip",
+      "next_page_link": null,
+      "purpose": "Display CSS code for expanding the browser window to fill the screen size.",
+      "reached_by": "detail",
+      "nemotron_ms": 6785,
+      "records_new": 0
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/BinaryIO-CPP.html",
+      "url_pattern": "/~John.cole/ProgrammingTips/BinaryIO-CPP.html",
+      "page_type": "other",
+      "entity": "ProgrammingTip",
+      "next_page_link": null,
+      "purpose": "Display a programming tip about binary file I/O in C++.",
+      "reached_by": "detail",
+      "nemotron_ms": 12979,
+      "records_new": 0
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/AndroidFileIO.html",
+      "url_pattern": "/~John.cole/ProgrammingTips/AndroidFileIO.html",
+      "page_type": "detail",
+      "entity": "ProgrammingTip",
+      "next_page_link": null,
+      "purpose": "Read a programming tip about Android File I/O.",
+      "reached_by": "detail",
+      "nemotron_ms": 14642,
+      "records_new": 0
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ExamRules.htm",
+      "url_pattern": "/~John.cole/ExamRules.htm",
+      "page_type": "list",
+      "entity": "ProgrammingTip",
+      "next_page_link": null,
+      "purpose": "Browse programming tips and code snippets across various topics.",
+      "reached_by": "Provides exam policies, possibly linked to course or student records.",
+      "nemotron_ms": 0,
+      "records_new": 3
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/Documentation.htm",
+      "url_pattern": "/~John.cole/Documentation.htm",
+      "page_type": "list",
+      "entity": "ProgrammingTip",
+      "next_page_link": null,
+      "purpose": "Browse programming tips and code snippets across various topics.",
+      "reached_by": "May include documentation standards relevant to assignments or projects.",
+      "nemotron_ms": 0,
+      "records_new": 4
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/DBConnect.java",
+      "url_pattern": "/~John.cole/ProgrammingTips/DBConnect.java",
+      "page_type": "other",
+      "entity": "DatabaseConnection",
+      "next_page_link": null,
+      "purpose": "A user reads Java source code that demonstrates how to connect to a SQL Server database.",
+      "reached_by": "Links to a Java database connection example, representing a different entity typ",
+      "nemotron_ms": 15485,
+      "records_new": 0
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/Fibonacci-Bad.txt",
+      "url_pattern": "/~John.cole/ProgrammingTips/Fibonacci-Bad.txt",
+      "page_type": "other",
+      "entity": "Fibonacci",
+      "next_page_link": null,
+      "purpose": "Display a text file containing Fibonacci code.",
+      "reached_by": "Links to a Fibonacci numbers example, covering algorithmic content.",
+      "nemotron_ms": 10968,
+      "records_new": 0
+    }
+  ]
+}

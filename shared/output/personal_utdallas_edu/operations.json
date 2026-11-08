@@ -1,0 +1,681 @@
+{
+  "version": 1,
+  "site": "https://personal.utdallas.edu/~John.cole/",
+  "generated_at": "2026-11-08T04:34:10",
+  "designed_by": {
+    "by": "nemotron",
+    "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+    "attempts": 2,
+    "nemotron_ms": 73297,
+    "problems_found": [
+      "list_professors: input 'class_list_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'welcome_message_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'note_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'note_detail_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'professor_name_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'professor_title_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'photo_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'department_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'university_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'class_list_eq' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "search_professors: path '/professors/search?q=' must start with / and use lowercase letters, digits, _ - {}",
+      "list_facultymembers: input 'navigation_items_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
+      "list_facultymembers: input 'welcome_message_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
+      "list_facultymembers: input 'navigation_items_eq' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
+      "search_facultymembers: path '/facultymembers/search?q=' must start with / and use lowercase letters, digits, _ - {}",
+      "list_programmingtips: input 'title_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
+      "list_programmingtips: input 'description_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
+      "list_programmingtips: input 'title_eq' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
+      "search_programmingtips: path '/programmingtips/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+    ],
+    "problems_after_fix": [
+      "list_professors: input 'class_list_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'welcome_message_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'note_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'note_detail_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'professor_name_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'professor_title_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'photo_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'department_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'university_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "list_professors: input 'class_list_eq' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+      "search_professors: path '/professors/search?q=' must start with / and use lowercase letters, digits, _ - {}",
+      "list_facultymembers: input 'navigation_items_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
+      "list_facultymembers: input 'welcome_message_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
+      "list_facultymembers: input 'navigation_items_eq' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
+      "search_facultymembers: path '/facultymembers/search?q=' must start with / and use lowercase letters, digits, _ - {}",
+      "list_programmingtips: input 'title_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
+      "list_programmingtips: input 'description_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
+      "list_programmingtips: input 'title_eq' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
+      "search_programmingtips: path '/programmingtips/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+    ],
+    "dropped": [
+      {
+        "name": "list_professors",
+        "problems": [
+          "list_professors: input 'class_list_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'welcome_message_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'note_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'note_detail_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'professor_name_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'professor_title_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'photo_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'department_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'university_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
+          "list_professors: input 'class_list_eq' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)"
+        ]
+      },
+      {
+        "name": "search_professors",
+        "problems": [
+          "search_professors: path '/professors/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+        ]
+      },
+      {
+        "name": "list_facultymembers",
+        "problems": [
+          "list_facultymembers: input 'navigation_items_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
+          "list_facultymembers: input 'welcome_message_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
+          "list_facultymembers: input 'navigation_items_eq' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)"
+        ]
+      },
+      {
+        "name": "search_facultymembers",
+        "problems": [
+          "search_facultymembers: path '/facultymembers/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+        ]
+      },
+      {
+        "name": "list_programmingtips",
+        "problems": [
+          "list_programmingtips: input 'title_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
+          "list_programmingtips: input 'description_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
+          "list_programmingtips: input 'title_eq' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)"
+        ]
+      },
+      {
+        "name": "search_programmingtips",
+        "problems": [
+          "search_programmingtips: path '/programmingtips/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+        ]
+      }
+    ],
+    "added_by_code": [
+      "list_professors",
+      "list_faculty_members",
+      "list_programming_tips"
+    ]
+  },
+  "entities": {
+    "Professor": {
+      "key": "legacy_id",
+      "record_count": 18,
+      "fields": [
+        {
+          "name": "class_list",
+          "label": "Classes Office Notes for Students Links Announcements Projects Reading List Teac",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "welcome_message",
+          "label": "Welcome to my online home. I'm a Professor of Instruction in the Compu",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "professor_name",
+          "label": "John Cole",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "professor_title",
+          "label": "Professor of Instruction in the Compu",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "photo_url",
+          "label": "John Cole photo",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "department_url",
+          "label": "Computer Science Department",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "university_url",
+          "label": "University of Texas at Dallas",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "note",
+          "label": "Some general notes for anyone taking my classes These are general guidelines. Some, such as attendance or grading policy, may differ from what is in any course syllabus. The syllabus always takes precedence.",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "note_detail",
+          "label": "I believe in you. I believe you are here at UTD because you are capable of doing excellent work. Please show me that this is true. Here are some guidelines for success.",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "FacultyMember": {
+      "key": "legacy_id",
+      "record_count": 1,
+      "fields": [
+        {
+          "name": "navigation_items",
+          "label": "navigation_items",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "welcome_message",
+          "label": "welcome_message",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "ProgrammingTip": {
+      "key": "legacy_id",
+      "record_count": 10,
+      "fields": [
+        {
+          "name": "title",
+          "label": "col1",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "description",
+          "label": "Random-access file example program in C++.",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "author",
+          "label": "John Cole",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "university",
+          "label": "The University of Texas at Dallas",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "date",
+          "label": "November 1, 2016",
+          "type": "date",
+          "required": false
+        }
+      ]
+    },
+    "DatabaseConnection": {
+      "key": "legacy_id",
+      "record_count": 0,
+      "fields": []
+    },
+    "Fibonacci": {
+      "key": "legacy_id",
+      "record_count": 0,
+      "fields": []
+    }
+  },
+  "operations": [
+    {
+      "name": "get_professor",
+      "method": "GET",
+      "path": "/professors/{id}",
+      "entity": "Professor",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single professor by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Professor"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/professors/~John.cole",
+        "response": {
+          "legacy_id": "~John.cole",
+          "class_list": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
+          "welcome_message": "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
+        }
+      }
+    },
+    {
+      "name": "get_facultymember",
+      "method": "GET",
+      "path": "/facultymembers/{id}",
+      "entity": "FacultyMember",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single faculty member by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "FacultyMember"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/facultymembers/d2f00fffdcc2",
+        "response": {
+          "legacy_id": "d2f00fffdcc2",
+          "navigation_items": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
+          "welcome_message": "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
+        }
+      }
+    },
+    {
+      "name": "get_programmingtip",
+      "method": "GET",
+      "path": "/programmingtips/{id}",
+      "entity": "ProgrammingTip",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single programming tip by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "ProgrammingTip"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/programmingtips/AndroidFileIO.html",
+        "response": {
+          "legacy_id": "AndroidFileIO.html",
+          "title": "Android Programming Android File I/O examples Android File I/O problem and solution Code snippets for animation using a thread on a timer Low-Pass Filter Array Adapter for ListView"
+        }
+      }
+    },
+    {
+      "name": "list_databaseconnections",
+      "method": "GET",
+      "path": "/databaseconnections",
+      "entity": "DatabaseConnection",
+      "kind": "list",
+      "source": "database",
+      "summary": "List database connection records (currently none).",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "match": "offset",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "DatabaseConnection"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/databaseconnections?limit=3",
+        "response": {
+          "total": 0,
+          "limit": 3,
+          "offset": 0,
+          "items": []
+        }
+      }
+    },
+    {
+      "name": "get_databaseconnection",
+      "method": "GET",
+      "path": "/databaseconnections/{id}",
+      "entity": "DatabaseConnection",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single database connection by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "DatabaseConnection"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/databaseconnections/",
+        "response": {
+          "error": "not found"
+        }
+      }
+    },
+    {
+      "name": "list_fibonacci",
+      "method": "GET",
+      "path": "/fibonacci",
+      "entity": "Fibonacci",
+      "kind": "list",
+      "source": "database",
+      "summary": "List Fibonacci records (currently none).",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "match": "offset",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Fibonacci"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/fibonacci?limit=3",
+        "response": {
+          "total": 0,
+          "limit": 3,
+          "offset": 0,
+          "items": []
+        }
+      }
+    },
+    {
+      "name": "get_fibonacci",
+      "method": "GET",
+      "path": "/fibonacci/{id}",
+      "entity": "Fibonacci",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single Fibonacci record by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Fibonacci"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/fibonacci/",
+        "response": {
+          "error": "not found"
+        }
+      }
+    },
+    {
+      "name": "list_professors",
+      "method": "GET",
+      "path": "/professors",
+      "entity": "Professor",
+      "kind": "list",
+      "source": "database",
+      "summary": "List Professor records, with filters",
+      "inputs": [
+        {
+          "name": "class_list",
+          "in": "query",
+          "type": "string",
+          "field": "class_list",
+          "match": "eq",
+          "values": [
+            "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *"
+          ],
+          "required": false
+        },
+        {
+          "name": "welcome_message",
+          "in": "query",
+          "type": "string",
+          "field": "welcome_message",
+          "match": "eq",
+          "values": [
+            "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
+          ],
+          "required": false
+        },
+        {
+          "name": "note_detail",
+          "in": "query",
+          "type": "string",
+          "field": "note_detail",
+          "match": "eq",
+          "values": [
+            "Academic Integrity. All assignments, unless explicitly stated in writing in the assignment, are individual. That is, you are to turn in your own work. You are not to work in a group, then each of you ",
+            "Robot built for the workshop at PES University.",
+            "Home Monitoring and Control system running at my house. This uses a combination of Arduino and Raspberry Pi boards.",
+            "Android Pong Game. This is the first app I have released to the Google Play Store. It's available free, and was done in part as a UTD project. You can find it using my name and \"Pong.\"",
+            "Section 052: Tuesday/Thursday from 8:00 AM to 8:50 AM 8-week session from January 20 to March 9, 2026 Section 051: Tuesday/Thursday from 9:00 AM to 9:50 AM 8-week session from January 20 to March 9, 2",
+            "Room: SCI 1.220",
+            "Last update: 5/15/2026",
+            "Schedule for Section 051 & 052 Schedule for Section 091 & 092"
+          ],
+          "required": false
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "match": "offset",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Professor"
+      },
+      "example": {
+        "request": "/professors?class_list=Classes+Office+Notes+for+Students+Links+Announcements+Projects+Reading+List+Teaching+Philosophy+ACM+at+UTD+%2A&limit=3",
+        "response": {
+          "total": 1,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "~John.cole",
+              "class_list": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
+              "welcome_message": "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "list_faculty_members",
+      "method": "GET",
+      "path": "/faculty_members",
+      "entity": "FacultyMember",
+      "kind": "list",
+      "source": "database",
+      "summary": "List FacultyMember records, with filters",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "match": "offset",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "FacultyMember"
+      },
+      "example": {
+        "request": "/faculty_members?limit=3",
+        "response": {
+          "total": 1,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "d2f00fffdcc2",
+              "navigation_items": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
+              "welcome_message": "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "list_programming_tips",
+      "method": "GET",
+      "path": "/programming_tips",
+      "entity": "ProgrammingTip",
+      "kind": "list",
+      "source": "database",
+      "summary": "List ProgrammingTip records, with filters",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "match": "sort",
+          "values": [
+            "date",
+            "-date"
+          ],
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "ProgrammingTip"
+      },
+      "example": {
+        "request": "/programming_tips?limit=3",
+        "response": {
+          "total": 10,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "AndroidFileIO.html",
+              "title": "Android Programming Android File I/O examples Android File I/O problem and solution Code snippets for animation using a thread on a timer Low-Pass Filter Array Adapter for ListView"
+            },
+            {
+              "legacy_id": "BinaryIO-CPP.html",
+              "title": "Database Programming C++ Binary File I/O Sample C++ Random-Access File I/O Sample Java Random-Access I/O Sample Connect to a MS SQL Server database from Java Connect to a MySQL database from Java"
+            },
+            {
+              "legacy_id": "CSScreenSize.html",
+              "title": "C# Programming Maximizing the screen and adjusting controls Comparator Class for ListView Capturing keystrokes at the Form level C++ Programming Example of \"friend\" classes MIPS Assembly Language Fibo"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -211,7 +211,7 @@ const operator = {
     s.think += dt;
     s.fixedAt = Math.max(0, s.fixedAt - dt * 0.5);
     let ready = true;
-    for (const e of s.eps) { if (ready) e.t = Math.min(1, e.t + dt * 1.6); ready = e.t >= 1; }
+    for (const e of s.eps) { if (ready) e.t = Math.min(1, e.t + dt * 3); ready = e.t >= 1; }
     if (s.phase === 'done' && s.eps.length && Math.random() < dt * 1.2) s.traffic.push({ i: Math.floor(Math.random() * s.eps.length), t: 0, dir: 1 });
     for (const p of s.traffic) { p.t += dt * 1.2; if (p.t >= 1 && p.dir === 1) { p.dir = -1; p.t = 0; } }
     s.traffic = s.traffic.filter((x) => x.t < 1);
