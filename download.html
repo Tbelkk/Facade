@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Download Facade</title>
+<meta name="description" content="Download the Facade app for Windows.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { background: var(--surface); }
+  .dl-head { max-width: 880px; margin: 0 auto; padding: 24px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .dl-logo { font: 800 24px var(--sans); letter-spacing: -0.04em; color: var(--ink); text-decoration: none; }
+  .dl-logo span { color: var(--accent); }
+  .dl-back { color: var(--muted); text-decoration: none; font-size: 14px; }
+  .dl-back:hover { color: var(--ink); }
+
+  .dl-hero { max-width: 880px; margin: 0 auto; padding: 72px 20px 56px; text-align: center; border-bottom: 1px solid var(--line); }
+  .win-logo { width: 56px; height: 56px; margin: 0 auto 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .win-logo i { background: var(--accent); border-radius: 2px; }
+  .dl-hero h1 { margin: 0 0 14px; font: 700 clamp(32px, 6vw, 52px)/1.05 var(--sans); letter-spacing: -0.035em; color: var(--ink); }
+  .dl-hero p { margin: 0 auto 32px; max-width: 540px; color: var(--muted); font-size: 18px; line-height: 1.6; }
+  .dl-btn { display: inline-flex; align-items: center; gap: 10px; height: 56px; padding: 0 28px; border-radius: 14px; text-decoration: none;
+    background: var(--accent); color: #fff; font: 600 17px var(--sans); box-shadow: 0 10px 24px rgba(37,99,235,.35); transition: transform .15s, background .15s; }
+  .dl-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+  .dl-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .dl-btn svg { width: 20px; height: 20px; }
+  .dl-meta { margin-top: 14px; font: 13px var(--mono); color: var(--muted); }
+
+  .dl-body { max-width: 880px; margin: 0 auto; padding: 0 20px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; }
+  .dl-body section { padding-top: 48px; }
+  .dl-body h2 { margin: 0 0 14px; font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--accent); }
+  .dl-list { list-style: none; margin: 0; padding: 0; }
+  .dl-list li { padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .dl-list li:last-child { border-bottom: 0; }
+  .dl-list small { display: block; color: var(--muted); font-size: 14px; }
+  ol.dl-list { counter-reset: s; }
+  ol.dl-list li { counter-increment: s; padding-left: 34px; position: relative; }
+  ol.dl-list li::before { content: counter(s); position: absolute; left: 0; top: 12px; font: 700 18px var(--sans); color: var(--accent); }
+  ul.dl-list li { padding-left: 28px; position: relative; }
+  ul.dl-list li::before { content: "✓"; position: absolute; left: 0; top: 12px; color: var(--accent); font-weight: 700; }
+  .dl-note { max-width: 880px; margin: 0 auto; padding: 0 20px 64px; color: var(--muted); font-size: 14px; text-align: center; }
+</style>
+</head>
+<body>
+
+<header class="dl-head">
+  <a class="dl-logo" href="index.html">Facade<span>.</span></a>
+  <a class="dl-back" href="index.html">← Back to home</a>
+</header>
+
+<main>
+  <section class="dl-hero">
+    <div class="win-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <h1>Download Facade for Windows</h1>
+    <p>Install the Facade app and open any old desktop program. Facade gives it a modern look and an AI assistant, without changing the original.</p>
+    <!-- TODO: replace href with the real installer link (e.g. a GitHub Releases .exe) -->
+    <a class="dl-btn" href="#" download>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Download for Windows
+    </a>
+    <div class="dl-meta">Facade-Setup.exe · Windows 10 &amp; 11 · 64-bit</div>
+  </section>
+
+  <div class="dl-body">
+    <section>
+      <h2>Install</h2>
+      <ol class="dl-list">
+        <li>Run <b>Facade-Setup.exe</b><small>Follow the installer prompts.</small></li>
+        <li>Start Facade as administrator<small>Needed so Facade can read apps that run with admin rights.</small></li>
+        <li>Open any old app<small>Facade modernizes it automatically. Toggle it off anytime.</small></li>
+      </ol>
+    </section>
+    <section>
+      <h2>Requirements</h2>
+      <ul class="dl-list">
+        <li>Windows 10 or 11, 64-bit</li>
+        <li>Internet connection<small>Used for NVIDIA Nemotron.</small></li>
+        <li>Administrator access</li>
+      </ul>
+    </section>
+  </div>
+
+  <p class="dl-note">Facade is Windows only. It works through the Windows accessibility layer, so Mac and Linux aren't supported.</p>
+</main>
+
+</body>
+</html>

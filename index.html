@@ -12,6 +12,7 @@
 </head>
 <body>
 
+
 <!-- ============ HERO: 1998 → 2026 rerender on scroll ============ -->
 <section class="stage" id="stage" aria-label="Facade homepage, rerendered from 1998 style to modern as you scroll">
   <div class="viewport">
@@ -20,7 +21,7 @@
     <div class="layer old" id="oldLayer">
       <div class="fit">
         <div class="r-top">
-          <div class="marquee"><span>★ WELCOME TO FACADE!!! ★ The #1 Legacy Software Modernizer on the World Wide Web!!! ★ Now with ARTIFICIAL INTELLIGENCE!!! ★ Sign our Guestbook!!! ★ WELCOME TO FACADE!!! ★ The #1 Legacy Software Modernizer on the World Wide Web!!! ★</span></div>
+          <div class="marquee"><span>★ WELCOME TO FACADE!!! ★ The #1 Legacy Software Modernizer on the World Wide Web!!! ★ Now with ARTIFICIAL INTELLIGENCE!!! ★ SCROLL DOWN to see the FUTURE!!! ★ Sign our Guestbook!!! ★ WELCOME TO FACADE!!! ★ The #1 Legacy Software Modernizer on the World Wide Web!!! ★</span></div>
         </div>
 
         <div class="r-head">
@@ -105,7 +106,7 @@
             <div class="wordmark">Facade<span>.</span></div>
             <div class="sub">Legacy software, rendered for this decade.</div>
           </div>
-          <a class="m-btn ghost" href="#demo" tabindex="-1">Book a demo</a>
+          <a class="m-btn primary" href="download.html">Download</a>
         </div>
 
         <div class="r-left">
@@ -113,8 +114,8 @@
             <a class="on" href="#" tabindex="-1"><i>⌂</i>Home</a>
             <a href="#what" tabindex="-1"><i>◇</i>What it is</a>
             <a href="#how" tabindex="-1"><i>↯</i>How it works</a>
-            <a href="#demo" tabindex="-1"><i>▶</i>Demo</a>
-            <a href="#stack" tabindex="-1"><i>◎</i>Team &amp; stack</a>
+            <a href="#how" tabindex="-1"><i>▶</i>Demo</a>
+            <a href="#what" tabindex="-1"><i>◎</i>Team &amp; stack</a>
             <a href="#safety" tabindex="-1"><i>✓</i>Safety</a>
           </nav>
           <div class="m-card metric">
@@ -139,7 +140,7 @@
             </ul>
             <div class="center-btns">
               <a class="m-btn primary" href="#how" tabindex="-1">See how it works</a>
-              <a class="m-btn ghost" href="#demo" tabindex="-1">Watch the demo</a>
+              <a class="m-btn ghost" href="download.html">Download for Windows</a>
             </div>
           </div>
         </div>
@@ -160,19 +161,23 @@
         </div>
 
         <div class="r-foot">
-          <div class="m-foot-links"><a href="#what" tabindex="-1">Product</a><a href="#how" tabindex="-1">Pipeline</a><a href="#modes" tabindex="-1">Modes</a><a href="#stack" tabindex="-1">Stack</a><a href="#safety" tabindex="-1">Safety</a></div>
+          <div class="m-foot-links"><a href="#what" tabindex="-1">Product</a><a href="#how" tabindex="-1">Pipeline</a><a href="#how" tabindex="-1">Modes</a><a href="#what" tabindex="-1">Stack</a><a href="#safety" tabindex="-1">Safety</a></div>
           <div class="m-copy">© 2026 Facade · Built at HackUTD</div>
         </div>
       </div>
     </div>
 
-    <!-- scan line + controls -->
-    <div class="scan" aria-hidden="true"><span class="scan-tag">FACADE · Nemotron rerendering <b id="pct">0%</b></span></div>
-    <div class="toggle" role="group" aria-label="View">
-      <button type="button" id="btnOld" aria-pressed="true">Original</button>
-      <button type="button" id="btnNew" aria-pressed="false">Facade</button>
-    </div>
-    <div class="hint" aria-hidden="true">scroll to modernize ↓</div>
+    <div class="scan" aria-hidden="true"></div>
+    <!-- controls -->
+    <a class="dl-float" href="download.html">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Download for Windows
+    </a>
+    <button type="button" class="hint" id="hint">
+      <span class="arrows">▼ ▼ ▼</span>
+      <span class="hint-text">SCROLL DOWN to modernize this page!!!</span>
+      <span class="arrows">▼ ▼ ▼</span>
+    </button>
   </div>
 </section>
 
@@ -180,96 +185,36 @@
 <main class="content">
 
   <section id="what" class="sec">
-    <div class="eyebrow">What Facade is</div>
-    <h2 class="h">DLSS for software.</h2>
-    <p class="lead">DLSS doesn't turn every game into the same game. It takes that game's art and renders it better. Facade does the same for software: same app, same identity, same data, rendered for this decade.</p>
-    <div class="grid three">
-      <div class="card"><h3>Too critical to replace</h3><p>Legacy systems run front desks, clinics, warehouses and government. Replacements take years and often fail.</p></div>
-      <div class="card"><h3>Too painful to use</h3><p>Cryptic errors, dense gray screens, and workflows that take a dozen clicks across five windows.</p></div>
-      <div class="card"><h3>No API, ever</h3><p>Most legacy software has no API. The screen is the only way in, so that's where Facade works.</p></div>
-    </div>
+    <div class="eyebrow">What Facade does</div>
+    <h2 class="h">Facade makes old software easy to use, without replacing it.</h2>
+    <p class="lead">Hospitals, offices and governments still run on desktop software from the '90s and 2000s. It's too important to replace and too painful to use. Facade sits on top of that software and gives it a clean, modern look, plus an AI assistant that does tasks for you in plain English.</p>
   </section>
 
   <section id="how" class="sec">
     <div class="eyebrow">How it works</div>
-    <h2 class="h">One pipeline. Any app. Nothing prebuilt.</h2>
-    <ol class="pipeline">
-      <li><b>Detect</b><span>Window opens or screen changes</span></li>
-      <li><b>Capture</b><span>Accessibility tree + screenshot</span></li>
-      <li><b>Fingerprint</b><span>Seen this screen before? Use the cache</span></li>
-      <li><b>Understand</b><span>Nemotron Nano Omni labels every control</span></li>
-      <li><b>Style</b><span>Palette, traits and density, once per app</span></li>
-      <li><b>Render</b><span>Overlay draws the modern UI in the app's style</span></li>
-      <li><b>Bind</b><span>Live values ↔ real controls, no AI in the loop</span></li>
-      <li><b>Act</b><span>Agent tasks run through the same controls</span></li>
+    <ol class="steps">
+      <li><b>Open your old app.</b><span>Facade reads the screen the same way a screen reader does. No code changes, no API needed.</span></li>
+      <li><b>It gets a modern look.</b><span>NVIDIA Nemotron understands each screen and redraws it in a modern version of the app's own style.</span></li>
+      <li><b>Ask it to do the work.</b><span>Type something like "text everyone with an appointment tomorrow" and Facade clicks through the app for you.</span></li>
     </ol>
-    <div class="grid two speeds">
-      <div class="card"><div class="tag">Slow path · seconds</div><h3>Once per new screen</h3><p>Nemotron labels the screen. The result is cached by fingerprint, so the second visit is instant.</p></div>
-      <div class="card"><div class="tag fast">Fast path · milliseconds</div><h3>Continuous</h3><p>Values stream from real controls and actions go back through accessibility patterns. No AI here, so it never invents data.</p></div>
-    </div>
-  </section>
-
-  <section id="modes" class="sec">
-    <div class="eyebrow">Capture &amp; quality modes</div>
-    <h2 class="h">Works on any app, at whatever fidelity you need.</h2>
-    <div class="grid three">
-      <div class="card"><div class="tag">Structure</div><h3>Good accessibility tree</h3><p>Exact controls, exact values, exact actions. Most Win32, WinForms, WPF and MFC business apps.</p></div>
-      <div class="card"><div class="tag">Vision</div><h3>Custom-drawn regions</h3><p>Grids, calendars and canvases are read and located from the screenshot by Nemotron Nano Omni.</p></div>
-      <div class="card"><div class="tag">Assist</div><h3>When unsure</h3><p>The original stays visible with a Facade side panel. A broken redesign is never shown.</p></div>
-    </div>
-    <div class="modes">
-      <div class="mode"><b>Faithful</b><span>Same positions, modern rendering. For veterans with muscle memory.</span></div>
-      <div class="mode on"><b>Enhanced <em>default</em></b><span>Grouped structure, clutter hidden, plain-English labels.</span></div>
-      <div class="mode"><b>Reimagined <em>stretch</em></b><span>Nemotron restructures the screen around tasks. For new hires.</span></div>
-    </div>
-  </section>
-
-  <section id="demo" class="sec">
-    <div class="eyebrow">The agent</div>
-    <h2 class="h">Describe the task. Facade does the clicking.</h2>
-    <div class="terminal">
-      <div class="t-bar"><i></i><i></i><i></i><span>facade · Open Dental</span></div>
-      <div class="t-body">
-        <p class="cmd">› Text everyone unconfirmed for tomorrow a reminder.</p>
-        <p class="step done">✓ Open appointment book for 11/08</p>
-        <p class="step done">✓ Read schedule (vision · custom-drawn grid)</p>
-        <p class="step done">✓ Found 4 unconfirmed appointments</p>
-        <p class="step wait">◆ Approval needed: send 4 SMS via Twilio</p>
-        <p class="step">○ Mark reminders sent in the real app</p>
-        <p class="log">nemotron-3-super · plan · 1,240 ms &nbsp;|&nbsp; nano-omni · read_screen · 2,140 ms</p>
-      </div>
-    </div>
   </section>
 
   <section id="safety" class="sec">
-    <div class="eyebrow">Safe by design</div>
-    <h2 class="h">The original is always one click away.</h2>
-    <div class="grid three">
-      <div class="card"><h3>Data never comes from the model</h3><p>Every value on screen is bound to a real control. AI only decides labels, layout and plans.</p></div>
-      <div class="card"><h3>Read-back verification</h3><p>Every write is read back. A mismatch stops the agent and reports it.</p></div>
-      <div class="card"><h3>Approvals + audit log</h3><p>Risky or destructive steps wait for a human. Everything is logged.</p></div>
-    </div>
-  </section>
-
-  <section id="stack" class="sec">
-    <div class="eyebrow">Built with</div>
-    <h2 class="h">The stack.</h2>
-    <div class="stack">
-      <div><b>Nemotron 3 Nano Omni</b><span>Screens, vision, style</span></div>
-      <div><b>Nemotron 3 Super</b><span>Planning + tool calling</span></div>
-      <div><b>NVIDIA NIM</b><span>Hosted now, on-prem later</span></div>
-      <div><b>Python core</b><span>uiautomation · mss · OpenCV</span></div>
-      <div><b>Electron + React</b><span>Overlay glued to the app</span></div>
-      <div><b>SpacetimeDB</b><span>Backend + Maincloud</span></div>
-      <div><b>Twilio</b><span>SMS tool</span></div>
-      <div><b>Smarty</b><span>Address validation</span></div>
-    </div>
+    <div class="eyebrow">Why it's safe</div>
+    <ul class="safe">
+      <li>The original app is never changed. Switch Facade off anytime.</li>
+      <li>Every value you see comes from the real app, not the AI.</li>
+      <li>Anything risky waits for your approval, and every action is logged.</li>
+    </ul>
   </section>
 
   <footer class="foot">
     <div class="wordmark sm">Facade<span>.</span></div>
-    <p>No rewrite, no vendor API, no risk. Toggle off and the original is untouched.</p>
-    <a class="m-btn ghost" href="#stage">↑ Back to 1998</a>
+    <p>Built with NVIDIA Nemotron at HackUTD 2026.</p>
+    <div class="foot-btns">
+      <a class="m-btn primary" href="download.html">Download for Windows</a>
+      <a class="m-btn ghost" href="#stage">↑ Back to 1998</a>
+    </div>
   </footer>
 </main>
 

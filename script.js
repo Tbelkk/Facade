@@ -4,9 +4,7 @@
   const stage = document.getElementById('stage');
   const oldLayer = document.getElementById('oldLayer');
   const newLayer = document.getElementById('newLayer');
-  const pct = document.getElementById('pct');
-  const btnOld = document.getElementById('btnOld');
-  const btnNew = document.getElementById('btnNew');
+  const hint = document.getElementById('hint');
 
   const W = 1100, H = 700;
   const START = 0.08, SPAN = 0.78; // hold the 1998 page briefly, finish before the stage ends
@@ -15,7 +13,7 @@
 
   function scale() {
     const vw = root.clientWidth, vh = window.innerHeight;
-    const s = Math.min((vw - 24) / W, (vh - 80) / H);
+    const s = Math.min((vw - 24) / W, (vh - 140) / H);
     root.style.setProperty('--s', Math.max(0.25, s).toFixed(4));
   }
 
@@ -30,22 +28,28 @@
     const raw = total > 0 ? clamp((window.scrollY - top) / total) : 0;
     const p = clamp((raw - START) / SPAN);
     root.style.setProperty('--p', p.toFixed(4));
-    pct.textContent = Math.round(p * 100) + '%';
+    hint.classList.toggle('gone', p > 0.05);
+    hint.tabIndex = p > 0.05 ? -1 : 0;
 
     const modern = p >= 0.5;
     newLayer.setAttribute('aria-hidden', String(!modern));
     oldLayer.setAttribute('aria-hidden', String(modern));
-    btnOld.setAttribute('aria-pressed', String(!modern));
-    btnNew.setAttribute('aria-pressed', String(modern));
   }
 
-  // ON/OFF toggle: jump to fully original or fully rerendered
+  // Jump to the fully modern version
   function goTo(p) {
     const { top, total } = scrollRange();
     window.scrollTo({ top: top + total * (p ? START + SPAN : 0), behavior: 'smooth' });
   }
-  btnOld.addEventListener('click', () => goTo(0));
-  btnNew.addEventListener('click', () => goTo(1));
+  hint.addEventListener('click', () => goTo(1));
+
+  // Any link on the 1998 page sends you to the modern version
+  oldLayer.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      e.preventDefault();
+      goTo(1);
+    }
+  });
 
   let ticking = false;
   window.addEventListener('scroll', () => {
