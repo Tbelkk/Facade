@@ -1,22 +1,21 @@
-// Facade desktop app: main process
-const { app, BrowserWindow, shell } = require('electron');
+// Facade desktop app: main process (front end only; the agents' back end is built separately).
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
-function createWindow() {
-  const isWin = process.platform === 'win32';
+let win = null;
 
-  const win = new BrowserWindow({
-    width: 1200,
-    height: 780,
-    minWidth: 960,
-    minHeight: 640,
+function createWindow() {
+  win = new BrowserWindow({
+    width: 1240,
+    height: 820,
+    minWidth: 980,
+    minHeight: 660,
     title: 'Facade',
-    backgroundColor: '#f5f8fe',
+    backgroundColor: '#000000',
     show: false,
-    // Custom title bar that matches the app; Windows keeps native min/max/close buttons.
     titleBarStyle: 'hidden',
-    titleBarOverlay: isWin ? { color: '#ffffff', symbolColor: '#0b1b3a', height: 44 } : false,
-    trafficLightPosition: { x: 16, y: 15 },
+    titleBarOverlay: process.platform === 'win32' ? { color: '#000000', symbolColor: '#ffffff', height: 48 } : false,
+    trafficLightPosition: { x: 18, y: 17 },
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -24,23 +23,16 @@ function createWindow() {
       sandbox: true,
     },
   });
-
   win.once('ready-to-show', () => win.show());
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
-
-  // Open external links in the user's browser, never inside the app.
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('https://')) shell.openExternal(url);
-    return { action: 'deny' };
-  });
+  win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   win.webContents.on('will-navigate', (e) => e.preventDefault());
+  win.on('closed', () => { win = null; });
 }
 
 app.whenReady().then(() => {
   createWindow();
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
+  app.on('activate', () => { if (!win) createWindow(); });
 });
 
 app.on('window-all-closed', () => {
