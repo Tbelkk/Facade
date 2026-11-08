@@ -4,28 +4,32 @@
 //   facadeSettings.get()          → current settings object (see DEFAULTS)
 //   facadeSettings.onChange(fn)   → fn(settings) whenever something changes
 export const facadeSettings = (function () {
-  const KEY = 'facade.settings.v1';
+  const KEY = 'facade.settings.v2';
+  // Each Explorer setting maps to a flag of `python -m facade.run` (see FLAGS in SettingsDrawer.jsx).
   const DEFAULTS = Object.freeze({
+    pauseSec: 1,             // --pause    seconds between page loads (speed limit for old servers)
+    maxPages: 200,           // --pages    stop after this many pages
+    maxRunMinutes: 30,       // --minutes  stop after this long
+    login: false,            // --login    log in by hand in the browser first
+    full: false,             // --full     page through every list to the end
+    headed: false,           // --headed   show the browser window
+    live: true,              // (--no-live when off) stream progress to SpacetimeDB
     readOnly: true,          // explore and copy data only; never submit forms
     askBeforeActing: 'always', // 'always' | 'destructive' | 'never'
-    pagesPerMinute: 20,      // speed limit for the Explorer
-    clickPauseSec: 1,        // pause between clicks on the old site
-    maxPages: 200,           // stop after this many pages
-    maxRunMinutes: 30,       // stop after this long
   });
   const LIMITS = {
-    pagesPerMinute: [1, 60, 1],
-    clickPauseSec: [0, 5, 0.5],
+    pauseSec: [0, 10, 0.5],
     maxPages: [10, 5000, 10],
     maxRunMinutes: [1, 240, 1],
   };
+  const FLAGS = ['login', 'full', 'headed', 'live', 'readOnly'];
 
   const listeners = new Set();
   let state = load();
 
   function clean(s) {
     const out = { ...DEFAULTS };
-    if (typeof s.readOnly === 'boolean') out.readOnly = s.readOnly;
+    for (const k of FLAGS) if (typeof s[k] === 'boolean') out[k] = s[k];
     if (['always', 'destructive', 'never'].includes(s.askBeforeActing)) out.askBeforeActing = s.askBeforeActing;
     for (const [k, [min, max, step]] of Object.entries(LIMITS)) {
       const n = Number(s[k]);

@@ -404,19 +404,27 @@ def same_site(url, host):
 # Safety ceilings only (protect against infinite sites); the agent normally stops on its own first.
 SAFETY_PAGES = int(os.getenv("AGENT_SAFETY_PAGES", "1000"))
 SAFETY_MINUTES = float(os.getenv("AGENT_SAFETY_MINUTES", "30"))
+# Speed limit: at least this many seconds between page loads, to go easy on fragile old servers.
+PAUSE_SECONDS = float(os.getenv("AGENT_PAUSE_SECONDS", "0"))
 
 
-def run(start_url, max_pages=None, vision=False, login=False, headed=False, budget=None, full=False, live=False):
+def run(start_url, max_pages=None, vision=False, login=False, headed=False, budget=None, full=False, live=False,
+        pause=None, minutes=None):
     """Explore + extract until there is nothing new left:
     - Nemotron's suggested links are followed until no unknown page types remain (it can also say done)
     - every list is paged until there is no next link, or a page adds no new records
     full=False (learn mode, the default): learn every page type and check paging works on each list
     (page 2), then stop. Fast enough for a live demo. The Operator does the full extraction from what
     was learned. full=True: also page through every list to the end (until the Operator exists).
-    max_pages is only for quick tests; the workflow calls run(url) with no limits."""
+    max_pages is only for quick tests; the workflow calls run(url) with no limits.
+    pause: seconds to wait between page loads (default AGENT_PAUSE_SECONDS, 0 = no wait).
+    minutes: stop after this long (default AGENT_SAFETY_MINUTES)."""
     from playwright.sync_api import sync_playwright
     limit = max_pages or SAFETY_PAGES
+    pause_s = PAUSE_SECONDS if pause is None else max(0.0, float(pause))
+    max_minutes = SAFETY_MINUTES if minutes is None else float(minutes)
     t_start = time.time()
+    last_load = None
     stop_reason = "nothing new left to explore"
 
     live_w = None
@@ -429,7 +437,8 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
     seen_urls, patterns, signatures = set(), {}, {}
     queued_detail, paged_lists = set(), {}   # detail page types already queued; pages followed per list
     print(f"Facade agent → {start_url}")
-    print(f"model={nemotron.MODEL_VISION if vision else nemotron.MODEL_AGENT}  page limit={limit if max_pages else 'auto'}  output={r.dir}\n")
+    print(f"model={nemotron.MODEL_VISION if vision else nemotron.MODEL_AGENT}  page limit={limit if max_pages else 'auto'}"
+          f"  pause={pause_s:g}s  time limit={max_minutes:g} min  output={r.dir}\n")
 
     with sync_playwright() as p:
         browser, ctx = open_browser(p, headed=headed or login)
@@ -445,8 +454,8 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
             if visited >= limit:
                 stop_reason = f"page limit ({limit})"
                 break
-            if (time.time() - t_start) / 60 > SAFETY_MINUTES:
-                stop_reason = f"safety time limit ({SAFETY_MINUTES:g} min)"
+            if (time.time() - t_start) / 60 > max_minutes:
+                stop_reason = f"time limit ({max_minutes:g} min)"
                 break
             url, why = queue.popleft()
             norm = url.split("#")[0]
@@ -454,6 +463,11 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
                     or (not why.startswith("start") and NO_DATA.search(norm)):
                 continue
             seen_urls.add(norm)
+            if pause_s and last_load is not None:   # speed limit between page loads
+                wait = pause_s - (time.time() - last_load)
+                if wait > 0:
+                    time.sleep(wait)
+            last_load = time.time()
             try:
                 page.goto(norm, wait_until="domcontentloaded", timeout=20000)
                 try:
@@ -610,8 +624,11 @@ def main(argv=None):
     ap.add_argument("--login", action="store_true", help="log in by hand first; the session is reused")
     ap.add_argument("--headed", action="store_true", help="show the browser")
     ap.add_argument("--budget", type=int, default=512, help="Nemotron reasoning budget per page (lower = faster)")
+    ap.add_argument("--pause", type=float, default=None, help="seconds between page loads, to go easy on old servers (default AGENT_PAUSE_SECONDS or 0)")
+    ap.add_argument("--minutes", type=float, default=None, help="stop after this many minutes (default AGENT_SAFETY_MINUTES or 30)")
     args = ap.parse_args(argv)
-    run(args.url, args.pages, args.vision, args.login, args.headed, args.budget, full=args.full, live=args.live)
+    run(args.url, args.pages, args.vision, args.login, args.headed, args.budget, full=args.full, live=args.live,
+        pause=args.pause, minutes=args.minutes)
 
 
 if __name__ == "__main__":
