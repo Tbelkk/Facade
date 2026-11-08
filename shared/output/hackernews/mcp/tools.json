@@ -1,0 +1,206 @@
+{
+  "site": "https://news.ycombinator.com",
+  "source": "files in shared/output/hackernews",
+  "tools": [
+    {
+      "name": "list_posts",
+      "description": "Returns a paginated list of posts with optional filters by title, author, points, comments, and time. Example: /posts?min_points=3&time=13+hours+ago&limit=3",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Text that title contains (case-insensitive)"
+          },
+          "author": {
+            "type": "string",
+            "description": "Text that author contains (case-insensitive)"
+          },
+          "min_points": {
+            "type": "integer",
+            "description": "Smallest points to include"
+          },
+          "max_points": {
+            "type": "integer",
+            "description": "Largest points to include"
+          },
+          "min_comments": {
+            "type": "integer",
+            "description": "Smallest comments to include"
+          },
+          "max_comments": {
+            "type": "integer",
+            "description": "Largest comments to include"
+          },
+          "time": {
+            "type": "string",
+            "description": "Exact time"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "How many results to return (default 50)"
+          },
+          "offset": {
+            "type": "integer",
+            "description": "How many results to skip, for paging"
+          },
+          "sort": {
+            "type": "string",
+            "description": "Field to sort by; put - in front for descending"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Post",
+        "kind": "list",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "title",
+            "field": "title",
+            "match": "contains"
+          },
+          {
+            "name": "author",
+            "field": "author",
+            "match": "contains"
+          },
+          {
+            "name": "min_points",
+            "field": "points",
+            "match": "gte"
+          },
+          {
+            "name": "max_points",
+            "field": "points",
+            "match": "lte"
+          },
+          {
+            "name": "min_comments",
+            "field": "comments",
+            "match": "gte"
+          },
+          {
+            "name": "max_comments",
+            "field": "comments",
+            "match": "lte"
+          },
+          {
+            "name": "time",
+            "field": "time",
+            "match": "eq"
+          },
+          {
+            "name": "limit",
+            "field": null,
+            "match": "limit"
+          },
+          {
+            "name": "offset",
+            "field": null,
+            "match": "offset"
+          },
+          {
+            "name": "sort",
+            "field": null,
+            "match": "sort"
+          }
+        ],
+        "legacy": null
+      }
+    },
+    {
+      "name": "get_post",
+      "description": "Returns a single post by its legacy ID. Example: /posts/50410107",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The record's id"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Post",
+        "kind": "get",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "id",
+            "field": "legacy_id",
+            "match": "id"
+          }
+        ],
+        "legacy": null
+      }
+    },
+    {
+      "name": "search_posts",
+      "description": "Searches posts by free-text query across title and author. Example: /posts/search?q=%28github.com%2Fcrmne%29&limit=3",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Words to look for in title, author"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "How many results to return (default 50)"
+          },
+          "offset": {
+            "type": "integer",
+            "description": "How many results to skip, for paging"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Post",
+        "kind": "search",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "q",
+            "fields": [
+              "title",
+              "author"
+            ],
+            "match": "search"
+          },
+          {
+            "name": "limit",
+            "field": null,
+            "match": "limit"
+          },
+          {
+            "name": "offset",
+            "field": null,
+            "match": "offset"
+          }
+        ],
+        "legacy": null
+      }
+    }
+  ]
+}
