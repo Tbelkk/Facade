@@ -276,6 +276,8 @@ def resolve_splits(tm, t, run, budget=None):
     tm["_split_samples"] = {t["headers"][i]: [v for v in col(i) if v][:10] for i in out}
     return out
 
+CREDENTIAL = re.compile(r"\b(pw|pwd|pass(word)?|passwd|acct|login|username|user_?name|otp|2fa|captcha|secret|token)\b", re.I)
+
 def structure_sig(snap):
     """Pages with the same data-table headers or the same detail labels are the same kind of page."""
     w = snap["web"]
@@ -293,7 +295,8 @@ def snake(s):
 
 
 class Run:
-    def __init__(self, start_url):
+    def __init__(self, start_url, live=None):
+        self.live = live       # store.live.Live or None: mirrors everything into SpacetimeDB as it happens
         self.dir = CACHE_DIR / "extract" / time.strftime("%Y%m%d-%H%M%S")
         (self.dir / "records").mkdir(parents=True, exist_ok=True)
         self.start = start_url
@@ -307,12 +310,22 @@ class Run:
         row = {"ts": time.time(), "kind": kind, **data}
         self.log_f.write(json.dumps(row, ensure_ascii=False) + "\n")
         self.log_f.flush()
+        if self.live:
+            if kind == "page":
+                how = "reused mapping" if data.get("reused_mapping") else f"Nemotron {data.get('nemotron_ms', 0) / 1000:.1f}s"
+                msg = f"{data.get('page_type') or '?'} {data.get('entity') or ''} +{data.get('records_new', 0)} ({how}) {data.get('url', '')}"
+            else:
+                msg = f"{kind}: {data.get('error') or data.get('reason') or data.get('url') or data.get('column') or ''}"
+            level = "error" if kind in ("error", "analyze_failed") else "warn" if kind == "mapping_problems" else "info"
+            self.live.event(kind, " ".join(msg.split()), data, level)
 
     def learn(self, entity, fields, rules):
         e = self.learned.setdefault(entity, {"fields": {}, "rules": set()})
         for f in fields or []:
             if not isinstance(f, dict) or not f.get("name"):
                 continue
+            if CREDENTIAL.search(f"{f.get('name')} {f.get('label', '')} {f.get('type', '')}"):
+                continue  # login fields are never data (and a password must never reach the API)
             name = snake(f["name"])
             spec = e["fields"].setdefault(name, {"label": f.get("label") or f["name"], "type": "string", "required": False})
             if f.get("type") and f["type"] != "string":
@@ -323,7 +336,9 @@ class Run:
             if f.get("values"):
                 spec["values"] = sorted(set(spec.get("values", [])) | set(map(str, f["values"])))
         for r in rules or []:
-            e["rules"].add(str(r)[:200])
+            r = str(r)[:200]
+            if not re.search(r"\bcol\d+\b", r, re.I):  # 'col5 is required' describes our columns, not the site
+                e["rules"].add(r)
 
     def add_record(self, entity, rec, key_hint):
         rec = {snake(k): v for k, v in rec.items() if v not in (None, "")}
@@ -334,6 +349,9 @@ class Run:
         merged = {**bucket.get(key, {}), **rec}   # detail pages enrich rows from list pages
         new = key not in bucket
         bucket[key] = merged
+        if self.live:
+            from operator_agent.inputs import legacy_id_of
+            self.live.record(entity, legacy_id_of({"_key": key}) or key, self.typed(entity, merged))
         e = self.learned.setdefault(entity, {"fields": {}, "rules": set()})
         for k in rec:
             e["fields"].setdefault(k, {"label": k, "type": "string", "required": False})
@@ -372,6 +390,10 @@ class Run:
         (self.dir / "data_model.json").write_text(json.dumps(model, indent=2, ensure_ascii=False), encoding="utf-8")
         (self.dir / "site_map.json").write_text(json.dumps({"site": self.start, "pages": self.pages}, indent=2,
                                                            ensure_ascii=False), encoding="utf-8")
+        if self.live:  # the Console draws the site map + data model from these as they grow
+            for e in model["entities"]:
+                self.live.schema(e["name"], e["fields"], e["rules"])
+            self.live.site_state({"site": self.start, "pages": self.pages}, model)
 
 
 def same_site(url, host):
@@ -384,7 +406,7 @@ SAFETY_PAGES = int(os.getenv("AGENT_SAFETY_PAGES", "1000"))
 SAFETY_MINUTES = float(os.getenv("AGENT_SAFETY_MINUTES", "30"))
 
 
-def run(start_url, max_pages=None, vision=False, login=False, headed=False, budget=None, full=False):
+def run(start_url, max_pages=None, vision=False, login=False, headed=False, budget=None, full=False, live=False):
     """Explore + extract until there is nothing new left:
     - Nemotron's suggested links are followed until no unknown page types remain (it can also say done)
     - every list is paged until there is no next link, or a page adds no new records
@@ -397,7 +419,12 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
     t_start = time.time()
     stop_reason = "nothing new left to explore"
 
-    r = Run(start_url)
+    live_w = None
+    if live:
+        from store.live import Live
+        live_w = Live(start_url, actor="explorer")
+        live_w.job_start("explore")
+    r = Run(start_url, live=live_w)
     queue = deque([(start_url, "start")])
     seen_urls, patterns, signatures = set(), {}, {}
     queued_detail, paged_lists = set(), {}   # detail page types already queued; pages followed per list
@@ -513,7 +540,9 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
             if entity and rec:
                 new_records += r.add_record(entity, rec, norm)
 
-            if entity:
+            has_password = any((x.get("type") or "").lower() == "password"
+                               for f in snap["web"]["forms"] for x in f["fields"])
+            if entity and not has_password:   # a login form tells us nothing about the data
                 r.learn(entity, a.get("fields"), a.get("rules"))
 
             # pagination: code follows it, the agent decided it's a list worth paging
@@ -527,8 +556,12 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
                 queue.appendleft((nxt["href"], "pagination"))
 
             # agent's choice of where to go next
+            real_links = {l["href"].split("#")[0] for l in snap["web"]["links"]}
             for n in (a.get("next") or [])[:5] if not known else []:
                 u = n.get("url") if isinstance(n, dict) else None
+                if u and u.split("#")[0] not in real_links:
+                    r.log("skipped_invented_link", url=u)  # only follow links that exist on the page
+                    continue
                 if u and same_site(u, r.host) and not UNSAFE.search(u) and not NO_DATA.search(u):
                     queue.append((u, (n.get("why") or "agent")[:80]))
 
@@ -543,12 +576,16 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
             print(f"  [{visited:>2}] {a.get('page_type', '?'):<6} {entity or '-':<14} +{new_records:<4} "
                   f"({tag}) {norm[:70]}")
             r.save()
+            if live_w:
+                live_w.job_update(visited)
             if a.get("done") and not queue:
                 stop_reason = "Nemotron: done"
                 break
         browser.close()
 
     r.save()
+    if live_w:
+        live_w.job_update(visited, visited, "done")
     r.log("done", pages=visited, reason=stop_reason, minutes=round((time.time() - t_start) / 60, 1))
     print(f"\nDone: {stop_reason}. {visited} pages in {(time.time() - t_start) / 60:.1f} min.")
     for e, bucket in r.records.items():
@@ -558,12 +595,15 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
         for rule in rules[:5]:
             print(f"     rule: {rule}")
     print(f"\nOutput: {r.dir}\n  records/*.csv  data_model.json  site_map.json  run_log.jsonl")
+    if live_w:
+        live_w.close()
     return r
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Facade extraction agent (read-only).")
     ap.add_argument("url")
+    ap.add_argument("--live", action="store_true", help="also write to SpacetimeDB as it runs (Console updates live)")
     ap.add_argument("--full", action="store_true", help="page through every list to the end (slow on big sites)")
     ap.add_argument("--pages", type=int, default=None, help="testing only: stop after N pages (default: run until done)")
     ap.add_argument("--vision", action="store_true", help="send screenshots too (uses MODEL_VISION)")
@@ -571,7 +611,7 @@ def main(argv=None):
     ap.add_argument("--headed", action="store_true", help="show the browser")
     ap.add_argument("--budget", type=int, default=512, help="Nemotron reasoning budget per page (lower = faster)")
     args = ap.parse_args(argv)
-    run(args.url, args.pages, args.vision, args.login, args.headed, args.budget, full=args.full)
+    run(args.url, args.pages, args.vision, args.login, args.headed, args.budget, full=args.full, live=args.live)
 
 
 if __name__ == "__main__":
