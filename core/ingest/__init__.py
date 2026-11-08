@@ -1,4 +1,4 @@
-"""Facade ingest: turn any app window into a labeled, styled screen model.
+"""RESTore ingest: turn any app window into a labeled, styled screen model.
 
 Modules
 -------

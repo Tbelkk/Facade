@@ -1,5 +1,5 @@
 /* =========================================================
-   FACADE — 1998 → 2026 scroll rerender
+   RESTORE — 1998 → 2026 scroll rerender
    ========================================================= */
 :root {
   --p: 0;                       /* rerender progress 0..1, set by script.js */

@@ -96,10 +96,18 @@ def self_test(app, state, report):
     return results
 
 
-def run(folder, port=8000, host="127.0.0.1", check_only=False, live=True, log=print):
-    folder = Path(folder)
+def run(folder=None, port=8000, host="127.0.0.1", check_only=False, live=True, log=print, site=None):
+    """Serve from an output folder (SpacetimeDB preferred, files as fallback), or, with site= and no folder,
+    straight from SpacetimeDB: a saved API comes back without its folder or a new run (see store.sites)."""
+    folder = Path(folder) if folder else None
     t0 = time.time()
-    state = load(folder)
+    if folder is not None:
+        state = load(folder)
+    else:
+        from .data import from_spacetime
+        state = from_spacetime(site) if site else None
+        if not state:
+            raise SystemExit(f"No saved API for {site} in SpacetimeDB. Run the full workflow for it first.")
     site = state["site"]
     lw = None
     if live:
@@ -140,14 +148,16 @@ def run(folder, port=8000, host="127.0.0.1", check_only=False, live=True, log=pr
     tested = sum(1 for r in results["routes"] if r["ok"] is not None) + len(results["tools"])
     summary = {"site": site, "api": base, "docs": base + "/docs", "mcp": base + "/mcp", "source": state["source"],
                "records": n_rec, "passed": passed, "tested": tested, "seconds": round(time.time() - t0, 1), **results}
-    (folder / "server.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
+    if folder is not None:
+        (folder / "server.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
     report("server_live" if not check_only else "server_checked",
            f"{'Live' if not check_only else 'Checked'}: API {base}  ·  docs {base}/docs  ·  MCP {base}/mcp  ·  self-test {passed}/{tested} passed",
            {k: summary[k] for k in ("api", "docs", "mcp", "passed", "tested")})
     if lw:
         lw.job_update(tested, tested, "done")
         lw.close()
-    log(f"\nClaude Desktop / Cursor (stdio):  python -m serve.mcp_stdio {folder}")
+    if folder is not None:
+        log(f"\nClaude Desktop / Cursor (stdio):  python -m serve.mcp_stdio {folder}")
     if check_only:
         return summary
     import uvicorn
@@ -157,15 +167,18 @@ def run(folder, port=8000, host="127.0.0.1", check_only=False, live=True, log=pr
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade Server: run the generated API + MCP server")
-    ap.add_argument("folder", help="shared/output/<site> (or a run folder with operations.json)")
+    ap = argparse.ArgumentParser(description="RESTore Server: run the generated API + MCP server")
+    ap.add_argument("folder", nargs="?", help="shared/output/<site> (or a run folder with operations.json)")
+    ap.add_argument("--site", help="serve a saved API straight from SpacetimeDB by its site URL (no folder needed)")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--check-only", action="store_true", help="self-test and exit without serving")
     ap.add_argument("--no-live", action="store_true", help="don't report events to SpacetimeDB")
     a = ap.parse_args(argv)
-    print(f"Facade Server → {a.folder}")
-    run(a.folder, port=a.port, host=a.host, check_only=a.check_only, live=not a.no_live)
+    if not a.folder and not a.site:
+        ap.error("give an output folder, or --site <url> to serve a saved API from SpacetimeDB")
+    print(f"RESTore Server → {a.folder or a.site}")
+    run(a.folder, port=a.port, host=a.host, check_only=a.check_only, live=not a.no_live, site=a.site)
 
 
 if __name__ == "__main__":

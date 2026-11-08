@@ -1,6 +1,6 @@
-// Facade dashboard controller: owns the six agent tiles and their canvas animation loop.
+// RESTore dashboard controller: owns the six agent tiles and their canvas animation loop.
 //
-// Same public API as app/renderer/dashboard.js, so the back end can drive it the same way:
+// Public API, so the back end can drive it:
 //   dashboard.set(agentId, { status, progress, stat })
 //      status   'idle' | 'working' | 'done' | 'live'
 //      progress 0..1   (how far along the agent is)

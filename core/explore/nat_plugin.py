@@ -1,4 +1,4 @@
-"""NVIDIA NeMo Agent Toolkit (NAT) plugin: the Facade Explorer as a NAT function.
+"""NVIDIA NeMo Agent Toolkit (NAT) plugin: the RESTore Explorer as a NAT function.
 
 Registered under the entry point group `nat.components` (see core/pyproject.toml), so after
 `uv pip install -e core` NAT discovers it automatically:
@@ -23,7 +23,7 @@ from nat.data_models.function import FunctionBaseConfig
 
 
 class FacadeExplorerConfig(FunctionBaseConfig, name="facade_explorer"):
-    """Map a legacy website (read-only) into a Facade site map."""
+    """Map a legacy website (read-only) into a RESTore site map."""
     page_budget: int = Field(default=25, description="Max page types to map.")
     reader: str = Field(default="nemotron", description="'nemotron' (Nano Omni) or 'heuristic'.")
     planner: str = Field(default="nemotron", description="'nemotron' (Super) or 'heuristic'.")

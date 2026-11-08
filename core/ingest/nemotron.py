@@ -1,4 +1,4 @@
-"""Shared Nemotron client for Facade (NVIDIA NIM, OpenAI-compatible API).
+"""Shared Nemotron client for RESTore (NVIDIA NIM, OpenAI-compatible API).
 
 Settings come from core/.env:
     NVIDIA_API_KEY      your key from build.nvidia.com (never commit it)

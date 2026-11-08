@@ -1,6 +1,6 @@
-"""Facade API.
+"""RESTore API.
 
-Run from the repo root (the Facade folder):
+Run from the repo root (the RESTore folder):
     uvicorn api.main:app --reload --port 8000
 
 Then open http://localhost:8000/docs to try the endpoints.
@@ -9,6 +9,8 @@ Endpoints so far:
     GET  /health   -> {"ok": true}           (is the API up?)
     POST /check    -> URL fit check           (used by the Console's start panel)
     POST /runs     -> start the agents on a URL; GET /runs/{id}/events follows them live
+                      (a site that's already saved is served from SpacetimeDB instead; {"reuse": false} re-runs it)
+    GET  /sites    -> every site with a saved API;  GET /sites/lookup?url=... -> is this site saved?
 
 Settings (environment variables):
     CONSOLE_ORIGINS  extra comma-separated web addresses allowed to call this API from a browser
@@ -25,10 +27,11 @@ from pydantic import BaseModel
 
 from api.fitcheck import check_url
 from api.runs import router as runs_router
+from api.sites import router as sites_router
 
 log = logging.getLogger("facade.api")
 
-app = FastAPI(title="Facade API", version="0.1.0",
+app = FastAPI(title="RESTore API", version="0.1.0",
               description="Legacy website -> database + API + MCP, built by Nemotron agents.")
 
 # Who may call this API from a browser:
@@ -47,6 +50,7 @@ app.add_middleware(
 
 
 app.include_router(runs_router)   # POST /runs, GET /runs/{id}/events: start the agents and follow them live
+app.include_router(sites_router)  # GET /sites, GET /sites/lookup: saved APIs, so a site isn't explored twice
 
 
 class CheckRequest(BaseModel):
@@ -69,7 +73,7 @@ def health() -> Dict[str, bool]:
 # and the server stays responsive while a slow site is being checked.
 @app.post("/check", response_model=CheckResponse)
 def check(body: CheckRequest) -> Dict[str, Any]:
-    """Is this URL a good fit for Facade? Opens the first page only, never logs in, never submits forms."""
+    """Is this URL a good fit for RESTore? Opens the first page only, never logs in, never submits forms."""
     try:
         return check_url(body.url)
     except Exception as exc:  # never hand the Console a 500: always a verdict it can show

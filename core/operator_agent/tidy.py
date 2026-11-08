@@ -18,7 +18,7 @@ PROTECTED = {"Document"}   # the Parser agent's output: its own /documents endpo
 ENTITY_RE = re.compile(r"^[A-Z][A-Za-z0-9]{1,40}$")
 FIELD_RE = re.compile(r"^[a-z][a-z0-9_]{0,40}$")
 
-SYSTEM = """You are the Operator agent of Facade, cleaning up data that another agent extracted from a legacy
+SYSTEM = """You are the Operator agent of RESTore, cleaning up data that another agent extracted from a legacy
 website, BEFORE it becomes a public REST API. Developers will only see entity names (they become endpoints like
 /announcements) and field names (JSON keys). They must understand every one without opening the old site.
 

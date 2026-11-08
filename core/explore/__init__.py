@@ -1,4 +1,4 @@
-"""Facade explore: two explorer agents share this package (run everything from core/).
+"""RESTore explore: two explorer agents share this package (run everything from core/).
 
 Daniel's extraction agent (one pass: explore + extract with Nemotron reading each page)
     agent         python -m explore.agent <url>          records + data model + site map (cache/extract/<run>/)

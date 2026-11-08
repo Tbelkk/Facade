@@ -1,18 +1,18 @@
-import { forwardRef, useEffect, useRef, useState } from 'react';
-import { GearIcon, GlobeIcon } from './Icons.jsx';
+import { useEffect, useRef, useState } from 'react';
+import { GlobeIcon } from './Icons.jsx';
 import { checkUrl, validateUrl } from '../lib/checkUrl.js';
 import './intake.css';
 
 const VERDICT = {
-  good_fit: { title: 'Good fit · can proceed', line: 'This looks like an older system Facade can modernize. Starting…' },
-  probably_not: { title: 'This may not need modernizing', line: 'Facade is built for older systems with no API. You can still explore it.' },
-  blocked: { title: 'Facade can’t explore this site', line: 'It isn’t a system Facade is allowed to access.' },
+  good_fit: { title: 'Good fit · can proceed', line: 'This looks like an older system RESTore can modernize. Starting…' },
+  probably_not: { title: 'This may not need modernizing', line: 'RESTore is built for older systems with no API. You can still explore it.' },
+  blocked: { title: 'RESTore can’t explore this site', line: 'It isn’t a system RESTore is allowed to access.' },
 };
 
 // Start panel: link box + Start exploring. Pressing Start first checks the site (is it an older system worth
-// modernizing, and is Facade allowed to access it?). A good fit starts right away; "probably not" asks first;
+// modernizing, and is RESTore allowed to access it?). A good fit starts right away; "probably not" asks first;
 // blocked is refused.
-const Intake = forwardRef(function Intake({ phase, running, url, setUrl, onStart, onStop, safety, onOpenSettings }, settingsBtnRef) {
+export default function Intake({ phase, running, url, setUrl, onStart, onStop }) {
   const urlRef = useRef(null);
   const [check, setCheck] = useState({ status: 'idle' });   // idle | invalid | loading | done | error
   const reqRef = useRef(null);
@@ -56,16 +56,6 @@ const Intake = forwardRef(function Intake({ phase, running, url, setUrl, onStart
     <section className="intake">
       <div className="intake-top">
         <div className="eyebrow"><span className="live-dot"></span><span id="phase">{phase}</span></div>
-        <div className="top-right">
-          <span className={'safety-chip' + (safety.acting ? ' acting' : '')} id="safetyChip" title="Current safety mode (change in Settings)">
-            {safety.label}
-          </span>
-          <button type="button" className="settings-btn gb" id="settingsBtn" aria-haspopup="dialog" aria-controls="settings"
-            ref={settingsBtnRef} onClick={onOpenSettings}>
-            <GearIcon />
-            Settings
-          </button>
-        </div>
       </div>
 
       <h1>Give it a link. <span>Watch the agents work.</span></h1>
@@ -87,10 +77,10 @@ const Intake = forwardRef(function Intake({ phase, running, url, setUrl, onStart
         )}
       </form>
 
-      {loading && <p className="check-note">Checking {check.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}: is it an older system worth modernizing, and is Facade allowed to access it?</p>}
+      {loading && <p className="check-note">Checking {check.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}: is it an older system worth modernizing, and is RESTore allowed to access it?</p>}
       {!running && !loading && check.status === 'idle' && (
         <p className="check-note" id="checkNote">
-          Before exploring, Facade checks that the site is an older system worth modernizing, and refuses sites it isn’t allowed to access.
+          Before exploring, RESTore checks that the site is an older system worth modernizing, and refuses sites it isn’t allowed to access.
         </p>
       )}
 
@@ -117,6 +107,4 @@ const Intake = forwardRef(function Intake({ phase, running, url, setUrl, onStart
       </div>
     </section>
   );
-});
-
-export default Intake;
+}

@@ -12,7 +12,7 @@ venv/
 # runtime output (screenshots, labels, styles)
 core/cache/
 
-# node / electron
+# node
 node_modules/
 dist/
 out/

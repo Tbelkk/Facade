@@ -1,23 +1,19 @@
-// Facade app: Dashboard and API pages plus the Settings drawer.
-// Same behavior as app/renderer/app.js.
+// RESTore app: Dashboard and API pages.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Titlebar from './components/Titlebar.jsx';
 import Intake from './components/Intake.jsx';
 import Board from './components/Board.jsx';
 import ApiView from './components/ApiView.jsx';
-import SettingsDrawer from './components/SettingsDrawer.jsx';
 import { createDashboard } from './lib/dashboard.js';
 import { createRunDriver, loadRecordedRun, replayRun } from './lib/runDriver.js';
 import DevPanel from './components/DevPanel.jsx';
-import { facadeSettings } from './lib/settings.js';
+import Assistant from './components/Assistant.jsx';
 import { API_BASE } from './lib/checkUrl.js';
-import { useSettings } from './lib/hooks.js';
 
-// The Settings drawer values, sent with POST /runs (same meaning as the python -m facade.run flags).
+// POST /runs body. The run uses the back end's defaults (the Settings drawer was removed).
 function runBody(url) {
-  const s = facadeSettings.get();
-  return { url, pause: s.pauseSec, pages: s.maxPages, minutes: s.maxRunMinutes, full: s.full, headed: s.headed, live: s.live };
+  return { url };
 }
 
 export default function App() {
@@ -31,9 +27,9 @@ export default function App() {
   // which NVIDIA model runs each agent (from core/.env), shown next to the agent's name
   useEffect(() => { fetch(`${API_BASE}/models`).then((r) => r.json()).then((m) => driver.store.set({ models: m })).catch(() => {}); }, [driver]);
   useEffect(() => () => { replay.current && replay.current.stop(); driver.stop(); }, [driver]);
-  // Globals: the HTML app's dashboard API, plus facadeEvent(evt) so a live back end can push real events.
+  // Globals: window.dashboard, plus facadeEvent(evt) so a live back end can push real events.
   useEffect(() => {
-    window.dashboard = dashboard; window.facadeSettings = facadeSettings;
+    window.dashboard = dashboard;
     window.facadeEvent = (evt) => driver.handle(evt);
   }, [dashboard, driver]);
 
@@ -44,13 +40,9 @@ export default function App() {
   const [phase, setPhase] = useState('Ready');
   const [clock, setClock] = useState('00:00');
   const [summary, setSummary] = useState(() => dashboard.summary());
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const settingsBtnRef = useRef(null);
-  const settings = useSettings();
 
   // body classes the stylesheet uses
   useEffect(() => { document.body.classList.toggle('running', running); }, [running]);
-  useEffect(() => { if (window.facade && window.facade.platform === 'darwin') document.body.classList.add('mac'); }, []);
 
   const liveRun = useRef(null);   // { stop } while following a real run from the API
 
@@ -77,7 +69,7 @@ export default function App() {
     setRunning(true);
   };
 
-  // Start exploring (the URL already passed the site check, see Intake.jsx): ask the Facade API to run the
+  // Start exploring (the URL already passed the site check, see Intake.jsx): ask the RESTore API to run the
   // real agents on it (POST /runs), then follow their events live (GET /runs/{id}/events) into the tiles.
   const startExploring = async (checkedUrl) => {
     const u = new URL(checkedUrl);
@@ -91,7 +83,7 @@ export default function App() {
       if (!res.ok) { setPhase(body.detail || `Couldn’t start the agents (${res.status})`); return; }
       id = body.id;
     } catch {
-      setPhase(`Couldn’t reach the Facade API at ${API_BASE}. Start it from the Facade folder: uvicorn api.main:app --port 8000`);
+      setPhase(`Couldn’t reach the RESTore API at ${API_BASE}. Start it from the RESTore folder: uvicorn api.main:app --port 8000`);
       return;
     }
     driver.begin({ site: u.href });
@@ -128,19 +120,6 @@ export default function App() {
     return () => clearInterval(id);
   }, [dashboard, driver, running, replaying, host]);
 
-  const openSettings = () => setSettingsOpen(true);
-  const closeSettings = useCallback(() => {
-    setSettingsOpen((wasOpen) => {
-      if (wasOpen) setTimeout(() => settingsBtnRef.current && settingsBtnRef.current.focus(), 0);
-      return false;
-    });
-  }, []);
-
-  const safety = {
-    label: settings.readOnly ? 'Read-only' : settings.askBeforeActing === 'never' ? 'Can act' : 'Can act · asks first',
-    acting: !settings.readOnly,
-  };
-
   return (
     <>
       <div className="dither" aria-hidden="true"></div>
@@ -148,14 +127,13 @@ export default function App() {
       <Titlebar view={view} onView={setView} />
 
       <main className={'app view' + (view === 'dashboard' ? ' on' : '')} id="view-dashboard">
-        <Intake ref={settingsBtnRef} phase={phase} running={running} url={url} setUrl={setUrl}
-          onStart={startExploring} onStop={stopRun} safety={safety} onOpenSettings={openSettings} />
+        <Intake phase={phase} running={running} url={url} setUrl={setUrl}
+          onStart={startExploring} onStop={stopRun} />
         <Board dashboard={dashboard} store={driver.store} working={summary.working} total={summary.total} clock={clock} />
+        <Assistant store={driver.store} />
       </main>
 
       <ApiView store={driver.store} host={host} on={view === 'api'} />
-
-      <SettingsDrawer open={settingsOpen} onClose={closeSettings} url={url} />
 
       <DevPanel recorded={recorded} running={running} replaying={replaying} onRun={startReplay} onStop={stopRun} />
     </>

@@ -18,7 +18,7 @@ REDUCERS = {"record": "upsert_record", "entity_schema": "upsert_schema", "site":
 
 PAGE = r"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Facade Extract Output</title>
+<title>RESTore Extract Output</title>
 <style>
 :root{--bg:#f6f7f9;--panel:#fff;--text:#16181d;--muted:#5d6472;--line:#dfe2e8;--accent:#3b5bdb;--accent-soft:#e7ecff;
 --code:#f1f3f6;--ok:#2b8a3e;--warn:#b35c00;--key:#1c5d99;--str:#2b7a3d;--num:#a8460c;--null:#8a8f99}

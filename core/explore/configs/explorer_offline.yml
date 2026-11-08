@@ -1,4 +1,4 @@
-# Facade Explorer as a NeMo Agent Toolkit workflow, NO Nemotron (works without an API key).
+# RESTore Explorer as a NeMo Agent Toolkit workflow, NO Nemotron (works without an API key).
 #   nat run --config_file explore/configs/explorer_offline.yml --input "http://localhost:5005"
 workflow:
   _type: facade_explorer

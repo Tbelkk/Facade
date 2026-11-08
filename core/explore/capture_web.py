@@ -410,7 +410,7 @@ def summarize(s):
 def main(argv=None):
     from playwright.sync_api import sync_playwright
 
-    ap = argparse.ArgumentParser(description="Capture a web page into a Facade page model (read-only).")
+    ap = argparse.ArgumentParser(description="Capture a web page into a RESTore page model (read-only).")
     ap.add_argument("url")
     ap.add_argument("--headed", action="store_true", help="show the browser window")
     ap.add_argument("--login", action="store_true",

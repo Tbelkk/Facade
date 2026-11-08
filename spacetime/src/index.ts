@@ -1,4 +1,4 @@
-// Facade backend: SpacetimeDB module.
+// RESTore backend: SpacetimeDB module.
 //
 // This module knows NOTHING about any specific website. It stores whatever the
 // Nemotron agents (Explorer + Operator) discover, keyed by `site` (the URL that

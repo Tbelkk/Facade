@@ -9,7 +9,7 @@
 ## Contents
 1. [The pitch in one breath](#1-the-pitch-in-one-breath)
 2. [The problem](#2-the-problem)
-3. [What Facade is (and honestly is not)](#3-what-facade-is-and-honestly-is-not)
+3. [What RESTore is (and honestly is not)](#3-what-facade-is-and-honestly-is-not)
 4. [Walkthrough: a mock example](#4-walkthrough-a-mock-example)
 5. [How it meets each track](#5-how-it-meets-each-track)
 6. [Architecture](#6-architecture)
@@ -26,7 +26,7 @@
 
 ## 1. The pitch in one breath
 
-> **Facade does the first and hardest part of leaving legacy software, automatically. Point it at an old web system and Nemotron agents explore it, work out what data and rules it holds, move that data into a modern database you own, and keep the old and new systems in sync while you switch over. It also gives the old system an API and MCP it never had.**
+> **RESTore does the first and hardest part of leaving legacy software, automatically. Point it at an old web system and Nemotron agents explore it, work out what data and rules it holds, move that data into a modern database you own, and keep the old and new systems in sync while you switch over. It also gives the old system an API and MCP it never had.**
 
 It doesn't clone the old website. It takes the **contents and structure** out of the old system and puts them into a modern one.
 
@@ -43,7 +43,7 @@ It doesn't clone the old website. It takes the **contents and structure** out of
 
 ---
 
-## 3. What Facade is (and honestly is not)
+## 3. What RESTore is (and honestly is not)
 
 ### What it does
 1. **Explore:** an agent clicks through the old system like a new employee and maps every page, form, table and link.
@@ -54,7 +54,7 @@ It doesn't clone the old website. It takes the **contents and structure** out of
 6. **Document:** site map, data dictionary and rules, which serve as the spec for the eventual full replacement.
 
 ### What it honestly does NOT do
-- It **cannot see hidden server logic** (billing formulas, nightly jobs, integrations, permissions). Facade maps what's visible and flags what it can't see.
+- It **cannot see hidden server logic** (billing formulas, nightly jobs, integrations, permissions). RESTore maps what's visible and flags what it can't see.
 - The modern app is a **working starting point plus a safety net**, not a guaranteed full replacement.
 - Use only on systems you own or are authorized to automate. No CAPTCHA bypassing. Credentials are entered by the user.
 
@@ -68,7 +68,7 @@ Being upfront about this builds trust with judges, especially 8090.
 
 | Step | What happens |
 |---|---|
-| **Start** | Office manager opens the Facade Console, pastes the ClinicPro URL, logs in herself |
+| **Start** | Office manager opens the RESTore Console, pastes the ClinicPro URL, logs in herself |
 | **1. Explore (~2 min)** | Agent: home menu → Patients (search + table, 25/page, "Next") → a patient detail → Edit form (looks, never saves) → Schedule (day calendar) → appointment detail. The site map grows live in the Console |
 | **2. Understand (~1 min)** | `Patient {name* text, dob date MM/DD/YYYY, phone, insurance_id}`, `Appointment {date, time, provider ∈ {Dr. Lee, Dr. Patel, Hyg. Kim}, patient → Patient, status ∈ {Scheduled, Confirmed, No-show}}`. Rules: "Name required", "Delete asks for confirmation", "No Sunday appointments" |
 | **3. Build** | SpacetimeDB schema, modern app (patient list, patient page, calendar), API docs page. Empty so far |
@@ -81,7 +81,7 @@ Being upfront about this builds trust with judges, especially 8090.
 ## 5. How it meets each track
 
 ### NVIDIA: "Use Nemotron Beyond a Chatbot"
-| Requirement | How Facade meets it |
+| Requirement | How RESTore meets it |
 |---|---|
 | **Beyond a chatbot** | Input is a URL, not a conversation. Agents explore, build, migrate and sync on their own; sync runs continuously with no prompts |
 | **Multi-step workflows** | Exploring an unknown site (plan → navigate → interpret → decide next); migrating thousands of records (paging, detail pages, recovery); write-through (navigate → fill → submit → verify → report) |
@@ -316,7 +316,7 @@ Stretch: point the explorer at a real open-source app (e.g., OpenEMR in Docker) 
 ## 10. Repo, setup, environment
 
 ```
-Facade/
+RESTore/
 ├── FACADE-PLAN-v3.md
 ├── core/
 │   ├── .env.example / .env (git-ignored)
@@ -390,7 +390,7 @@ python -m ingest.selftest                     # still passes
 | 1:25–2:00 | **Migrate:** progress bar; the modern app fills live; a session timeout is recovered; duplicates flagged |
 | 2:00–2:35 | **Sync:** edit a patient's phone in the modern app → on the screen next to it, **ClinicPro updates itself** → ✓ verified. Book a Sunday → "Old system rule: no Sunday appointments" |
 | 2:35–2:50 | **API/MCP:** the docs page; one call returns real migrated data |
-| 2:50–3:00 | **Close:** "Facade turns years of migration groundwork into minutes: map it, move it, keep it in sync, and switch over safely. Built on Nemotron agents, self-hostable as NIM." |
+| 2:50–3:00 | **Close:** "RESTore turns years of migration groundwork into minutes: map it, move it, keep it in sync, and switch over safely. Built on Nemotron agents, self-hostable as NIM." |
 
 ---
 
@@ -398,7 +398,7 @@ python -m ingest.selftest                     # still passes
 
 | Question | Answer |
 |---|---|
-| "How is this different from Skyvern / Integuru / browser agents?" | Those help you **use** a legacy system (automate tasks, build integrations). Facade gets you **off** it: whole-system discovery, a data model and rules, data migration into a database you own, and side-by-side sync for a safe switch |
+| "How is this different from Skyvern / Integuru / browser agents?" | Those help you **use** a legacy system (automate tasks, build integrations). RESTore gets you **off** it: whole-system discovery, a data model and rules, data migration into a database you own, and side-by-side sync for a safe switch |
 | "Doesn't it miss hidden business logic?" | Yes, and it says so. It maps what's visible, lists what isn't, and keeps the old system as the source of truth during the switch, so its rules still apply (e.g. the Sunday rejection) |
 | "Is it fast enough for real data?" | Nemotron learns each page type once; extraction then runs as fast browser code, with Nemotron only for surprises |
 | "Is this legal?" | For systems you own or are authorized to automate (your own data). No CAPTCHA bypassing; credentials entered by the user |

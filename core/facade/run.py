@@ -1,4 +1,4 @@
-"""The whole Facade workflow from one URL. This is what the Console's Start button calls.
+"""The whole RESTore workflow from one URL. This is what the Console's Start button calls.
 
     python -m facade.run https://news.ycombinator.com
     python -m facade.run http://localhost:5005 --login        # a person logs in once in the browser
@@ -62,7 +62,7 @@ def run(url, login=False, headed=False, offline_design=False, full=False, live=T
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade: website -> database + API design, in one go")
+    ap = argparse.ArgumentParser(description="RESTore: website -> database + API design, in one go")
     ap.add_argument("url")
     ap.add_argument("--login", action="store_true", help="log in by hand first (the session is reused)")
     ap.add_argument("--headed", action="store_true", help="show the browser")

@@ -1,8 +1,8 @@
-"""Start the Facade back end with one line, from the Facade folder (venv active):
+"""Start the RESTore back end with one line, from the RESTore folder (venv active):
 
     python -m api
 
-Runs the Facade API on http://localhost:8000 (site check + starts the agents for the dashboard), and a
+Runs the RESTore API on http://localhost:8000 (site check + starts the agents for the dashboard), and a
 practice legacy site on http://127.0.0.1:5061/products to test against. Ctrl+C stops both.
 """
 import os
@@ -22,5 +22,5 @@ if os.getenv("FACADE_PRACTICE_SITE", "1") != "0":
     except OSError:
         print("Practice legacy site: port 5061 is busy, skipped")
 
-print("Facade API: http://localhost:8000  (docs: /docs)  ·  now run `npm run dev` in web/ for the dashboard")
+print("RESTore API: http://localhost:8000  (docs: /docs)  ·  now run `npm run dev` in web/ for the dashboard")
 uvicorn.run("api.main:app", host="127.0.0.1", port=int(os.getenv("FACADE_API_PORT", "8000")), log_level="warning")

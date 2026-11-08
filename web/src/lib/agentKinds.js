@@ -1,4 +1,4 @@
-// Agent tiles: one per real stage of the Facade pipeline. Every word drawn here comes from the run itself
+// Agent tiles: one per real stage of the RESTore pipeline. Every word drawn here comes from the run itself
 // (page paths, Nemotron's summaries, extracted rows, endpoint paths, checker messages, database counts).
 //   dashboard.feed(agentId, payload)              real content for that tile
 //   dashboard.set(agentId, { status, progress, stat })

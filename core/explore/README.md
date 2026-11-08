@@ -1,4 +1,4 @@
-# Facade Explorer
+# RESTore Explorer
 
 Point it at a website. It maps every page type on its own, **read-only**, and writes a
 site map (plan format 7.2) plus one page model per page type for the Understand step.
