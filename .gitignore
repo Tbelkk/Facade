@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+.venv/
+__pycache__/
+
+# build output
+dist/
+target/
+
+# secrets and local state (per plan)
+.env
+core/cache/
+_to_delete/
