@@ -1,0 +1,10 @@
+# Facade Explorer as a NeMo Agent Toolkit workflow, with Nemotron:
+#   Nemotron 3 Nano Omni reads each page, Nemotron 3 Super plans every step.
+#   nat run --config_file explore/configs/explorer.yml --input "http://localhost:5005"
+workflow:
+  _type: facade_explorer
+  reader: nemotron
+  planner: nemotron
+  page_budget: 25
+  login: none
+  sink: json         # 'spacetime' also streams events + the site map to SpacetimeDB

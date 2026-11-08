@@ -1,0 +1,22 @@
+# A Nemotron ReAct agent (NeMo Agent Toolkit) that uses the Facade Explorer as a tool.
+#   nat run --config_file explore/configs/agent.yml --input "Map the clinic system at http://localhost:5005 and tell me which entities it holds"
+#   nat serve --config_file explore/configs/agent.yml      # same thing as a REST endpoint
+llms:
+  nemotron_super:
+    _type: nim
+    model_name: nvidia/nemotron-3-super-120b-a12b
+    temperature: 0.2
+    max_tokens: 4096
+
+functions:
+  explore_site:
+    _type: facade_explorer
+    reader: nemotron
+    planner: nemotron
+    page_budget: 25
+
+workflow:
+  _type: react_agent
+  tool_names: [explore_site]
+  llm_name: nemotron_super
+  verbose: true
