@@ -69,7 +69,22 @@ dashboard.set('explorer', { status: 'working', progress: 0.4, stat: 'Pages mappe
 
 Replace `mock.start(...)` in `App.jsx` with the real run.
 
-## Electron
+## Opening it from the home page
 
-`npm run build` writes `dist/` with relative paths. To load it in the desktop app later,
-point `app/main.js` at `web/dist/index.html`.
+The home page (`index.html` in the repo root) has an **Open dashboard** button that links to `dashboard/`.
+Build the dashboard into that folder:
+
+```bash
+cd web
+npm run build      # writes ../dashboard
+```
+
+Then serve the repo root and open the home page:
+
+```bash
+cd ..
+python3 -m http.server 8000   # http://localhost:8000/
+```
+
+Rebuild after changing anything in `web/`. Commit `dashboard/` too if the site is hosted as static files
+(for example GitHub Pages). The Explorer tab's run comes from `public/run/`, which is copied into the build.

@@ -14,12 +14,6 @@ import DevPanel from './components/DevPanel.jsx';
 import { facadeSettings } from './lib/settings.js';
 import { useSettings } from './lib/hooks.js';
 
-function normalize(input) {
-  let s = input.trim();
-  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) s = 'https://' + s;
-  try { const u = new URL(s); return /^https?:$/.test(u.protocol) ? u : null; } catch { return null; }
-}
-
 export default function App() {
   // One dashboard + run driver for the app's lifetime. The driver turns real agent events into tile states.
   const dashboard = useMemo(() => createDashboard(), []);
@@ -50,13 +44,13 @@ export default function App() {
   useEffect(() => { document.body.classList.toggle('running', running); }, [running]);
   useEffect(() => { if (window.facade && window.facade.platform === 'darwin') document.body.classList.add('mac'); }, []);
 
-  // Returns true when the link is bad, so the form can refocus the input.
   const stopRun = () => {
     replay.current && replay.current.stop();
     replay.current = null;
     driver.stop();
     setRunning(false);
     setReplaying(false);
+    setPhase('Stopped');
   };
 
   // Plays the recorded run through the same driver a live run will use.
@@ -71,22 +65,19 @@ export default function App() {
     setRunning(true);
   };
 
-  const onSubmit = () => {
-    if (running) { stopRun(); setPhase('Stopped'); return false; }
-    const u = normalize(url);
-    if (!u) { setPhase('That doesn’t look like a website link'); return true; }
-    setUrl(u.href);
+  // Start exploring: the URL has already passed the fit-check and the authorization box (see Intake.jsx).
+  // A connected back end starts a real run and pushes events through window.facadeEvent;
+  // until then the recorded run plays so the dashboard still shows the real flow.
+  const startExploring = (checkedUrl) => {
+    const u = new URL(checkedUrl);
     setHost(u.host);
-    // A connected back end starts a real run and pushes events through window.facadeEvent.
     if (window.facade && typeof window.facade.runAgents === 'function') {
       driver.begin({ site: u.href });
       window.facade.runAgents(u.href);
       setRunning(true);
-      return false;
+      return;
     }
-    // No back end yet: show the recorded run so the dashboard still demonstrates the real flow.
     startReplay(1);
-    return false;
   };
 
   // status line + clock
@@ -126,7 +117,7 @@ export default function App() {
 
       <main className={'app view' + (view === 'dashboard' ? ' on' : '')} id="view-dashboard">
         <Intake ref={settingsBtnRef} phase={phase} running={running} url={url} setUrl={setUrl}
-          onSubmit={onSubmit} safety={safety} onOpenSettings={openSettings} />
+          onStart={startExploring} onStop={stopRun} safety={safety} onOpenSettings={openSettings} />
         <Board dashboard={dashboard} store={driver.store} working={summary.working} total={summary.total} clock={clock} />
       </main>
 
