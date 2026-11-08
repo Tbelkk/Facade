@@ -1,0 +1,26 @@
+[
+  {
+    "job_key": "mock-hr-explore",
+    "kind": "explore",
+    "entity": "",
+    "status": "done",
+    "done": 11,
+    "total": 11
+  },
+  {
+    "job_key": "mock-hr-extract-employee",
+    "kind": "extract",
+    "entity": "Employee",
+    "status": "done",
+    "done": 36,
+    "total": 36
+  },
+  {
+    "job_key": "mock-hr-extract-timeoff",
+    "kind": "extract",
+    "entity": "TimeOffRequest",
+    "status": "running",
+    "done": 9,
+    "total": 25
+  }
+]

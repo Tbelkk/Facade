@@ -1,0 +1,147 @@
+[
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Opened start page",
+    "data": {
+      "page": "home",
+      "nemotron_ms": 1840
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Found menu: Inventory, Suppliers, Orders, Sales Reports",
+    "data": {
+      "links": 4
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Inventory looks like a searchable list of books (20 per page)",
+    "data": {
+      "page": "book_list",
+      "action": "navigate",
+      "nemotron_ms": 2310
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Opened a book's detail page",
+    "data": {
+      "page": "book_detail",
+      "action": "open row",
+      "nemotron_ms": 1975
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Read the Adjust Stock form (did not submit)",
+    "data": {
+      "page": "stock_adjust",
+      "action": "open form",
+      "nemotron_ms": 2120
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Opened Suppliers list and one supplier",
+    "data": {
+      "page": "supplier_detail",
+      "nemotron_ms": 1660
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "warn",
+    "message": "Skipped Sales Reports (out of page budget)",
+    "data": {
+      "unexplored": "Sales Reports"
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Inferred data model: Book (8 fields), Supplier (5 fields)",
+    "data": {
+      "entities": 2,
+      "rules": 2,
+      "nemotron_ms": 6420
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "info",
+    "message": "Logged in",
+    "data": {}
+  },
+  {
+    "actor": "operator",
+    "level": "info",
+    "message": "Extracted all 8 suppliers",
+    "data": {
+      "entity": "Supplier"
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "info",
+    "message": "Extracted book B0005",
+    "data": {
+      "entity": "Book",
+      "legacy_id": "B0005",
+      "result": "extracted"
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "warn",
+    "message": "Possible duplicate: B0005 and B0041 (same title + author)",
+    "data": {
+      "entity": "Book",
+      "legacy_ids": [
+        "B0005",
+        "B0041"
+      ]
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "warn",
+    "message": "Session expired, logged back in and resumed at page 2",
+    "data": {
+      "recovered": true
+    }
+  },
+  {
+    "actor": "api",
+    "level": "info",
+    "message": "update_stock requested for B0007",
+    "data": {
+      "op_request": "mock-bs-1"
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "info",
+    "message": "update_stock done and verified",
+    "data": {
+      "op_request": "mock-bs-1",
+      "result": "done"
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "error",
+    "message": "update_stock rejected by the old system",
+    "data": {
+      "op_request": "mock-bs-2",
+      "result": "failed",
+      "error": "Old system rule: Stock quantity cannot be negative"
+    }
+  }
+]

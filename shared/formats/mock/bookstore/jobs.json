@@ -1,0 +1,26 @@
+[
+  {
+    "job_key": "mock-bs-explore",
+    "kind": "explore",
+    "entity": "",
+    "status": "done",
+    "done": 14,
+    "total": 14
+  },
+  {
+    "job_key": "mock-bs-extract-supplier",
+    "kind": "extract",
+    "entity": "Supplier",
+    "status": "done",
+    "done": 8,
+    "total": 8
+  },
+  {
+    "job_key": "mock-bs-extract-book",
+    "kind": "extract",
+    "entity": "Book",
+    "status": "running",
+    "done": 27,
+    "total": 41
+  }
+]

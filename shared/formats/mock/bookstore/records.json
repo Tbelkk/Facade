@@ -1,0 +1,619 @@
+{
+  "Book": [
+    {
+      "legacy_id": "B0001",
+      "data": {
+        "isbn": "978-0-78579-786-1",
+        "title": "The Wild Atlas",
+        "author": "Hannah Kim",
+        "genre": "History",
+        "price": "14.00",
+        "stock": "1",
+        "supplier_id": "S004",
+        "shelf": "F-12"
+      }
+    },
+    {
+      "legacy_id": "B0002",
+      "data": {
+        "isbn": "978-8-42899-673-6",
+        "title": "The Hidden Archive",
+        "author": "Lucas Ivanova",
+        "genre": "Cookbook",
+        "price": "29.99",
+        "stock": "12",
+        "supplier_id": "S008",
+        "shelf": "D-4"
+      }
+    },
+    {
+      "legacy_id": "B0003",
+      "data": {
+        "isbn": "978-0-14339-253-9",
+        "title": "The Salt Map",
+        "author": "Mateo Walker",
+        "genre": "Science",
+        "price": "14.95",
+        "stock": "3",
+        "supplier_id": "S005",
+        "shelf": "F-8"
+      }
+    },
+    {
+      "legacy_id": "B0004",
+      "data": {
+        "isbn": "978-7-66915-671-0",
+        "title": "The Hidden Lantern",
+        "author": "Kenji Patel",
+        "genre": "History",
+        "price": "35.95",
+        "stock": "20",
+        "supplier_id": "S008",
+        "shelf": "D-3"
+      }
+    },
+    {
+      "legacy_id": "B0005",
+      "data": {
+        "isbn": "978-1-95006-372-7",
+        "title": "The Midnight Orchard",
+        "author": "Daniel Moreno",
+        "genre": "Mystery",
+        "price": "29.00",
+        "stock": "12",
+        "supplier_id": "S007",
+        "shelf": "A-1"
+      }
+    },
+    {
+      "legacy_id": "B0006",
+      "data": {
+        "isbn": "978-8-20887-724-3",
+        "title": "The Paper Orchard",
+        "author": "Amara Nguyen",
+        "genre": "Children",
+        "price": "16.95",
+        "stock": "35",
+        "supplier_id": "S008",
+        "shelf": "B-1"
+      }
+    },
+    {
+      "legacy_id": "B0007",
+      "data": {
+        "isbn": "978-9-74485-806-2",
+        "title": "The Broken Letters",
+        "author": "Hannah Clark",
+        "genre": "Mystery",
+        "price": "35.95",
+        "stock": "35",
+        "supplier_id": "S006",
+        "shelf": "A-7"
+      }
+    },
+    {
+      "legacy_id": "B0008",
+      "data": {
+        "isbn": "978-9-50108-619-6",
+        "title": "The Little Map",
+        "author": "Carlos Ivanova",
+        "genre": "Mystery",
+        "price": "24.00",
+        "stock": "1",
+        "supplier_id": "S003",
+        "shelf": "A-7"
+      }
+    },
+    {
+      "legacy_id": "B0009",
+      "data": {
+        "isbn": "978-5-94708-461-0",
+        "title": "The Silent Archive",
+        "author": "Hannah Chen",
+        "genre": "Cookbook",
+        "price": "16.99",
+        "stock": "0",
+        "supplier_id": "S002",
+        "shelf": "C-2"
+      }
+    },
+    {
+      "legacy_id": "B0010",
+      "data": {
+        "isbn": "978-9-91081-924-2",
+        "title": "The Garden Island",
+        "author": "Mateo Smith",
+        "genre": "History",
+        "price": "19.99",
+        "stock": "12",
+        "supplier_id": "S008",
+        "shelf": "E-4"
+      }
+    },
+    {
+      "legacy_id": "B0011",
+      "data": {
+        "isbn": "978-6-14476-300-2",
+        "title": "The River Engine",
+        "author": "Zara Nguyen",
+        "genre": "History",
+        "price": "14.99",
+        "stock": "20",
+        "supplier_id": "S002",
+        "shelf": "F-11"
+      }
+    },
+    {
+      "legacy_id": "B0012",
+      "data": {
+        "isbn": "978-8-38668-904-8",
+        "title": "The Garden Kingdom",
+        "author": "Nina Okafor",
+        "genre": "History",
+        "price": "16.99",
+        "stock": "1",
+        "supplier_id": "S001",
+        "shelf": "E-7"
+      }
+    },
+    {
+      "legacy_id": "B0013",
+      "data": {
+        "isbn": "978-4-34536-452-2",
+        "title": "The Winter Promise",
+        "author": "Hannah Moreno",
+        "genre": "Science",
+        "price": "29.50",
+        "stock": "8",
+        "supplier_id": "S002",
+        "shelf": "C-9"
+      }
+    },
+    {
+      "legacy_id": "B0014",
+      "data": {
+        "isbn": "978-1-79107-915-8",
+        "title": "The Winter Bridge",
+        "author": "Wei Smith",
+        "genre": "Mystery",
+        "price": "7.00",
+        "stock": "12",
+        "supplier_id": "S008",
+        "shelf": "D-11"
+      }
+    },
+    {
+      "legacy_id": "B0015",
+      "data": {
+        "isbn": "978-8-97870-286-0",
+        "title": "The Midnight Bridge",
+        "author": "Priya Brown",
+        "genre": "Children",
+        "price": "35.50",
+        "stock": "8",
+        "supplier_id": "S006",
+        "shelf": "A-10"
+      }
+    },
+    {
+      "legacy_id": "B0016",
+      "data": {
+        "isbn": "978-9-38106-683-4",
+        "title": "The Quiet Machine",
+        "author": "Nina Mensah",
+        "genre": "Mystery",
+        "price": "9.95",
+        "stock": "20",
+        "supplier_id": "S005",
+        "shelf": "A-7"
+      }
+    },
+    {
+      "legacy_id": "B0017",
+      "data": {
+        "isbn": "978-0-56694-839-2",
+        "title": "The Northern Archive",
+        "author": "Liam Haddad",
+        "genre": "Children",
+        "price": "9.95",
+        "stock": "0",
+        "supplier_id": "S003",
+        "shelf": "C-3"
+      }
+    },
+    {
+      "legacy_id": "B0018",
+      "data": {
+        "isbn": "978-1-11818-521-4",
+        "title": "The Burning Harbor",
+        "author": "James Patel",
+        "genre": "Mystery",
+        "price": "7.95",
+        "stock": "3",
+        "supplier_id": "S005",
+        "shelf": "A-2"
+      }
+    },
+    {
+      "legacy_id": "B0019",
+      "data": {
+        "isbn": "978-7-89594-740-9",
+        "title": "The River Season",
+        "author": "Noah Chen",
+        "genre": "Children",
+        "price": "14.99",
+        "stock": "5",
+        "supplier_id": "S006",
+        "shelf": "D-11"
+      }
+    },
+    {
+      "legacy_id": "B0020",
+      "data": {
+        "isbn": "978-8-99312-357-6",
+        "title": "The Hidden Bridge",
+        "author": "Fatima Nguyen",
+        "genre": "Cookbook",
+        "price": "24.00",
+        "stock": "5",
+        "supplier_id": "S002",
+        "shelf": "C-12"
+      }
+    },
+    {
+      "legacy_id": "B0021",
+      "data": {
+        "isbn": "978-1-48920-886-6",
+        "title": "The Copper Island",
+        "author": "Maria Mensah",
+        "genre": "Science",
+        "price": "14.00",
+        "stock": "3",
+        "supplier_id": "S006",
+        "shelf": "F-2"
+      }
+    },
+    {
+      "legacy_id": "B0022",
+      "data": {
+        "isbn": "978-1-25503-138-2",
+        "title": "The Golden Lantern",
+        "author": "Amara Lopez",
+        "genre": "Fiction",
+        "price": "24.50",
+        "stock": "35",
+        "supplier_id": "S003",
+        "shelf": "C-7"
+      }
+    },
+    {
+      "legacy_id": "B0023",
+      "data": {
+        "isbn": "978-3-65179-778-3",
+        "title": "The Garden Kingdom",
+        "author": "Zara Garcia",
+        "genre": "Cookbook",
+        "price": "35.99",
+        "stock": "8",
+        "supplier_id": "S007",
+        "shelf": "C-3"
+      }
+    },
+    {
+      "legacy_id": "B0024",
+      "data": {
+        "isbn": "978-0-46284-654-7",
+        "title": "The Burning Machine",
+        "author": "Liam Kim",
+        "genre": "Cookbook",
+        "price": "9.50",
+        "stock": "0",
+        "supplier_id": "S004",
+        "shelf": "E-1"
+      }
+    },
+    {
+      "legacy_id": "B0025",
+      "data": {
+        "isbn": "978-8-51615-157-0",
+        "title": "The Paper Promise",
+        "author": "James Rossi",
+        "genre": "Cookbook",
+        "price": "35.50",
+        "stock": "5",
+        "supplier_id": "S005",
+        "shelf": "F-7"
+      }
+    },
+    {
+      "legacy_id": "B0026",
+      "data": {
+        "isbn": "978-8-46144-451-3",
+        "title": "The Midnight Lantern",
+        "author": "Kenji Singh",
+        "genre": "Children",
+        "price": "29.95",
+        "stock": "2",
+        "supplier_id": "S006",
+        "shelf": "B-3"
+      }
+    },
+    {
+      "legacy_id": "B0027",
+      "data": {
+        "isbn": "978-7-10696-462-8",
+        "title": "The Burning Map",
+        "author": "James Okafor",
+        "genre": "Fiction",
+        "price": "16.95",
+        "stock": "1",
+        "supplier_id": "S007",
+        "shelf": "E-12"
+      }
+    },
+    {
+      "legacy_id": "B0028",
+      "data": {
+        "isbn": "978-1-12405-646-3",
+        "title": "The Quiet Machine",
+        "author": "Ethan Nguyen",
+        "genre": "History",
+        "price": "24.50",
+        "stock": "1",
+        "supplier_id": "S005",
+        "shelf": "E-2"
+      }
+    },
+    {
+      "legacy_id": "B0029",
+      "data": {
+        "isbn": "978-6-53726-660-4",
+        "title": "The Hidden Harbor",
+        "author": "Chloe Clark",
+        "genre": "Cookbook",
+        "price": "14.50",
+        "stock": "1",
+        "supplier_id": "S002",
+        "shelf": "C-5"
+      }
+    },
+    {
+      "legacy_id": "B0030",
+      "data": {
+        "isbn": "978-2-60936-293-0",
+        "title": "The Wild Engine",
+        "author": "Hannah Moreno",
+        "genre": "Science",
+        "price": "35.50",
+        "stock": "5",
+        "supplier_id": "S005",
+        "shelf": "F-9"
+      }
+    },
+    {
+      "legacy_id": "B0031",
+      "data": {
+        "isbn": "978-5-80660-248-2",
+        "title": "The Silent Season",
+        "author": "Wei Ivanova",
+        "genre": "Cookbook",
+        "price": "7.95",
+        "stock": "1",
+        "supplier_id": "S001",
+        "shelf": "A-6"
+      }
+    },
+    {
+      "legacy_id": "B0032",
+      "data": {
+        "isbn": "978-8-30214-713-9",
+        "title": "The Paper Kingdom",
+        "author": "Wei Chen",
+        "genre": "History",
+        "price": "9.00",
+        "stock": "2",
+        "supplier_id": "S005",
+        "shelf": "D-5"
+      }
+    },
+    {
+      "legacy_id": "B0033",
+      "data": {
+        "isbn": "978-5-72178-610-1",
+        "title": "The Broken Archive",
+        "author": "Sofia Brown",
+        "genre": "Cookbook",
+        "price": "29.95",
+        "stock": "0",
+        "supplier_id": "S005",
+        "shelf": "A-2"
+      }
+    },
+    {
+      "legacy_id": "B0034",
+      "data": {
+        "isbn": "978-4-44773-871-3",
+        "title": "The Lost Lantern",
+        "author": "Elena Ivanova",
+        "genre": "Children",
+        "price": "19.95",
+        "stock": "12",
+        "supplier_id": "S002",
+        "shelf": "F-11"
+      }
+    },
+    {
+      "legacy_id": "B0035",
+      "data": {
+        "isbn": "978-5-33166-301-7",
+        "title": "The Paper Bridge",
+        "author": "Ravi Brown",
+        "genre": "Science",
+        "price": "24.99",
+        "stock": "8",
+        "supplier_id": "S008",
+        "shelf": "B-3"
+      }
+    },
+    {
+      "legacy_id": "B0036",
+      "data": {
+        "isbn": "978-2-66530-374-5",
+        "title": "The Northern Lantern",
+        "author": "Omar Singh",
+        "genre": "Science",
+        "price": "12.95",
+        "stock": "35",
+        "supplier_id": "S008",
+        "shelf": "B-6"
+      }
+    },
+    {
+      "legacy_id": "B0037",
+      "data": {
+        "isbn": "978-1-45115-400-9",
+        "title": "The Salt Engine",
+        "author": "Noah Tanaka",
+        "genre": "Fiction",
+        "price": "35.95",
+        "stock": "20",
+        "supplier_id": "S003",
+        "shelf": "F-7"
+      }
+    },
+    {
+      "legacy_id": "B0038",
+      "data": {
+        "isbn": "978-7-98893-967-8",
+        "title": "The Golden Letters",
+        "author": "Elena Brown",
+        "genre": "Cookbook",
+        "price": "19.00",
+        "stock": "0",
+        "supplier_id": "S006",
+        "shelf": "D-12"
+      }
+    },
+    {
+      "legacy_id": "B0039",
+      "data": {
+        "isbn": "978-4-83258-818-4",
+        "title": "The Garden Lantern",
+        "author": "Ethan Reyes",
+        "genre": "History",
+        "price": "29.99",
+        "stock": "0",
+        "supplier_id": "S003",
+        "shelf": "C-1"
+      }
+    },
+    {
+      "legacy_id": "B0040",
+      "data": {
+        "isbn": "978-1-96596-972-4",
+        "title": "The Copper Harbor",
+        "author": "Daniel Singh",
+        "genre": "Children",
+        "price": "16.95",
+        "stock": "2",
+        "supplier_id": "S001",
+        "shelf": "A-9"
+      }
+    },
+    {
+      "legacy_id": "B0041",
+      "data": {
+        "isbn": "9781950063727",
+        "title": "The Midnight Orchard",
+        "author": "Daniel Moreno",
+        "genre": "Mystery",
+        "price": "29.00",
+        "stock": "12",
+        "supplier_id": "S007",
+        "shelf": "A-1"
+      }
+    }
+  ],
+  "Supplier": [
+    {
+      "legacy_id": "S001",
+      "data": {
+        "name": "Blue Press Supply",
+        "contact": "Mateo Ivanova",
+        "phone": "(862) 305-4658",
+        "email": "orders1@supplier1.example",
+        "terms": "Prepaid"
+      }
+    },
+    {
+      "legacy_id": "S002",
+      "data": {
+        "name": "Oak Wholesale",
+        "contact": "Ethan Singh",
+        "phone": "(445) 202-2322",
+        "email": "orders2@supplier2.example",
+        "terms": "Net 30"
+      }
+    },
+    {
+      "legacy_id": "S003",
+      "data": {
+        "name": "Summit Books",
+        "contact": "Kenji Garcia",
+        "phone": "(901) 702-6148",
+        "email": "orders3@supplier3.example",
+        "terms": "Net 30"
+      }
+    },
+    {
+      "legacy_id": "S004",
+      "data": {
+        "name": "Oak Press Supply",
+        "contact": "Fatima Brown",
+        "phone": "(585) 963-9414",
+        "email": "orders4@supplier4.example",
+        "terms": "Prepaid"
+      }
+    },
+    {
+      "legacy_id": "S005",
+      "data": {
+        "name": "Blue Press Supply",
+        "contact": "Aisha Mensah",
+        "phone": "(750) 499-5712",
+        "email": "orders5@supplier5.example",
+        "terms": "Net 60"
+      }
+    },
+    {
+      "legacy_id": "S006",
+      "data": {
+        "name": "Prairie Press Supply",
+        "contact": "Maria Brown",
+        "phone": "(572) 672-7917",
+        "email": "orders6@supplier6.example",
+        "terms": "Net 30"
+      }
+    },
+    {
+      "legacy_id": "S007",
+      "data": {
+        "name": "Oak Wholesale",
+        "contact": "Wei Moreno",
+        "phone": "(718) 968-9045",
+        "email": "orders7@supplier7.example",
+        "terms": "Net 60"
+      }
+    },
+    {
+      "legacy_id": "S008",
+      "data": {
+        "name": "Summit Wholesale",
+        "contact": "Ethan Walker",
+        "phone": "(725) 730-1415",
+        "email": "orders8@supplier8.example",
+        "terms": "Prepaid"
+      }
+    }
+  ]
+}

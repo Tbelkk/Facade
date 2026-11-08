@@ -1,0 +1,749 @@
+{
+  "Employee": [
+    {
+      "legacy_id": "E1001",
+      "data": {
+        "first_name": "Zara",
+        "last_name": "Garcia",
+        "email": "zara.garcia1@company.example",
+        "department": "Sales",
+        "title": "Account Executive",
+        "hire_date": "03/11/2015",
+        "status": "Active",
+        "phone": "(889) 374-6069"
+      }
+    },
+    {
+      "legacy_id": "E1002",
+      "data": {
+        "first_name": "Ethan",
+        "last_name": "Moreno",
+        "email": "ethan.moreno2@company.example",
+        "department": "Engineering",
+        "title": "Engineering Manager",
+        "hire_date": "09/22/2025",
+        "status": "Active",
+        "phone": ""
+      }
+    },
+    {
+      "legacy_id": "E1003",
+      "data": {
+        "first_name": "Elena",
+        "last_name": "Nguyen",
+        "email": "elena.nguyen3@company.example",
+        "department": "Finance",
+        "title": "Accountant",
+        "hire_date": "09/24/2024",
+        "status": "Active",
+        "phone": "(682) 873-6591"
+      }
+    },
+    {
+      "legacy_id": "E1004",
+      "data": {
+        "first_name": "Fatima",
+        "last_name": "Chen",
+        "email": "fatima.chen4@company.example",
+        "department": "Finance",
+        "title": "Payroll Specialist",
+        "hire_date": "05/16/2018",
+        "status": "Active",
+        "phone": ""
+      }
+    },
+    {
+      "legacy_id": "E1005",
+      "data": {
+        "first_name": "Carlos",
+        "last_name": "Garcia",
+        "email": "carlos.garcia5@company.example",
+        "department": "Operations",
+        "title": "Facilities Lead",
+        "hire_date": "06/09/2022",
+        "status": "Active",
+        "phone": "(724) 949-7552"
+      }
+    },
+    {
+      "legacy_id": "E1006",
+      "data": {
+        "first_name": "Daniel",
+        "last_name": "Clark",
+        "email": "daniel.clark6@company.example",
+        "department": "Finance",
+        "title": "Accountant",
+        "hire_date": "07/28/2010",
+        "status": "On Leave",
+        "phone": "(984) 505-8906"
+      }
+    },
+    {
+      "legacy_id": "E1007",
+      "data": {
+        "first_name": "Aisha",
+        "last_name": "Ivanova",
+        "email": "aisha.ivanova7@company.example",
+        "department": "Support",
+        "title": "Support Lead",
+        "hire_date": "08/11/2018",
+        "status": "Active",
+        "phone": "(775) 378-5218"
+      }
+    },
+    {
+      "legacy_id": "E1008",
+      "data": {
+        "first_name": "Mateo",
+        "last_name": "Tanaka",
+        "email": "mateo.tanaka8@company.example",
+        "department": "Support",
+        "title": "Support Specialist",
+        "hire_date": "10/07/2008",
+        "status": "Active",
+        "phone": "(639) 720-9627"
+      }
+    },
+    {
+      "legacy_id": "E1009",
+      "data": {
+        "first_name": "Mateo",
+        "last_name": "Smith",
+        "email": "mateo.smith9@company.example",
+        "department": "Sales",
+        "title": "Sales Manager",
+        "hire_date": "12/16/2012",
+        "status": "On Leave",
+        "phone": "(533) 572-7422"
+      }
+    },
+    {
+      "legacy_id": "E1010",
+      "data": {
+        "first_name": "Amara",
+        "last_name": "Mensah",
+        "email": "amara.mensah10@company.example",
+        "department": "Support",
+        "title": "Support Specialist",
+        "hire_date": "03/20/2025",
+        "status": "Active",
+        "phone": "(334) 872-2000"
+      }
+    },
+    {
+      "legacy_id": "E1011",
+      "data": {
+        "first_name": "Omar",
+        "last_name": "Lopez",
+        "email": "omar.lopez11@company.example",
+        "department": "Engineering",
+        "title": "Software Engineer",
+        "hire_date": "03/09/2025",
+        "status": "Active",
+        "phone": ""
+      }
+    },
+    {
+      "legacy_id": "E1012",
+      "data": {
+        "first_name": "Priya",
+        "last_name": "Nguyen",
+        "email": "priya.nguyen12@company.example",
+        "department": "Sales",
+        "title": "Account Executive",
+        "hire_date": "11/05/2021",
+        "status": "Terminated",
+        "phone": "(759) 229-5925"
+      }
+    },
+    {
+      "legacy_id": "E1013",
+      "data": {
+        "first_name": "Mateo",
+        "last_name": "Brown",
+        "email": "mateo.brown13@company.example",
+        "department": "Sales",
+        "title": "Account Executive",
+        "hire_date": "08/22/2021",
+        "status": "Active",
+        "phone": "(349) 931-9326"
+      }
+    },
+    {
+      "legacy_id": "E1014",
+      "data": {
+        "first_name": "Hannah",
+        "last_name": "Garcia",
+        "email": "hannah.garcia14@company.example",
+        "department": "Engineering",
+        "title": "Software Engineer",
+        "hire_date": "02/12/2016",
+        "status": "Active",
+        "phone": "(367) 715-4134"
+      }
+    },
+    {
+      "legacy_id": "E1015",
+      "data": {
+        "first_name": "Elena",
+        "last_name": "Moreno",
+        "email": "elena.moreno15@company.example",
+        "department": "Engineering",
+        "title": "Software Engineer",
+        "hire_date": "03/08/2015",
+        "status": "Active",
+        "phone": "(362) 748-7913"
+      }
+    },
+    {
+      "legacy_id": "E1016",
+      "data": {
+        "first_name": "Kenji",
+        "last_name": "Brown",
+        "email": "kenji.brown16@company.example",
+        "department": "Operations",
+        "title": "Operations Coordinator",
+        "hire_date": "05/21/2022",
+        "status": "On Leave",
+        "phone": "(293) 416-4202"
+      }
+    },
+    {
+      "legacy_id": "E1017",
+      "data": {
+        "first_name": "Aisha",
+        "last_name": "Brown",
+        "email": "aisha.brown17@company.example",
+        "department": "Engineering",
+        "title": "Engineering Manager",
+        "hire_date": "11/20/2013",
+        "status": "Active",
+        "phone": "(856) 643-4101"
+      }
+    },
+    {
+      "legacy_id": "E1018",
+      "data": {
+        "first_name": "Maria",
+        "last_name": "Mensah",
+        "email": "maria.mensah18@company.example",
+        "department": "Operations",
+        "title": "Operations Coordinator",
+        "hire_date": "11/21/2016",
+        "status": "Active",
+        "phone": "(607) 209-8808"
+      }
+    },
+    {
+      "legacy_id": "E1019",
+      "data": {
+        "first_name": "Kenji",
+        "last_name": "Haddad",
+        "email": "kenji.haddad19@company.example",
+        "department": "Support",
+        "title": "Support Lead",
+        "hire_date": "08/05/2011",
+        "status": "Active",
+        "phone": "(567) 666-7183"
+      }
+    },
+    {
+      "legacy_id": "E1020",
+      "data": {
+        "first_name": "Lucas",
+        "last_name": "Clark",
+        "email": "lucas.clark20@company.example",
+        "department": "Support",
+        "title": "Support Specialist",
+        "hire_date": "12/22/2025",
+        "status": "Active",
+        "phone": "(898) 280-8552"
+      }
+    },
+    {
+      "legacy_id": "E1021",
+      "data": {
+        "first_name": "Fatima",
+        "last_name": "Mensah",
+        "email": "fatima.mensah21@company.example",
+        "department": "Operations",
+        "title": "Operations Coordinator",
+        "hire_date": "05/10/2009",
+        "status": "Active",
+        "phone": "(271) 740-8412"
+      }
+    },
+    {
+      "legacy_id": "E1022",
+      "data": {
+        "first_name": "Wei",
+        "last_name": "Tanaka",
+        "email": "wei.tanaka22@company.example",
+        "department": "Support",
+        "title": "Support Lead",
+        "hire_date": "10/16/2025",
+        "status": "Active",
+        "phone": "(526) 337-1435"
+      }
+    },
+    {
+      "legacy_id": "E1023",
+      "data": {
+        "first_name": "Noah",
+        "last_name": "Johnson",
+        "email": "noah.johnson23@company.example",
+        "department": "Engineering",
+        "title": "Software Engineer",
+        "hire_date": "09/28/2016",
+        "status": "Active",
+        "phone": "(966) 272-9533"
+      }
+    },
+    {
+      "legacy_id": "E1024",
+      "data": {
+        "first_name": "Chloe",
+        "last_name": "Chen",
+        "email": "chloe.chen24@company.example",
+        "department": "Engineering",
+        "title": "Engineering Manager",
+        "hire_date": "03/10/2023",
+        "status": "Active",
+        "phone": "(679) 907-4973"
+      }
+    },
+    {
+      "legacy_id": "E1025",
+      "data": {
+        "first_name": "Sofia",
+        "last_name": "Ivanova",
+        "email": "sofia.ivanova25@company.example",
+        "department": "Operations",
+        "title": "Facilities Lead",
+        "hire_date": "07/02/2023",
+        "status": "Active",
+        "phone": "(649) 393-2863"
+      }
+    },
+    {
+      "legacy_id": "E1026",
+      "data": {
+        "first_name": "Hannah",
+        "last_name": "Clark",
+        "email": "hannah.clark26@company.example",
+        "department": "Support",
+        "title": "Support Lead",
+        "hire_date": "08/17/2008",
+        "status": "Active",
+        "phone": "(593) 947-1557"
+      }
+    },
+    {
+      "legacy_id": "E1027",
+      "data": {
+        "first_name": "Kenji",
+        "last_name": "Kim",
+        "email": "kenji.kim27@company.example",
+        "department": "Support",
+        "title": "Support Lead",
+        "hire_date": "04/28/2024",
+        "status": "Active",
+        "phone": "(642) 952-1430"
+      }
+    },
+    {
+      "legacy_id": "E1028",
+      "data": {
+        "first_name": "Amara",
+        "last_name": "Ivanova",
+        "email": "amara.ivanova28@company.example",
+        "department": "Finance",
+        "title": "Accountant",
+        "hire_date": "09/04/2019",
+        "status": "Active",
+        "phone": "(767) 374-8492"
+      }
+    },
+    {
+      "legacy_id": "E1029",
+      "data": {
+        "first_name": "Wei",
+        "last_name": "Patel",
+        "email": "wei.patel29@company.example",
+        "department": "Operations",
+        "title": "Facilities Lead",
+        "hire_date": "07/01/2015",
+        "status": "Active",
+        "phone": ""
+      }
+    },
+    {
+      "legacy_id": "E1030",
+      "data": {
+        "first_name": "Mateo",
+        "last_name": "Haddad",
+        "email": "mateo.haddad30@company.example",
+        "department": "Sales",
+        "title": "Sales Manager",
+        "hire_date": "02/09/2013",
+        "status": "Active",
+        "phone": "(846) 929-2895"
+      }
+    },
+    {
+      "legacy_id": "E1031",
+      "data": {
+        "first_name": "Zara",
+        "last_name": "Nguyen",
+        "email": "zara.nguyen31@company.example",
+        "department": "Operations",
+        "title": "Facilities Lead",
+        "hire_date": "12/15/2024",
+        "status": "Active",
+        "phone": "(394) 866-8888"
+      }
+    },
+    {
+      "legacy_id": "E1032",
+      "data": {
+        "first_name": "Grace",
+        "last_name": "Johnson",
+        "email": "grace.johnson32@company.example",
+        "department": "Engineering",
+        "title": "Software Engineer",
+        "hire_date": "11/03/2016",
+        "status": "Active",
+        "phone": ""
+      }
+    },
+    {
+      "legacy_id": "E1033",
+      "data": {
+        "first_name": "Lucas",
+        "last_name": "Nguyen",
+        "email": "lucas.nguyen33@company.example",
+        "department": "Support",
+        "title": "Support Lead",
+        "hire_date": "05/03/2025",
+        "status": "Active",
+        "phone": "(729) 797-9850"
+      }
+    },
+    {
+      "legacy_id": "E1034",
+      "data": {
+        "first_name": "Hannah",
+        "last_name": "Nguyen",
+        "email": "hannah.nguyen34@company.example",
+        "department": "Sales",
+        "title": "Sales Manager",
+        "hire_date": "04/18/2020",
+        "status": "Active",
+        "phone": ""
+      }
+    },
+    {
+      "legacy_id": "E1035",
+      "data": {
+        "first_name": "Maria",
+        "last_name": "Moreno",
+        "email": "maria.moreno35@company.example",
+        "department": "Engineering",
+        "title": "QA Analyst",
+        "hire_date": "09/03/2022",
+        "status": "Terminated",
+        "phone": "(442) 368-4266"
+      }
+    },
+    {
+      "legacy_id": "E1036",
+      "data": {
+        "first_name": "Amara",
+        "last_name": "Mensah",
+        "email": "AMARA.MENSAH10@COMPANY.EXAMPLE",
+        "department": "Support",
+        "title": "Support Specialist",
+        "hire_date": "03/20/2025",
+        "status": "Active",
+        "phone": "(334) 872-2000"
+      }
+    }
+  ],
+  "TimeOffRequest": [
+    {
+      "legacy_id": "TO-5001",
+      "data": {
+        "employee_id": "E1033",
+        "type": "Personal",
+        "start_date": "06/13/2026",
+        "end_date": "06/18/2026",
+        "status": "Approved",
+        "notes": "Doctor appointment"
+      }
+    },
+    {
+      "legacy_id": "TO-5002",
+      "data": {
+        "employee_id": "E1006",
+        "type": "Vacation",
+        "start_date": "01/12/2026",
+        "end_date": "01/17/2026",
+        "status": "Approved",
+        "notes": "Moving"
+      }
+    },
+    {
+      "legacy_id": "TO-5003",
+      "data": {
+        "employee_id": "E1034",
+        "type": "Sick",
+        "start_date": "04/16/2026",
+        "end_date": "04/21/2026",
+        "status": "Approved",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5004",
+      "data": {
+        "employee_id": "E1032",
+        "type": "Sick",
+        "start_date": "09/04/2026",
+        "end_date": "09/04/2026",
+        "status": "Denied",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5005",
+      "data": {
+        "employee_id": "E1032",
+        "type": "Personal",
+        "start_date": "11/14/2026",
+        "end_date": "11/18/2026",
+        "status": "Approved",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5006",
+      "data": {
+        "employee_id": "E1002",
+        "type": "Sick",
+        "start_date": "11/09/2026",
+        "end_date": "11/09/2026",
+        "status": "Denied",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5007",
+      "data": {
+        "employee_id": "E1020",
+        "type": "Sick",
+        "start_date": "10/19/2026",
+        "end_date": "10/21/2026",
+        "status": "Pending",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5008",
+      "data": {
+        "employee_id": "E1022",
+        "type": "Bereavement",
+        "start_date": "12/06/2026",
+        "end_date": "12/10/2026",
+        "status": "Pending",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5009",
+      "data": {
+        "employee_id": "E1031",
+        "type": "Bereavement",
+        "start_date": "03/20/2026",
+        "end_date": "03/20/2026",
+        "status": "Pending",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5010",
+      "data": {
+        "employee_id": "E1001",
+        "type": "Personal",
+        "start_date": "10/17/2026",
+        "end_date": "10/18/2026",
+        "status": "Denied",
+        "notes": "Family trip"
+      }
+    },
+    {
+      "legacy_id": "TO-5011",
+      "data": {
+        "employee_id": "E1002",
+        "type": "Personal",
+        "start_date": "08/20/2026",
+        "end_date": "08/21/2026",
+        "status": "Denied",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5012",
+      "data": {
+        "employee_id": "E1029",
+        "type": "Vacation",
+        "start_date": "10/04/2026",
+        "end_date": "10/05/2026",
+        "status": "Approved",
+        "notes": "Doctor appointment"
+      }
+    },
+    {
+      "legacy_id": "TO-5013",
+      "data": {
+        "employee_id": "E1005",
+        "type": "Bereavement",
+        "start_date": "07/09/2026",
+        "end_date": "07/15/2026",
+        "status": "Denied",
+        "notes": "Family trip"
+      }
+    },
+    {
+      "legacy_id": "TO-5014",
+      "data": {
+        "employee_id": "E1017",
+        "type": "Bereavement",
+        "start_date": "08/20/2026",
+        "end_date": "08/23/2026",
+        "status": "Approved",
+        "notes": "Family trip"
+      }
+    },
+    {
+      "legacy_id": "TO-5015",
+      "data": {
+        "employee_id": "E1011",
+        "type": "Vacation",
+        "start_date": "02/20/2026",
+        "end_date": "02/21/2026",
+        "status": "Approved",
+        "notes": "Family trip"
+      }
+    },
+    {
+      "legacy_id": "TO-5016",
+      "data": {
+        "employee_id": "E1026",
+        "type": "Sick",
+        "start_date": "04/11/2026",
+        "end_date": "04/17/2026",
+        "status": "Pending",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5017",
+      "data": {
+        "employee_id": "E1025",
+        "type": "Personal",
+        "start_date": "03/20/2026",
+        "end_date": "03/25/2026",
+        "status": "Denied",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5018",
+      "data": {
+        "employee_id": "E1020",
+        "type": "Bereavement",
+        "start_date": "09/18/2026",
+        "end_date": "09/23/2026",
+        "status": "Approved",
+        "notes": "Family trip"
+      }
+    },
+    {
+      "legacy_id": "TO-5019",
+      "data": {
+        "employee_id": "E1029",
+        "type": "Personal",
+        "start_date": "04/06/2026",
+        "end_date": "04/06/2026",
+        "status": "Approved",
+        "notes": "Family trip"
+      }
+    },
+    {
+      "legacy_id": "TO-5020",
+      "data": {
+        "employee_id": "E1011",
+        "type": "Sick",
+        "start_date": "07/19/2026",
+        "end_date": "07/22/2026",
+        "status": "Denied",
+        "notes": "Doctor appointment"
+      }
+    },
+    {
+      "legacy_id": "TO-5021",
+      "data": {
+        "employee_id": "E1004",
+        "type": "Vacation",
+        "start_date": "10/10/2026",
+        "end_date": "10/16/2026",
+        "status": "Approved",
+        "notes": "Moving"
+      }
+    },
+    {
+      "legacy_id": "TO-5022",
+      "data": {
+        "employee_id": "E1020",
+        "type": "Personal",
+        "start_date": "07/08/2026",
+        "end_date": "07/14/2026",
+        "status": "Approved",
+        "notes": "Family trip"
+      }
+    },
+    {
+      "legacy_id": "TO-5023",
+      "data": {
+        "employee_id": "E1025",
+        "type": "Vacation",
+        "start_date": "09/08/2026",
+        "end_date": "09/11/2026",
+        "status": "Denied",
+        "notes": "Doctor appointment"
+      }
+    },
+    {
+      "legacy_id": "TO-5024",
+      "data": {
+        "employee_id": "E1024",
+        "type": "Bereavement",
+        "start_date": "04/18/2026",
+        "end_date": "04/20/2026",
+        "status": "Pending",
+        "notes": ""
+      }
+    },
+    {
+      "legacy_id": "TO-5025",
+      "data": {
+        "employee_id": "E1016",
+        "type": "Bereavement",
+        "start_date": "04/06/2026",
+        "end_date": "04/10/2026",
+        "status": "Denied",
+        "notes": "Doctor appointment"
+      }
+    }
+  ]
+}
