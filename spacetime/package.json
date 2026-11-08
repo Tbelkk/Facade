@@ -1,0 +1,17 @@
+{
+  "name": "facade-spacetime",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Facade backend: SpacetimeDB module (site-agnostic storage for whatever the Nemotron agents discover)",
+  "scripts": {
+    "build": "spacetime build",
+    "publish:cloud": "spacetime publish facade --server maincloud",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "spacetimedb": "^2.14.1"
+  },
+  "devDependencies": {
+    "typescript": "~5.6.2"
+  }
+}
