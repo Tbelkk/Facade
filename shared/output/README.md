@@ -35,3 +35,19 @@ Then commit `shared/output/` and push.
    (`{"_key": "<url>", field: value}`); `core/operator_agent/inputs.py` (`load`) shows how to normalise both.
 4. `operations.json` -> one endpoint + one MCP tool per operation. `source: "database"` reads the records
    (filter semantics: `core/operator_agent/query.py`); `source: "legacy"` creates an `op_request`.
+
+## Check it before loading
+
+```bash
+cd core && source .venv/bin/activate
+python -m operator_agent.verify              # every site here
+python -m operator_agent.verify hackernews   # one site
+python -m pytest -q tests/test_output_endpoints.py
+```
+
+Errors mean the database or API would be wrong: records not in the `{legacy_id, hash, data}` shape, repeated
+ids, a hash that does not match, fields missing from the data model, values of the wrong type, references to
+records that do not exist, or an endpoint that answers wrongly. Every read endpoint in `operations.json` is
+actually called against the records: filters must only return matching records (and all of them), sort must be
+ordered, limit/offset must page, get must return the right record, and stored examples must still match.
+Warnings are data quality (fields that are always empty, "required" fields that are often empty).
