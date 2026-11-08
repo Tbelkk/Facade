@@ -21,6 +21,7 @@ Returns:
 import re
 import socket
 import sys
+import warnings
 from html.parser import HTMLParser
 from typing import Any, Dict, List
 from urllib.parse import urljoin, urlparse
@@ -148,6 +149,19 @@ class _PageScan(HTMLParser):
         self.text_chars += len(data.strip())
 
 
+def _fetch(url: str, verify: bool):
+    """GET the page, reading at most MAX_BYTES. Returns (response, body bytes)."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")  # silence the "unverified HTTPS request" warning on the fallback
+        resp = requests.get(url, headers=HEADERS, timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
+                            allow_redirects=True, stream=True, verify=verify)
+        try:
+            body = resp.raw.read(MAX_BYTES, decode_content=True) or b""
+        finally:
+            resp.close()
+    return resp, body
+
+
 def _decode(body: bytes, ctype: str) -> str:
     """Bytes -> text. Use the charset the server declared, else the page's <meta charset>, else UTF-8."""
     m = re.search(r"charset=([\w.:-]+)", ctype)
@@ -171,7 +185,7 @@ def _result(verdict: str, reasons: List[str], checked_url: str, signals: Dict[st
     return {"verdict": verdict, "reasons": reasons, "checked_url": checked_url, "signals": signals}
 
 
-def check_url(url: str) -> Dict[str, Any]:
+def _check(url: str) -> Dict[str, Any]:
     url = (url or "").strip()
     parsed = urlparse(url)
     if parsed.scheme not in ("http", "https") or not parsed.netloc:
@@ -179,15 +193,19 @@ def check_url(url: str) -> Dict[str, Any]:
                        url, {})
 
     # ---- 1. Can we reach it? ----
+    cert_problem = False
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
-                            allow_redirects=True, stream=True)
-        try:
-            body = resp.raw.read(MAX_BYTES, decode_content=True) or b""
-        finally:
-            resp.close()
+        resp, body = _fetch(url, verify=True)
     except requests.exceptions.SSLError:
-        return _result("blocked", ["The site's security certificate couldn't be verified."], url, {})
+        # Old internal systems often have expired or self-made certificates, which is exactly
+        # the kind of site Facade is for. We only READ this one page (nothing is sent),
+        # so read it without verification and warn the user instead of blocking.
+        cert_problem = True
+        try:
+            resp, body = _fetch(url, verify=False)
+        except requests.exceptions.RequestException:
+            return _result("blocked", ["The site's security certificate couldn't be verified, and the page "
+                                       "couldn't be read."], url, {})
     except requests.exceptions.TooManyRedirects:
         return _result("blocked", ["The site keeps redirecting in a loop."], url, {})
     except (requests.exceptions.Timeout, socket.timeout):
@@ -197,7 +215,7 @@ def check_url(url: str) -> Dict[str, Any]:
                        url, {})
 
     final_url = resp.url
-    signals: Dict[str, Any] = {"status": resp.status_code}
+    signals: Dict[str, Any] = {"status": resp.status_code, "certificate_ok": not cert_problem}
     ctype = resp.headers.get("Content-Type", "").lower()
     signals["content_type"] = ctype
     text = _decode(body, ctype)
@@ -299,8 +317,8 @@ def check_url(url: str) -> Dict[str, Any]:
     has_api = bool(api_links)
     if has_api:
         score -= 2
-        bad.append("This site links to an API or developer docs. If it already has an API, use that instead "
-                   "of Facade.")
+        bad.append(f"This site links to an API or developer docs ({api_links[0]['href'][:80]}). If it already "
+                   "has an API, use that instead of Facade.")
 
     if export_links:
         score -= 1
@@ -334,10 +352,50 @@ def check_url(url: str) -> Dict[str, Any]:
     return _result("probably_not", bad + good, final_url, signals)
 
 
+CERT_WARNING = ("The site's security certificate couldn't be verified. That's common on older internal "
+                "systems, but make sure this is the system you expect before logging in.")
+
+
+def check_url(url: str) -> Dict[str, Any]:
+    result = _check(url)
+    if result.get("signals", {}).get("certificate_ok") is False:
+        result["reasons"] = result["reasons"] + [CERT_WARNING]
+    return result
+
+
+# Real public sites, with the verdict we expect. Run:  python -m api.fitcheck --samples
+SAMPLE_URLS = [
+    ("https://the-internet.herokuapp.com/login", "good_fit", "plain server-rendered login page"),
+    ("https://demo.testfire.net/login.jsp", "probably_not", "old-style portal, but it links to its own REST API docs (/swagger); bad certificate should warn, not block"),
+    ("https://www.gutenberg.org/ebooks/search/?query=dickens", "good_fit", "server-rendered record list with search + paging"),
+    ("https://news.ycombinator.com", "probably_not", "has a public API (linked in the footer)"),
+    ("https://en.wikipedia.org/wiki/Main_Page", "probably_not", "mostly articles"),
+    ("https://example.com", "probably_not", "no records at all"),
+    ("https://httpbin.org/json", "probably_not", "raw JSON, already an API"),
+    ("https://www.google.com/recaptcha/api2/demo", "blocked", "reCAPTCHA demo page"),
+    ("https://httpbin.org/status/404", "blocked", "page not found"),
+    ("https://this-domain-does-not-exist-facade.com", "blocked", "unreachable"),
+]
+
+
 if __name__ == "__main__":
-    # Quick test from the terminal:  python -m api.fitcheck https://example.com
+    # Quick test from the terminal:
+    #   python -m api.fitcheck https://example.com        check any URLs
+    #   python -m api.fitcheck --samples                  check the real sample sites above
     import json
-    for u in sys.argv[1:] or ["https://news.ycombinator.com"]:
+    args = sys.argv[1:]
+    if args == ["--samples"]:
+        matched = 0
+        for u, expected, why in SAMPLE_URLS:
+            r = check_url(u)
+            ok = r["verdict"] == expected
+            matched += ok
+            print(f"\n{'OK  ' if ok else 'DIFF'} {u}\n     got {r['verdict']}, expected {expected} ({why})")
+            for reason in r["reasons"]:
+                print("      -", reason)
+        print(f"\n{matched}/{len(SAMPLE_URLS)} matched the expected verdict.")
+        sys.exit(0)
+    for u in args or ["https://news.ycombinator.com"]:
         r = check_url(u)
         print(f"\n{u}\n  verdict: {r['verdict']}")
         for reason in r["reasons"]:

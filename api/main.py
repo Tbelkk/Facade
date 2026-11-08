@@ -10,8 +10,8 @@ Endpoints so far:
     POST /check    -> URL fit check           (used by the Console's start panel)
 
 Settings (environment variables):
-    CONSOLE_ORIGINS  comma-separated web addresses allowed to call this API from a browser
-                     (default: the Vite dev server, http://localhost:5173 and http://127.0.0.1:5173)
+    CONSOLE_ORIGINS  extra comma-separated web addresses allowed to call this API from a browser
+                     (localhost / 127.0.0.1 on any port, and file:// pages, are always allowed)
 """
 
 import logging
@@ -29,11 +29,16 @@ log = logging.getLogger("facade.api")
 app = FastAPI(title="Facade API", version="0.1.0",
               description="Legacy website -> database + API + MCP, built by Nemotron agents.")
 
-origins = [o.strip() for o in os.getenv(
-    "CONSOLE_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",") if o.strip()]
+# Who may call this API from a browser:
+#  - the Console on this computer, on any port (npm run dev = 5173, npm run preview = 4173,
+#    the built dashboard/ folder on any static server)
+#  - "null": the built dashboard opened straight from a file (file://)
+#  - anything extra listed in CONSOLE_ORIGINS (comma-separated), e.g. a hosted home page
+extra_origins = [o.strip() for o in os.getenv("CONSOLE_ORIGINS", "").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["null", *extra_origins],
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$",
     allow_methods=["*"],
     allow_headers=["*"],
 )
