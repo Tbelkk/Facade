@@ -1,7 +1,7 @@
 // Settings drawer: how the Explorer runs on the old site.
 // Every Explorer setting maps to a flag of `python -m facade.run` (core/facade/run.py),
 // and the drawer shows the exact command for the current settings.
-// Start exploring doesn't launch the agent yet, so the command is how you run it with these settings today.
+// Search sends these settings with POST /runs; the command is the same run from a terminal.
 
 import { useEffect, useRef, useState } from 'react';
 import { facadeSettings as S } from '../lib/settings.js';

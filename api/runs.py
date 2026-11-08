@@ -1,6 +1,6 @@
 """Start the whole Facade workflow from the Console and follow it live.
 
-    POST /runs                 {"url": "https://..."}  -> {"id": "...", "status": "running"}
+    POST /runs                 {"url": "https://...", "pause": 1, "pages": 200, "minutes": 30}  -> {"id": "...", "status": "running"}
     GET  /runs/{id}/events?after=N                      -> {"events": [...], "next": M, "status": "running|serving|failed"}
     GET  /runs/current                                  -> the run in progress, if any
 
@@ -14,7 +14,7 @@ import time
 import traceback
 import uuid
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -31,9 +31,17 @@ SERVE_PORT = 8001   # this API is on 8000; the generated API + MCP server goes n
 
 class RunRequest(BaseModel):
     url: str
+    # the dashboard's Settings drawer (web/src/lib/settings.js); each maps to a flag of python -m facade.run
+    pause: Optional[float] = None     # --pause    seconds between page loads
+    pages: Optional[int] = None       # --pages    stop after this many pages
+    minutes: Optional[float] = None   # --minutes  stop after this long
+    full: bool = False                # --full     page through every list to the end
+    headed: bool = False              # --headed   show the browser window
+    live: bool = True                 # --no-live when off
 
 
-def _worker(run_id, url):
+def _worker(run_id, req):
+    url = req.url
     from facade import events
     from facade import run as pipeline
     run = RUNS[run_id]
@@ -47,7 +55,8 @@ def _worker(run_id, url):
 
     stop = events.listen(collect)
     try:
-        pipeline.run(url, live=True, serve=True, port=SERVE_PORT)   # blocks while the generated server runs
+        pipeline.run(url, live=req.live, serve=True, port=SERVE_PORT, full=req.full, headed=req.headed,
+                     pause=req.pause, minutes=req.minutes, pages=req.pages)   # blocks while the generated server runs
     except BaseException as exc:  # SystemExit from the agents too (e.g. no records): report it, don't crash
         with _lock:
             run["status"] = "failed"
@@ -67,7 +76,7 @@ def start_run(body: RunRequest) -> Dict[str, Any]:
         run_id = uuid.uuid4().hex[:10]
         RUNS[run_id] = {"id": run_id, "url": body.url, "status": "running", "events": [], "started": time.time(),
                         "error": None, "server": None}
-    threading.Thread(target=_worker, args=(run_id, body.url), daemon=True, name=f"facade-run-{run_id}").start()
+    threading.Thread(target=_worker, args=(run_id, body), daemon=True, name=f"facade-run-{run_id}").start()
     return {"id": run_id, "status": "running"}
 
 

@@ -14,6 +14,12 @@ import { facadeSettings } from './lib/settings.js';
 import { API_BASE } from './lib/checkUrl.js';
 import { useSettings } from './lib/hooks.js';
 
+// The Settings drawer values, sent with POST /runs (same meaning as the python -m facade.run flags).
+function runBody(url) {
+  const s = facadeSettings.get();
+  return { url, pause: s.pauseSec, pages: s.maxPages, minutes: s.maxRunMinutes, full: s.full, headed: s.headed, live: s.live };
+}
+
 export default function App() {
   // One dashboard + run driver for the app's lifetime. The driver turns real agent events into tile states.
   const dashboard = useMemo(() => createDashboard(), []);
@@ -78,7 +84,7 @@ export default function App() {
     setHost(u.host);
     let id;
     try {
-      const res = await fetch(`${API_BASE}/runs`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: u.href }) });
+      const res = await fetch(`${API_BASE}/runs`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(runBody(u.href)) });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) { setPhase(body.detail || `Couldn’t start the agents (${res.status})`); return; }
       id = body.id;
