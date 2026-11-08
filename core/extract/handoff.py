@@ -40,6 +40,8 @@ def output_root():
 def site_name(run_dir, site_url=None):
     """clinic_20261108-001314 -> clinic ; shared/samples/hackernews -> hackernews ; else the host."""
     name = _STAMP.sub("", Path(run_dir).resolve().name)
+    if re.fullmatch(r"\d{8}-\d{6}", name):  # a bare timestamp folder (explore.agent runs): use the site's host
+        name = ""
     if name and not re.fullmatch(r"[\d_]+", name):
         return re.sub(r"[^a-z0-9_-]+", "_", name.lower()).strip("_")
     host = urlsplit(site_url or "").netloc or "site"
