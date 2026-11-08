@@ -6,7 +6,7 @@
   const canvas = document.getElementById('flow');
   const ctx = canvas.getContext('2d');
   const hub = document.getElementById('hub');
-  const foot = document.querySelector('.foot');
+  const foot = canvas.parentElement.querySelector('.foot');   // only text that shares the canvas's area
   const busList = document.getElementById('bus');
   const busCount = document.getElementById('busCount');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -57,9 +57,10 @@
 
   /* ---------------- layout ---------------- */
   function measureHub() {
-    const r = hub.getBoundingClientRect();
-    hubRect = { left: r.left - 4, right: r.right + 4, top: r.top - 4, bottom: r.bottom + 4 };
-    contentBottom = foot ? foot.getBoundingClientRect().bottom : r.bottom;
+    // everything is measured relative to the canvas, so it also works when the canvas scrolls with the page
+    const c = canvas.getBoundingClientRect(), r = hub.getBoundingClientRect();
+    hubRect = { left: r.left - c.left - 4, right: r.right - c.left + 4, top: r.top - c.top - 4, bottom: r.bottom - c.top + 4 };
+    contentBottom = (foot ? foot.getBoundingClientRect().bottom : r.bottom) - c.top;
   }
 
   function placeAgents() {
@@ -108,8 +109,9 @@
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth;
-    H = window.innerHeight;
+    const box = canvas.getBoundingClientRect();
+    W = box.width || window.innerWidth;
+    H = box.height || window.innerHeight;
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -257,16 +259,18 @@
     });
   }
 
+  const local = (e) => { const c = canvas.getBoundingClientRect(); return { x: e.clientX - c.left, y: e.clientY - c.top, inside: e.clientY >= c.top && e.clientY <= c.bottom }; };
   window.addEventListener('click', (e) => {
-    if (reduce || e.target.closest('.card, a, button')) return;
-    assign(e.clientX, e.clientY);
+    if (reduce || e.target.closest('.card, a, button, input')) return;
+    const p = local(e);
+    if (p.inside) assign(p.x, p.y);
   });
   const assignBtn = document.getElementById('assign');
   if (assignBtn) assignBtn.addEventListener('click', () => {
     if (reduce) return;
     assign(cx, hubRect.top);
   });
-  window.addEventListener('pointermove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; mouse.on = e.pointerType === 'mouse'; });
+  window.addEventListener('pointermove', (e) => { const p = local(e); mouse.x = p.x; mouse.y = p.y; mouse.on = e.pointerType === 'mouse' && p.inside; });
   window.addEventListener('mouseout', (e) => { if (!e.relatedTarget) mouse.on = false; });
   window.addEventListener('resize', resize);
 
@@ -418,9 +422,13 @@
 
   let last = performance.now();
   let hubCheck = 0;
+  // pause when the animation is scrolled out of view
+  let visible = true;
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(canvas);
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
+    if (!visible) { requestAnimationFrame(frame); return; }
     hubCheck -= dt;
     if (hubCheck <= 0) { measureHub(); hubCheck = 0.5; }
     step(dt);

@@ -13,20 +13,26 @@
 
 <header class="titlebar">
   <div class="brand">Facade</div>
-  <div class="crumb">Old website <span>→</span> data + API</div>
+  <div class="crumb">Website <span>→</span> data + API</div>
+  <nav class="tabs-nav" role="tablist" aria-label="Pages">
+    <button type="button" role="tab" aria-selected="true" data-view="dashboard">Dashboard</button>
+    <button type="button" role="tab" aria-selected="false" data-view="api">API</button>
+  </nav>
 </header>
 
-<main class="app">
+<main class="app view on" id="view-dashboard">
 
   <!-- the link -->
   <section class="intake">
     <div class="intake-top">
       <div class="eyebrow"><span class="live-dot"></span><span id="phase">Ready</span></div>
-      <!-- Settings: not wired up yet -->
-      <button type="button" class="settings-btn gb" id="settingsBtn" title="Settings (coming soon)">
+      <div class="top-right">
+      <span class="safety-chip" id="safetyChip" title="Current safety mode (change in Settings)"></span>
+      <button type="button" class="settings-btn gb" id="settingsBtn" aria-haspopup="dialog" aria-controls="settings">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         Settings
       </button>
+      </div>
     </div>
 
     <h1>Give it a link. <span>Watch the agents work.</span></h1>
@@ -52,8 +58,103 @@
   </section>
 </main>
 
+<!-- generated API (mock data for now) -->
+<main class="app view" id="view-api" aria-label="Generated API">
+  <section class="api-head">
+    <div class="eyebrow"><span class="live-dot"></span><span>Generated API · OpenAPI 3.0</span></div>
+    <h1>The plug. <span>Click an endpoint to try it.</span></h1>
+    <p class="api-source" id="apiSource"></p>
+    <div class="api-meta">
+      <code class="api-base" id="apiBase"></code>
+      <span class="chip-tag" id="apiCount"></span>
+      <span class="chip-tag">Bearer auth</span>
+      <span class="chip-tag solid">Mock data</span>
+    </div>
+  </section>
+  <section id="apiList"></section>
+</main>
+
+<!-- settings -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="settings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" aria-hidden="true" inert>
+  <div class="drawer-head">
+    <div>
+      <div class="eyebrow"><span>Settings</span></div>
+      <h2 class="drawer-title" id="settingsTitle">Safety</h2>
+      <p class="drawer-sub">What the agents are allowed to do on the old site.</p>
+    </div>
+    <button type="button" class="icon-btn" id="closeSettings" aria-label="Close settings">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <!-- read-only -->
+  <div class="set-block">
+    <div class="set-row">
+      <div class="set-text">
+        <b id="roLabel">Read-only mode</b>
+        <small>Explore and copy data only. Agents never submit a form or change anything.</small>
+      </div>
+      <button type="button" class="switch" id="sReadOnly" role="switch" aria-checked="true" aria-labelledby="roLabel"></button>
+    </div>
+  </div>
+
+  <!-- ask before acting -->
+  <div class="set-block" id="askBlock">
+    <div class="set-text">
+      <b id="askLabel">Ask before acting</b>
+      <small>When agents are allowed to change data (book, cancel, update), when do they need your approval?</small>
+    </div>
+    <div class="seg" id="sAsk" role="radiogroup" aria-labelledby="askLabel">
+      <button type="button" role="radio" data-v="always">Always</button>
+      <button type="button" role="radio" data-v="destructive">Destructive</button>
+      <button type="button" role="radio" data-v="never">Never</button>
+    </div>
+    <p class="set-hint" id="askHint"></p>
+  </div>
+
+  <!-- speed -->
+  <div class="set-block">
+    <div class="set-text">
+      <b>Speed limit</b>
+      <small>Go easy on a fragile 2005 server.</small>
+    </div>
+    <label class="range-row">
+      <span>Pages per minute</span>
+      <input type="range" id="sPpm" data-key="pagesPerMinute">
+      <output id="oPpm"></output>
+    </label>
+    <label class="range-row">
+      <span>Pause between clicks</span>
+      <input type="range" id="sPause" data-key="clickPauseSec">
+      <output id="oPause"></output>
+    </label>
+  </div>
+
+  <!-- stop limits -->
+  <div class="set-block">
+    <div class="set-text">
+      <b>Stop limits</b>
+      <small>Agents stop when either limit is reached.</small>
+    </div>
+    <div class="num-grid">
+      <label class="num"><span>Max pages to explore</span><div><input type="number" id="sMaxPages" data-key="maxPages"><em>pages</em></div></label>
+      <label class="num"><span>Max run time</span><div><input type="number" id="sMaxTime" data-key="maxRunMinutes"><em>min</em></div></label>
+    </div>
+  </div>
+
+  <div class="drawer-foot">
+    <button type="button" class="link-btn" id="resetSettings">Reset to defaults</button>
+    <span class="saved" id="savedNote" aria-live="polite"></span>
+    <button type="button" class="btn primary small" id="doneSettings">Done</button>
+  </div>
+</aside>
+
+<script src="settings.js"></script>
 <script src="dashboard.js"></script>
 <script src="mock.js"></script>
+<script src="mockapi.js"></script>
+<script src="apiview.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

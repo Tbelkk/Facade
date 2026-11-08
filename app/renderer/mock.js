@@ -22,6 +22,9 @@ window.mock = (function () {
     const elapsed = (performance.now() - t0) / 1000;
     for (const [id, at, takes, end] of PLAN) {
       const e = elapsed - at;
+      // Read-only mode: the Worker never acts on the old site
+      if (id === 'worker' && window.facadeSettings?.get().readOnly) { D.set(id, { status: 'idle', progress: 0, stat: 'Read-only mode · no actions' }); continue; }
+      if (id === 'worker') D.set(id, { stat: null });
       if (e < 0) D.set(id, { status: 'idle', progress: 0 });
       else if (takes && e < takes) D.set(id, { status: 'working', progress: e / takes });
       else D.set(id, { status: end, progress: 1 });
