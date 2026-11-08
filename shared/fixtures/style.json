@@ -1,0 +1,80 @@
+{
+  "app_key": "OpenDental.exe",
+  "source_palette": [
+    "#D4D0C8",
+    "#FFFFFF",
+    "#2E7D7A",
+    "#000080",
+    "#ECE9D8",
+    "#316AC5",
+    "#404040"
+  ],
+  "palette_share": [
+    {
+      "hex": "#D4D0C8",
+      "share": 0.63
+    },
+    {
+      "hex": "#FFFFFF",
+      "share": 0.214
+    },
+    {
+      "hex": "#2E7D7A",
+      "share": 0.085
+    },
+    {
+      "hex": "#000080",
+      "share": 0.034
+    },
+    {
+      "hex": "#ECE9D8",
+      "share": 0.013
+    },
+    {
+      "hex": "#316AC5",
+      "share": 0.011
+    },
+    {
+      "hex": "#404040",
+      "share": 0.006
+    }
+  ],
+  "traits": "Teal module bar on the left, navy title bar, classic gray 3D chrome, dense forms and a white data grid",
+  "theme": "light",
+  "density": "compact",
+  "chrome_style": "classic_3d",
+  "original_font": {
+    "family": "MS Sans Serif",
+    "size": 8
+  },
+  "identity_color": "#2E7D7A",
+  "identity_from": "measured",
+  "tokens": {
+    "color.primary": "#2E7D7A",
+    "color.primary.hover": "#266764",
+    "color.on.primary": "#FFFFFF",
+    "color.surface": "#FAFCFC",
+    "color.surface.alt": "#F2F5F5",
+    "color.border": "#D7E0DF",
+    "color.text": "#1C2626",
+    "color.text.muted": "#637473",
+    "color.accent": "#101093",
+    "color.danger": "#B3261E",
+    "radius.sm": "3px",
+    "radius.md": "6px",
+    "font.family": "Segoe UI Variable, Inter, system-ui, sans-serif",
+    "font.size.base": "13px",
+    "space.unit": "4px",
+    "shadow.card": "0 1px 2px rgba(0,0,0,0.08)"
+  },
+  "contrast_checked": true,
+  "contrast_report": {
+    "text_on_surface": 15.06,
+    "muted_on_surface": 4.77,
+    "on_primary": 4.85,
+    "accent_on_surface": 13.44,
+    "danger_on_surface": 6.35
+  },
+  "traits_source": "nemotron",
+  "model_ms": 900
+}

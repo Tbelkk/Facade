@@ -1,0 +1,81 @@
+{
+  "entities": [
+    {
+      "name": "Patient",
+      "key": "legacy_id",
+      "fields": [
+        {
+          "name": "last_name",
+          "label": "Last Name",
+          "type": "string",
+          "required": true,
+          "read": {
+            "page": "patient_detail",
+            "label": "Last Name"
+          },
+          "write": {
+            "page": "patient_edit",
+            "label": "Last Name"
+          }
+        },
+        {
+          "name": "dob",
+          "label": "Date of Birth",
+          "type": "date",
+          "format": "MM/DD/YYYY",
+          "read": {
+            "page": "patient_detail",
+            "label": "DOB"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointment",
+      "key": "legacy_id",
+      "relations": [
+        {
+          "field": "patient_id",
+          "to": "Patient"
+        }
+      ],
+      "fields": [
+        {
+          "name": "provider",
+          "type": "enum",
+          "values": [
+            "Dr. Lee",
+            "Dr. Patel",
+            "Hyg. Kim"
+          ],
+          "read": {
+            "page": "appt_detail",
+            "label": "Provider"
+          },
+          "write": {
+            "page": "appt_new",
+            "label": "Provider"
+          }
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "r1",
+      "entity": "Patient",
+      "text": "Last name is required",
+      "source": "required marker on edit form"
+    },
+    {
+      "id": "r2",
+      "entity": "Appointment",
+      "text": "No appointments on Sundays",
+      "source": "error message seen"
+    }
+  ],
+  "not_visible": [
+    "Billing calculations",
+    "Permissions"
+  ]
+}

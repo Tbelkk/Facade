@@ -1,0 +1,697 @@
+{
+  "snapshot_id": "snap_fixture_001",
+  "app": {
+    "process": "OpenDental.exe",
+    "window_title": "Open Dental - Family",
+    "hwnd": 0
+  },
+  "window_rect": {
+    "x": 0,
+    "y": 0,
+    "w": 1000,
+    "h": 640
+  },
+  "dpi_scale": 1.0,
+  "fingerprint": "OpenDental.exe|WindowsForms10|fixture001",
+  "source": "uia",
+  "window_kind": "main",
+  "window_parent": null,
+  "menus": [
+    {
+      "name": "File",
+      "hotkey": "Alt+F",
+      "items": []
+    },
+    {
+      "name": "Setup",
+      "hotkey": "Alt+S",
+      "items": []
+    }
+  ],
+  "screenshot_path": "screenshot.png",
+  "nodes": [
+    {
+      "id": 0,
+      "parent": null,
+      "role": "Window",
+      "name": "Open Dental - Family",
+      "automation_id": "FormOpenDental",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 1000,
+        "h": 640
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 1,
+      "parent": 0,
+      "role": "TitleBar",
+      "name": "Open Dental - Family",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "w": 1000,
+        "h": 22
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 2,
+      "parent": 0,
+      "role": "Pane",
+      "name": "",
+      "automation_id": "myOutlookBar",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 0,
+        "y": 22,
+        "w": 90,
+        "h": 618
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 3,
+      "parent": 2,
+      "role": "ListItem",
+      "name": "Appts",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 12,
+        "y": 40,
+        "w": 66,
+        "h": 50
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "select"
+      ]
+    },
+    {
+      "id": 4,
+      "parent": 2,
+      "role": "ListItem",
+      "name": "Family",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 12,
+        "y": 110,
+        "w": 66,
+        "h": 50
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "select"
+      ]
+    },
+    {
+      "id": 5,
+      "parent": 2,
+      "role": "ListItem",
+      "name": "Account",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 12,
+        "y": 180,
+        "w": 66,
+        "h": 50
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "select"
+      ]
+    },
+    {
+      "id": 6,
+      "parent": 2,
+      "role": "ListItem",
+      "name": "TreatPlan",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 12,
+        "y": 250,
+        "w": 66,
+        "h": 50
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "select"
+      ]
+    },
+    {
+      "id": 7,
+      "parent": 2,
+      "role": "ListItem",
+      "name": "Chart",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 12,
+        "y": 320,
+        "w": 66,
+        "h": 50
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "select"
+      ]
+    },
+    {
+      "id": 8,
+      "parent": 2,
+      "role": "ListItem",
+      "name": "Manage",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 12,
+        "y": 390,
+        "w": 66,
+        "h": 50
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "select"
+      ]
+    },
+    {
+      "id": 9,
+      "parent": 0,
+      "role": "ToolBar",
+      "name": "",
+      "automation_id": "ToolBarMain",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 90,
+        "y": 22,
+        "w": 910,
+        "h": 40
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 10,
+      "parent": 9,
+      "role": "Button",
+      "name": "Select Pat (F2)",
+      "automation_id": "butSelectPat",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 100,
+        "y": 30,
+        "w": 95,
+        "h": 24
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "invoke"
+      ]
+    },
+    {
+      "id": 11,
+      "parent": 9,
+      "role": "Button",
+      "name": "Add Fam",
+      "automation_id": "butAddFam",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 200,
+        "y": 30,
+        "w": 95,
+        "h": 24
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "invoke"
+      ]
+    },
+    {
+      "id": 12,
+      "parent": 9,
+      "role": "Button",
+      "name": "Delete Fam",
+      "automation_id": "butDeleteFam",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 300,
+        "y": 30,
+        "w": 95,
+        "h": 24
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "invoke"
+      ]
+    },
+    {
+      "id": 13,
+      "parent": 9,
+      "role": "Button",
+      "name": "Print",
+      "automation_id": "butPrint",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 400,
+        "y": 30,
+        "w": 95,
+        "h": 24
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "invoke"
+      ]
+    },
+    {
+      "id": 14,
+      "parent": 0,
+      "role": "Group",
+      "name": "Patient Information",
+      "automation_id": "groupPatInfo",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 110,
+        "y": 80,
+        "w": 420,
+        "h": 300
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 15,
+      "parent": 14,
+      "role": "Text",
+      "name": "LName",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 130,
+        "y": 101,
+        "w": 120,
+        "h": 12
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 16,
+      "parent": 14,
+      "role": "Edit",
+      "name": "",
+      "automation_id": "textLName",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 130,
+        "y": 115,
+        "w": 180,
+        "h": 20
+      },
+      "value": "Smith",
+      "enabled": true,
+      "actions": [
+        "set_value",
+        "focus"
+      ],
+      "focusable": true,
+      "help_text": "Patient last name",
+      "required": true
+    },
+    {
+      "id": 17,
+      "parent": 14,
+      "role": "Text",
+      "name": "FName",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 101,
+        "w": 120,
+        "h": 12
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 18,
+      "parent": 14,
+      "role": "Edit",
+      "name": "",
+      "automation_id": "textFName",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 115,
+        "w": 180,
+        "h": 20
+      },
+      "value": "Jordan",
+      "enabled": true,
+      "actions": [
+        "set_value",
+        "focus"
+      ],
+      "focusable": true
+    },
+    {
+      "id": 19,
+      "parent": 14,
+      "role": "Text",
+      "name": "Birthdate",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 130,
+        "y": 161,
+        "w": 120,
+        "h": 12
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 20,
+      "parent": 14,
+      "role": "Edit",
+      "name": "",
+      "automation_id": "textBirthdate",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 130,
+        "y": 175,
+        "w": 180,
+        "h": 20
+      },
+      "value": "03/14/1987",
+      "enabled": true,
+      "actions": [
+        "set_value",
+        "focus"
+      ],
+      "focusable": true,
+      "help_text": "MM/DD/YYYY"
+    },
+    {
+      "id": 21,
+      "parent": 14,
+      "role": "Text",
+      "name": "HmPhone",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 161,
+        "w": 120,
+        "h": 12
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 22,
+      "parent": 14,
+      "role": "Edit",
+      "name": "",
+      "automation_id": "textHmPhone",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 175,
+        "w": 180,
+        "h": 20
+      },
+      "value": "",
+      "enabled": true,
+      "actions": [
+        "set_value",
+        "focus"
+      ],
+      "focusable": true
+    },
+    {
+      "id": 23,
+      "parent": 14,
+      "role": "Text",
+      "name": "WirelessPhone",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 130,
+        "y": 221,
+        "w": 120,
+        "h": 12
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 24,
+      "parent": 14,
+      "role": "Edit",
+      "name": "",
+      "automation_id": "textWirelessPhone",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 130,
+        "y": 235,
+        "w": 180,
+        "h": 20
+      },
+      "value": "(214) 555-0142",
+      "enabled": true,
+      "actions": [
+        "set_value",
+        "focus"
+      ],
+      "focusable": true
+    },
+    {
+      "id": 25,
+      "parent": 14,
+      "role": "Text",
+      "name": "Address",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 221,
+        "w": 120,
+        "h": 12
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 26,
+      "parent": 14,
+      "role": "Edit",
+      "name": "",
+      "automation_id": "textAddress",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 235,
+        "w": 180,
+        "h": 20
+      },
+      "value": "800 W Campbell Rd",
+      "enabled": true,
+      "actions": [
+        "set_value",
+        "focus"
+      ],
+      "focusable": true
+    },
+    {
+      "id": 27,
+      "parent": 14,
+      "role": "CheckBox",
+      "name": "chkDebugMode",
+      "automation_id": "checkDebug",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 130,
+        "y": 300,
+        "w": 140,
+        "h": 16
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "toggle"
+      ],
+      "toggle_state": 0,
+      "focusable": true
+    },
+    {
+      "id": 28,
+      "parent": 14,
+      "role": "Button",
+      "name": "OK",
+      "automation_id": "butOK",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 340,
+        "w": 90,
+        "h": 24
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "invoke"
+      ]
+    },
+    {
+      "id": 29,
+      "parent": 14,
+      "role": "Button",
+      "name": "Cancel",
+      "automation_id": "butCancel",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 430,
+        "y": 340,
+        "w": 90,
+        "h": 24
+      },
+      "value": null,
+      "enabled": true,
+      "actions": [
+        "invoke"
+      ]
+    },
+    {
+      "id": 30,
+      "parent": 0,
+      "role": "Pane",
+      "name": "",
+      "automation_id": "gridFamily",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 550,
+        "y": 80,
+        "w": 430,
+        "h": 300
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 31,
+      "parent": 0,
+      "role": "StatusBar",
+      "name": "",
+      "automation_id": "statusBar",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 90,
+        "y": 616,
+        "w": 910,
+        "h": 24
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 32,
+      "parent": 31,
+      "role": "Text",
+      "name": "Ready  |  Server: localhost  |  DB: demo",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 96,
+        "y": 620,
+        "w": 300,
+        "h": 14
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 33,
+      "parent": 14,
+      "role": "Text",
+      "name": "Prov",
+      "automation_id": "",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 280,
+        "w": 60,
+        "h": 12
+      },
+      "value": null,
+      "enabled": true,
+      "actions": []
+    },
+    {
+      "id": 34,
+      "parent": 14,
+      "role": "ComboBox",
+      "name": "",
+      "automation_id": "comboPriProv",
+      "class_name": "WindowsForms10.Window.8.app",
+      "rect": {
+        "x": 330,
+        "y": 294,
+        "w": 180,
+        "h": 20
+      },
+      "value": "DOC1 - Lee",
+      "enabled": true,
+      "actions": [
+        "expand",
+        "set_value"
+      ],
+      "options": [
+        "DOC1 - Lee",
+        "DOC2 - Patel",
+        "HYG1 - Nguyen"
+      ],
+      "focusable": true
+    }
+  ],
+  "node_count": 35,
+  "truncated": false,
+  "walk_ms": 0,
+  "_note": "FAKE FIXTURE for offline development. Not real application data."
+}

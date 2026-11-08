@@ -1,0 +1,25 @@
+# secrets
+.env
+*.env
+!.env.example
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# runtime output (screenshots, labels, styles)
+core/cache/
+
+# node / electron
+node_modules/
+dist/
+out/
+
+# files parked by Claude when it can't delete (never commit these)
+_to_delete/
+
+# os
+.DS_Store
+Thumbs.db

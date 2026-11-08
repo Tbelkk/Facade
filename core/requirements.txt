@@ -1,0 +1,16 @@
+openai>=1.40
+python-dotenv
+pillow>=9.1
+numpy
+mss
+psutil
+websockets
+requests
+# Windows only (screen capture + automation). Skipped automatically on Mac.
+uiautomation; sys_platform == "win32"
+pywin32; sys_platform == "win32"
+# Explorer (core/explore)
+playwright>=1.49
+pyyaml
+pytest
+# NVIDIA NeMo Agent Toolkit (needs Python 3.11+): pip install "nvidia-nat[langchain]>=1.9"
