@@ -1,4 +1,4 @@
-"""Facade Server: turns the Operator's API design (operations.json) into a running REST API and MCP server.
+"""RESTore Server: turns the Operator's API design (operations.json) into a running REST API and MCP server.
 
     python -m serve.run ../shared/output/hackernews            # start both, self-test them, keep serving
     python -m serve.mcp_stdio ../shared/output/hackernews      # MCP over stdio (for Claude Desktop & co.)

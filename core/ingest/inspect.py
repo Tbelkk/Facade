@@ -1,4 +1,4 @@
-"""Facade Inspector: a local dev viewer for Screen Models (not the real overlay).
+"""RESTore Inspector: a local dev viewer for Screen Models (not the real overlay).
 
 Usage (from core/):
     python -m ingest.inspect            # opens http://127.0.0.1:8770 in your browser
@@ -70,13 +70,13 @@ class Handler(SimpleHTTPRequestHandler):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade Inspector")
+    ap = argparse.ArgumentParser(description="RESTore Inspector")
     ap.add_argument("--port", type=int, default=8770)
     ap.add_argument("--no-open", action="store_true")
     args = ap.parse_args(argv)
     srv = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
     url = f"http://127.0.0.1:{args.port}"
-    print(f"Facade Inspector running at {url}  (Ctrl+C to stop)")
+    print(f"RESTore Inspector running at {url}  (Ctrl+C to stop)")
     print(f"screens found: {len(find_screens())}")
     if not args.no_open:
         webbrowser.open(url)

@@ -69,7 +69,7 @@ class MCPServer:
                 result = {"protocolVersion": params.get("protocolVersion") or PROTOCOL,
                           "capabilities": {"tools": {"listChanged": False}},
                           "serverInfo": {"name": self.name, "version": "1.0"},
-                          "instructions": f"Read-only tools over data extracted from {self.state.get('site')} by Facade."}
+                          "instructions": f"Read-only tools over data extracted from {self.state.get('site')} by RESTore."}
             elif method == "ping":
                 result = {}
             elif method == "tools/list":

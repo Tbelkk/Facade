@@ -26,7 +26,7 @@
 
 ## 1. The pitch
 
-> **Point Facade at a legacy website. Nemotron agents explore the whole system, extract its data into a modern database, and generate an API and an MCP server for it. Your data is free and usable, and you never touch the old system's code.**
+> **Point RESTore at a legacy website. Nemotron agents explore the whole system, extract its data into a modern database, and generate an API and an MCP server for it. Your data is free and usable, and you never touch the old system's code.**
 
 **Outputs, from just a URL:**
 1. **A modern database** (SpacetimeDB) holding the system's data, with a typed schema the agents discovered
@@ -34,7 +34,7 @@
 3. **An MCP server**: the same operations as tools any AI assistant can use
 4. **Docs**: data dictionary, observed rules, API reference, generated from what the agents found
 
-**Our edge vs. existing browser-agent tools** (Skyvern, Integuru, Browser Use): those need you to describe each task one at a time. Facade **discovers the entire system on its own** and turns it into a database, API and MCP in one go.
+**Our edge vs. existing browser-agent tools** (Skyvern, Integuru, Browser Use): those need you to describe each task one at a time. RESTore **discovers the entire system on its own** and turns it into a database, API and MCP in one go.
 
 ---
 
@@ -67,7 +67,7 @@
 - UI restyling, overlays, Windows desktop capture
 
 ### Honest limits (say these in the pitch)
-- Facade sees **what's visible** in the system. Hidden server logic (billing formulas, nightly jobs, permissions) isn't visible; Facade lists what it couldn't see.
+- RESTore sees **what's visible** in the system. Hidden server logic (billing formulas, nightly jobs, permissions) isn't visible; RESTore lists what it couldn't see.
 - Use only on systems you own or are authorized to automate. No CAPTCHA bypassing. Credentials are entered by a person.
 
 ---
@@ -78,7 +78,7 @@
 
 | Step | What happens |
 |---|---|
-| **Start** | Office manager pastes the ClinicPro URL into the Facade Console and logs in herself |
+| **Start** | Office manager pastes the ClinicPro URL into the RESTore Console and logs in herself |
 | **1. Explore (~2 min)** | The agent opens the menu → Patients (search + table, 25/page, "Next") → a patient's detail page → the Edit form (reads it, never saves) → Schedule → an appointment. The site map grows live |
 | **2. Understand (~1 min)** | `Patient {last_name* , first_name, dob MM/DD/YYYY, phone, insurance_id}` · `Appointment {date, time, provider ∈ {Dr. Lee, Dr. Patel, Hyg. Kim}, patient → Patient, status}` · Rules: "Last name required", "No Sunday appointments" · Not visible: billing logic |
 | **3. Extract** | Progress bars: Patients 1,250 / 6,000. A session timeout is recovered automatically. Two "John Smith, 1971-03-02" records are flagged as possible duplicates |
@@ -90,7 +90,7 @@
 ## 5. How it meets each track
 
 ### NVIDIA: "Use Nemotron Beyond a Chatbot"
-| Requirement | How Facade meets it |
+| Requirement | How RESTore meets it |
 |---|---|
 | **Beyond a chatbot** | Input is a URL, not a conversation. Agents explore, extract and execute on their own |
 | **Multi-step workflows** | Exploring an unknown system (plan → navigate → interpret → decide next); extracting thousands of records with recovery; write operations (navigate → fill → submit → verify → report) |
@@ -310,7 +310,7 @@ Human-readable `message` + `data_json`, e.g.
 | 5 | **MCP server** (Python `mcp` SDK): the same operations as tools | An MCP client lists and calls the tools |
 | 6 | Pitch slides, before/after framing, backup video at freeze | 3-minute run-through |
 
-### 👤 Frontend person: Facade Console
+### 👤 Frontend person: RESTore Console
 **Owns:** `web/` (React + TS + Vite + SpacetimeDB TS SDK)
 
 | # | Task | Done when |
@@ -328,7 +328,7 @@ Human-readable `message` + `data_json`, e.g.
 ## 10. Repo, setup, environment
 
 ```
-Facade/
+RESTore/
 ├── FACADE-PLAN-v4.md
 ├── core/
 │   ├── .env.example / .env (git-ignored)
@@ -339,7 +339,7 @@ Facade/
 ├── legacy/clinicpro/  # demo target (SpacetimeDB person)
 ├── spacetime/         # SpacetimeDB module (SpacetimeDB person)
 ├── api/               # FastAPI + MCP (SpacetimeDB person)
-├── web/               # Facade Console (frontend)
+├── web/               # RESTore Console (frontend)
 └── shared/
     ├── formats/       # one example of each format (7.2–7.4)
     └── prompts/       # Nemotron prompts (versioned)
@@ -410,7 +410,7 @@ python -m ingest.selftest
 
 | Question | Answer |
 |---|---|
-| "How is this different from Skyvern / Integuru / browser agents?" | They automate tasks you describe, one at a time. Facade **discovers the whole system on its own** and produces a typed database, API and MCP for all of it, with verified writes |
+| "How is this different from Skyvern / Integuru / browser agents?" | They automate tasks you describe, one at a time. RESTore **discovers the whole system on its own** and produces a typed database, API and MCP for all of it, with verified writes |
 | "Doesn't it miss hidden logic?" | Yes, and it says so: it lists what isn't visible. Writes go through the old system, so its own rules still apply (the Sunday rejection) |
 | "Is it fast enough?" | Nemotron learns each page type once; extraction then runs as fast browser code; Nemotron only for surprises |
 | "Is this legal?" | For systems you own or are authorized to automate (your own data). No CAPTCHA bypassing; credentials entered by a person |

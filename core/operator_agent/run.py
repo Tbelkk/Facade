@@ -40,7 +40,7 @@ def run(run_dir, use_nemotron=None, log=print):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade Operator: design the API for extracted data")
+    ap = argparse.ArgumentParser(description="RESTore Operator: design the API for extracted data")
     ap.add_argument("run_dir")
     ap.add_argument("--offline", action="store_true", help="code-only design (no Nemotron)")
     ap.add_argument("--no-publish", action="store_true", help="do not publish to shared/output/<name>/")

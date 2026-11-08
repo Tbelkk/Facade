@@ -1,6 +1,6 @@
-"""URL fit check: is this site a good candidate for Facade?
+"""URL fit check: is this site a good candidate for RESTore?
 
-Facade is for older business web systems (records behind logins, tables, forms)
+RESTore is for older business web systems (records behind logins, tables, forms)
 that have no API and no export. This check opens just the first page and looks
 for signs either way, so people don't spend a full Nemotron exploration on a
 site that isn't a fit.
@@ -28,7 +28,7 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 
-USER_AGENT = "Mozilla/5.0 (compatible; FacadeFitCheck/0.1; authorized-systems-only)"
+USER_AGENT = "Mozilla/5.0 (compatible; RESToreFitCheck/0.1; authorized-systems-only)"
 HEADERS = {
     "User-Agent": USER_AGENT,
     "Accept": "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
@@ -198,7 +198,7 @@ def _check(url: str) -> Dict[str, Any]:
         resp, body = _fetch(url, verify=True)
     except requests.exceptions.SSLError:
         # Old internal systems often have expired or self-made certificates, which is exactly
-        # the kind of site Facade is for. We only READ this one page (nothing is sent),
+        # the kind of site RESTore is for. We only READ this one page (nothing is sent),
         # so read it without verification and warn the user instead of blocking.
         cert_problem = True
         try:
@@ -239,7 +239,7 @@ def _check(url: str) -> Dict[str, Any]:
     # A page that only *mentions* a CAPTCHA in its text (e.g. an article) is not blocked.
     if attr_hits or (challenge_status and (challenge_title or text_hits)):
         signals["captcha_markers"] = sorted(attr_hits | text_hits)
-        return _result("blocked", ["The site is protected by a CAPTCHA or bot check. Facade never tries to get "
+        return _result("blocked", ["The site is protected by a CAPTCHA or bot check. RESTore never tries to get "
                                    "around those."], final_url, signals)
 
     if resp.status_code == 404:
@@ -291,7 +291,7 @@ def _check(url: str) -> Dict[str, Any]:
 
     if scan.password_inputs:
         score += 3
-        good.append("Found a login form. Facade is built for systems behind a login (you'll type the password "
+        good.append("Found a login form. RESTore is built for systems behind a login (you'll type the password "
                     "yourself).")
     elif login_links:
         score += 1
@@ -318,7 +318,7 @@ def _check(url: str) -> Dict[str, Any]:
     if has_api:
         score -= 2
         bad.append(f"This site links to an API or developer docs ({api_links[0]['href'][:80]}). If it already "
-                   "has an API, use that instead of Facade.")
+                   "has an API, use that instead of RESTore.")
 
     if export_links:
         score -= 1

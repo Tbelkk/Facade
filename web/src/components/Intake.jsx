@@ -6,18 +6,18 @@
 //   and the verdict is good_fit, or probably_not with "Continue anyway" clicked.
 // blocked can never start.
 
-import { forwardRef, useEffect, useRef, useState } from 'react';
-import { GearIcon, GlobeIcon } from './Icons.jsx';
+import { useEffect, useRef, useState } from 'react';
+import { GlobeIcon } from './Icons.jsx';
 import { CHECK_ENDPOINT, checkMode, checkUrl, validateUrl } from '../lib/checkUrl.js';
 import './intake.css';
 
 const VERDICT = {
-  good_fit: { title: 'Good fit', line: 'This looks like a legacy system Facade can explore.' },
-  probably_not: { title: 'Probably not a fit', line: 'Facade is built for older systems with no API. You can still continue.' },
-  blocked: { title: 'Can’t explore this site', line: 'Facade won’t run on this address.' },
+  good_fit: { title: 'Good fit', line: 'This looks like a legacy system RESTore can explore.' },
+  probably_not: { title: 'Probably not a fit', line: 'RESTore is built for older systems with no API. You can still continue.' },
+  blocked: { title: 'Can’t explore this site', line: 'RESTore won’t run on this address.' },
 };
 
-const Intake = forwardRef(function Intake({ phase, running, url, setUrl, onStart, onStop, safety, onOpenSettings }, settingsBtnRef) {
+export default function Intake({ phase, running, url, setUrl, onStart, onStop }) {
   const urlRef = useRef(null);
   const [authorized, setAuthorized] = useState(false);
   // check: idle | invalid | loading | done | error
@@ -96,16 +96,6 @@ const Intake = forwardRef(function Intake({ phase, running, url, setUrl, onStart
     <section className="intake">
       <div className="intake-top">
         <div className="eyebrow"><span className="live-dot"></span><span id="phase">{phase}</span></div>
-        <div className="top-right">
-          <span className={'safety-chip' + (safety.acting ? ' acting' : '')} id="safetyChip" title="Current safety mode (change in Settings)">
-            {safety.label}
-          </span>
-          <button type="button" className="settings-btn gb" id="settingsBtn" aria-haspopup="dialog" aria-controls="settings"
-            ref={settingsBtnRef} onClick={onOpenSettings}>
-            <GearIcon />
-            Settings
-          </button>
-        </div>
       </div>
 
       <h1>Give it a link. <span>Watch the agents work.</span></h1>
@@ -183,6 +173,4 @@ const Intake = forwardRef(function Intake({ phase, running, url, setUrl, onStart
       </div>
     </section>
   );
-});
-
-export default Intake;
+}

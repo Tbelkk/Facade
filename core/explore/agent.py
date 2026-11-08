@@ -1,4 +1,4 @@
-"""Facade extraction agent: give it a URL, a Nemotron agent explores the site and pulls the data out.
+"""RESTore extraction agent: give it a URL, a Nemotron agent explores the site and pulls the data out.
 
 Usage (from core/, venv active, NVIDIA key in core/.env):
     python -m explore.agent https://news.ycombinator.com
@@ -436,7 +436,7 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
     queue = deque([(start_url, "start")])
     seen_urls, patterns, signatures = set(), {}, {}
     queued_detail, paged_lists = set(), {}   # detail page types already queued; pages followed per list
-    print(f"Facade agent → {start_url}")
+    print(f"RESTore agent → {start_url}")
     print(f"model={nemotron.MODEL_VISION if vision else nemotron.MODEL_AGENT}  page limit={limit if max_pages else 'auto'}"
           f"  pause={pause_s:g}s  time limit={max_minutes:g} min  output={r.dir}\n")
 
@@ -615,7 +615,7 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade extraction agent (read-only).")
+    ap = argparse.ArgumentParser(description="RESTore extraction agent (read-only).")
     ap.add_argument("url")
     ap.add_argument("--live", action="store_true", help="also write to SpacetimeDB as it runs (Console updates live)")
     ap.add_argument("--full", action="store_true", help="page through every list to the end (slow on big sites)")

@@ -24,7 +24,7 @@ from .explorer import ExploreConfig, Explorer, validate_site_map
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade Explorer: map a website, read-only.")
+    ap = argparse.ArgumentParser(description="RESTore Explorer: map a website, read-only.")
     ap.add_argument("url")
     ap.add_argument("--budget", type=int, default=None, help="max page types to map (default EXPLORE_PAGE_BUDGET or 25)")
     ap.add_argument("--offline", action="store_true", help="no Nemotron: heuristic reader and planner")

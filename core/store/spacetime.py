@@ -1,4 +1,4 @@
-"""Facade store client: the one way Python code talks to SpacetimeDB.
+"""RESTore store client: the one way Python code talks to SpacetimeDB.
 
 Used by the Explorer (Daniel), the Operator (Tyler), the API, and the mock loader.
 Knows nothing about any specific website: it just calls reducers and runs SQL.

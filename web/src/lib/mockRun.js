@@ -1,11 +1,10 @@
 // DEMO ONLY: fakes the agents' progress so the dashboard can be shown before the back end exists.
-// Same plan and timings as app/renderer/mock.js.
 //
 // When the real agents are ready, stop using this and call
 //   dashboard.set('explorer', { status: 'working', progress: 0.4, stat: 'Pages mapped 12 / 30' })
 // from the real events instead. Agent ids: explorer, analyst, extractor, builder, worker, verifier.
 
-export function createMock(D, settings) {
+export function createMock(D) {
   // [agent, starts after (s), takes (s), then becomes]
   const PLAN = [
     ['explorer', 0, 10, 'done'],
@@ -23,7 +22,6 @@ export function createMock(D, settings) {
     for (const [id, at, takes, end] of PLAN) {
       const e = elapsed - at;
       // Read-only mode: the Worker never acts on the old site
-      if (id === 'worker' && settings.get().readOnly) { D.set(id, { status: 'idle', progress: 0, stat: 'Read-only mode · no actions' }); continue; }
       if (id === 'worker') D.set(id, { stat: null });
       if (e < 0) D.set(id, { status: 'idle', progress: 0 });
       else if (takes && e < takes) D.set(id, { status: 'working', progress: e / takes });

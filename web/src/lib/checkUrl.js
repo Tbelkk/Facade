@@ -1,4 +1,4 @@
-// URL fit-check: is this a legacy system Facade should explore?
+// URL fit-check: is this a legacy system RESTore should explore?
 //
 // Live:  POST {CHECK_ENDPOINT}  body { url }  →  { verdict: 'good_fit' | 'probably_not' | 'blocked', reasons: [string] }
 // Mock:  same answer shape, picked from the URL so every verdict can be tried (see mockVerdict below).
@@ -96,12 +96,12 @@ const MOCK = {
   probably_not: [
     'This looks like a modern public website',
     'It already offers a public API or data export',
-    'Facade works best on older systems your business runs or uses',
+    'RESTore works best on older systems your business runs or uses',
   ],
   blocked: [
     'This is a site you don’t run, with sensitive personal or financial data',
     'Its terms don’t allow automated access',
-    'Facade only explores systems you own or are authorized to automate',
+    'RESTore only explores systems you own or are authorized to automate',
   ],
 };
 

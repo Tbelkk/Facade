@@ -38,7 +38,7 @@ def run(snapshot, snapshot_dir=None, use_cache=True, use_ai_style=True, budget=N
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade ingest pipeline")
+    ap = argparse.ArgumentParser(description="RESTore ingest pipeline")
     src = ap.add_mutually_exclusive_group(required=True)
     src.add_argument("--snapshot", help="snapshot JSON file")
     src.add_argument("--live", action="store_true", help="Windows only: capture the window in front")

@@ -1,6 +1,6 @@
-"""Facade API.
+"""RESTore API.
 
-Run from the repo root (the Facade folder):
+Run from the repo root (the RESTore folder):
     uvicorn api.main:app --reload --port 8000
 
 Then open http://localhost:8000/docs to try the endpoints.
@@ -26,7 +26,7 @@ from api.fitcheck import check_url
 
 log = logging.getLogger("facade.api")
 
-app = FastAPI(title="Facade API", version="0.1.0",
+app = FastAPI(title="RESTore API", version="0.1.0",
               description="Legacy website -> database + API + MCP, built by Nemotron agents.")
 
 # Who may call this API from a browser:
@@ -64,7 +64,7 @@ def health() -> Dict[str, bool]:
 # and the server stays responsive while a slow site is being checked.
 @app.post("/check", response_model=CheckResponse)
 def check(body: CheckRequest) -> Dict[str, Any]:
-    """Is this URL a good fit for Facade? Opens the first page only, never logs in, never submits forms."""
+    """Is this URL a good fit for RESTore? Opens the first page only, never logs in, never submits forms."""
     try:
         return check_url(body.url)
     except Exception as exc:  # never hand the Console a 500: always a verdict it can show

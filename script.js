@@ -1,4 +1,4 @@
-// Facade landing page: scroll drives a "Nemotron rerender" from 1998 → 2026.
+// RESTore landing page: scroll drives a "Nemotron rerender" from 1998 → 2026.
 (function () {
   const root = document.documentElement;
   const stage = document.getElementById('stage');

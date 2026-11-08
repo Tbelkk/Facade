@@ -12,7 +12,7 @@ import os
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade: extract records using the explorer's recipes.json")
+    ap = argparse.ArgumentParser(description="RESTore: extract records using the explorer's recipes.json")
     ap.add_argument("run_dir")
     ap.add_argument("--login", choices=["none", "env", "manual"], default="none")
     ap.add_argument("--headed", action="store_true")

@@ -1,4 +1,4 @@
-// Facade Agents: a live network of agents passing work to each other.
+// RESTore Agents: a live network of agents passing work to each other.
 //   • Tasks stream in from the screen edges along dotted lanes to an agent.
 //   • Agents hand work to each other along links, then deliver results to the hub card.
 //   • Cursor pushes the dots aside; clicking sends a shockwave and assigns a new task.

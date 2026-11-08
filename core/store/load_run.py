@@ -106,7 +106,7 @@ def load(folder, clear=False, workers=8, max_events=500):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Load a Facade output folder into SpacetimeDB")
+    ap = argparse.ArgumentParser(description="Load a RESTore output folder into SpacetimeDB")
     ap.add_argument("folder")
     ap.add_argument("--clear", action="store_true", help="delete this site's rows first")
     ap.add_argument("--workers", type=int, default=8, help="parallel reducer calls")

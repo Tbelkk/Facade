@@ -1,17 +1,13 @@
-// Facade app: Dashboard and API pages plus the Settings drawer.
-// Same behavior as app/renderer/app.js.
+// RESTore app: Dashboard and API pages.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Titlebar from './components/Titlebar.jsx';
 import Intake from './components/Intake.jsx';
 import Board from './components/Board.jsx';
 import ApiView from './components/ApiView.jsx';
-import SettingsDrawer from './components/SettingsDrawer.jsx';
 import { createDashboard } from './lib/dashboard.js';
 import { createRunDriver, loadRecordedRun, replayRun } from './lib/runDriver.js';
 import DevPanel from './components/DevPanel.jsx';
-import { facadeSettings } from './lib/settings.js';
-import { useSettings } from './lib/hooks.js';
 
 export default function App() {
   // One dashboard + run driver for the app's lifetime. The driver turns real agent events into tile states.
@@ -22,9 +18,9 @@ export default function App() {
   const [replaying, setReplaying] = useState(false);
   useEffect(() => { loadRecordedRun().then(setRecorded); }, []);
   useEffect(() => () => { replay.current && replay.current.stop(); driver.stop(); }, [driver]);
-  // Globals: the HTML app's dashboard API, plus facadeEvent(evt) so a live back end can push real events.
+  // Globals: window.dashboard, plus facadeEvent(evt) so a live back end can push real events.
   useEffect(() => {
-    window.dashboard = dashboard; window.facadeSettings = facadeSettings;
+    window.dashboard = dashboard;
     window.facadeEvent = (evt) => driver.handle(evt);
   }, [dashboard, driver]);
 
@@ -35,13 +31,9 @@ export default function App() {
   const [phase, setPhase] = useState('Ready');
   const [clock, setClock] = useState('00:00');
   const [summary, setSummary] = useState(() => dashboard.summary());
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const settingsBtnRef = useRef(null);
-  const settings = useSettings();
 
   // body classes the stylesheet uses
   useEffect(() => { document.body.classList.toggle('running', running); }, [running]);
-  useEffect(() => { if (window.facade && window.facade.platform === 'darwin') document.body.classList.add('mac'); }, []);
 
   const stopRun = () => {
     replay.current && replay.current.stop();
@@ -65,17 +57,11 @@ export default function App() {
   };
 
   // Start exploring: the URL has already passed the fit-check and the authorization box (see Intake.jsx).
-  // A connected back end starts a real run and pushes events through window.facadeEvent;
-  // until then the recorded run plays so the dashboard still shows the real flow.
+  // A real run will be started here and push events through window.facadeEvent
+  // (call driver.begin({ site }) first). Until then the recorded run plays so the dashboard still shows the real flow.
   const startExploring = (checkedUrl) => {
     const u = new URL(checkedUrl);
     setHost(u.host);
-    if (window.facade && typeof window.facade.runAgents === 'function') {
-      driver.begin({ site: u.href });
-      window.facade.runAgents(u.href);
-      setRunning(true);
-      return;
-    }
     startReplay(1);
   };
 
@@ -87,26 +73,13 @@ export default function App() {
       const s = Math.floor(driver.elapsed());
       setClock(`${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`);
       const active = dashboard.find('working');
-      const tag = replaying || (replay.current && !window.facade?.runAgents) ? 'Recorded run · ' : '';
+      const tag = replaying || replay.current ? 'Recorded run · ' : '';
       setPhase(tag + (active
         ? `${active.name} working · ${host}`
         : dashboard.find('live') ? `Live · API + MCP ready for ${host}` : `Starting · ${host}`));
     }, 250);
     return () => clearInterval(id);
   }, [dashboard, driver, running, replaying, host]);
-
-  const openSettings = () => setSettingsOpen(true);
-  const closeSettings = useCallback(() => {
-    setSettingsOpen((wasOpen) => {
-      if (wasOpen) setTimeout(() => settingsBtnRef.current && settingsBtnRef.current.focus(), 0);
-      return false;
-    });
-  }, []);
-
-  const safety = {
-    label: settings.readOnly ? 'Read-only' : settings.askBeforeActing === 'never' ? 'Can act' : 'Can act · asks first',
-    acting: !settings.readOnly,
-  };
 
   return (
     <>
@@ -115,14 +88,12 @@ export default function App() {
       <Titlebar view={view} onView={setView} />
 
       <main className={'app view' + (view === 'dashboard' ? ' on' : '')} id="view-dashboard">
-        <Intake ref={settingsBtnRef} phase={phase} running={running} url={url} setUrl={setUrl}
-          onStart={startExploring} onStop={stopRun} safety={safety} onOpenSettings={openSettings} />
+        <Intake phase={phase} running={running} url={url} setUrl={setUrl}
+          onStart={startExploring} onStop={stopRun} />
         <Board dashboard={dashboard} store={driver.store} working={summary.working} total={summary.total} clock={clock} />
       </main>
 
       <ApiView store={driver.store} host={host} on={view === 'api'} />
-
-      <SettingsDrawer open={settingsOpen} onClose={closeSettings} url={url} />
 
       <DevPanel recorded={recorded} running={running} replaying={replaying} onRun={startReplay} onStop={stopRun} />
     </>

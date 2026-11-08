@@ -144,14 +144,14 @@ def run(folder, port=8000, host="127.0.0.1", check_only=False, live=True, log=pr
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Facade Server: run the generated API + MCP server")
+    ap = argparse.ArgumentParser(description="RESTore Server: run the generated API + MCP server")
     ap.add_argument("folder", help="shared/output/<site> (or a run folder with operations.json)")
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--check-only", action="store_true", help="self-test and exit without serving")
     ap.add_argument("--no-live", action="store_true", help="don't report events to SpacetimeDB")
     a = ap.parse_args(argv)
-    print(f"Facade Server → {a.folder}")
+    print(f"RESTore Server → {a.folder}")
     run(a.folder, port=a.port, host=a.host, check_only=a.check_only, live=not a.no_live)
 
 

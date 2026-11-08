@@ -243,7 +243,7 @@ def _check_write(op, e, tag):
 
 # ------------------------------------------------------------------ Nemotron
 
-SYSTEM = """You are the Operator agent of Facade. Another agent explored a legacy website (no API) and
+SYSTEM = """You are the Operator agent of RESTore. Another agent explored a legacy website (no API) and
 extracted its data. You design the REST API that other software will use to reach this data.
 
 Decide, from the entity profiles you are given (fields, types, REAL value statistics, forms seen):

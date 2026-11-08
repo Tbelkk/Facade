@@ -1,4 +1,4 @@
-# Facade SpacetimeDB module
+# RESTore SpacetimeDB module
 
 Site-agnostic storage for whatever the Nemotron agents discover. Every table has a `site` column, so any number of explored URLs can live side by side.
 

@@ -6,7 +6,7 @@ Shape agreed with the frontend (schema_version 1):
     tree    nested nodes with ARIA roles, window-relative rects [x, y, w, h], locators
     menus   [{name, hotkey, items[]}]
 
-Facade additions (extra keys only, nothing in the agreed shape is changed):
+RESTore additions (extra keys only, nothing in the agreed shape is changed):
     screen.window.{x, y, dpi_scale}   where the window is on screen, so the overlay can sit on top
     screen.ai                         Nemotron's screen understanding (purpose, help, warnings, sections...)
     node.ai                           Nemotron's per-control labels (plain-English label, importance, risk)

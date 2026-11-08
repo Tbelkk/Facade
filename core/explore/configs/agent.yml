@@ -1,4 +1,4 @@
-# A Nemotron ReAct agent (NeMo Agent Toolkit) that uses the Facade Explorer as a tool.
+# A Nemotron ReAct agent (NeMo Agent Toolkit) that uses the RESTore Explorer as a tool.
 #   nat run --config_file explore/configs/agent.yml --input "Map the clinic system at http://localhost:5005 and tell me which entities it holds"
 #   nat serve --config_file explore/configs/agent.yml      # same thing as a REST endpoint
 llms:

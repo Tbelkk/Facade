@@ -12,7 +12,7 @@ from . import nemotron
 
 def main():
     print(f"endpoint={nemotron.BASE_URL}  model={nemotron.MODEL_VISION}  budget={nemotron.REASONING_BUDGET}")
-    r = nemotron.chat([{"role": "user", "content": "Reply with exactly: Facade online."}],
+    r = nemotron.chat([{"role": "user", "content": "Reply with exactly: RESTore online."}],
                       purpose="test_text", answer_tokens=200)
     print(f"[text]   {r['ms']} ms -> {r['text']!r}")
     print(f"         usage={r['usage']}")
