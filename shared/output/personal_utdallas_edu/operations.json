@@ -1,355 +1,278 @@
 {
   "version": 1,
   "site": "https://personal.utdallas.edu/~John.cole/",
-  "generated_at": "2026-11-08T04:34:10",
+  "generated_at": "2026-11-08T06:33:30",
   "designed_by": {
     "by": "nemotron",
     "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
     "attempts": 2,
-    "nemotron_ms": 73297,
+    "nemotron_ms": 112040,
     "problems_found": [
-      "list_professors: input 'class_list_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'welcome_message_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'note_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'note_detail_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'professor_name_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'professor_title_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'photo_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'department_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'university_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'class_list_eq' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "search_professors: path '/professors/search?q=' must start with / and use lowercase letters, digits, _ - {}",
-      "list_facultymembers: input 'navigation_items_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
-      "list_facultymembers: input 'welcome_message_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
-      "list_facultymembers: input 'navigation_items_eq' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
-      "search_facultymembers: path '/facultymembers/search?q=' must start with / and use lowercase letters, digits, _ - {}",
-      "list_programmingtips: input 'title_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
-      "list_programmingtips: input 'description_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
-      "list_programmingtips: input 'title_eq' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
-      "search_programmingtips: path '/programmingtips/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+      "search_teaching_philosophy: search input 'q' needs 'fields' that are text fields of TeachingPhilosophy; bad: none given",
+      "search_useful_link: search input 'q' needs 'fields' that are text fields of UsefulLink; bad: none given",
+      "search_course: search input 'q' needs 'fields' that are text fields of Course; bad: none given",
+      "search_guideline: search input 'q' needs 'fields' that are text fields of Guideline; bad: none given",
+      "search_schedule: search input 'q' needs 'fields' that are text fields of Schedule; bad: none given",
+      "search_project: search input 'q' needs 'fields' that are text fields of Project; bad: none given"
     ],
     "problems_after_fix": [
-      "list_professors: input 'class_list_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'welcome_message_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'note_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'note_detail_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'professor_name_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'professor_title_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'photo_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'department_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'university_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "list_professors: input 'class_list_eq' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-      "search_professors: path '/professors/search?q=' must start with / and use lowercase letters, digits, _ - {}",
-      "list_facultymembers: input 'navigation_items_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
-      "list_facultymembers: input 'welcome_message_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
-      "list_facultymembers: input 'navigation_items_eq' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
-      "search_facultymembers: path '/facultymembers/search?q=' must start with / and use lowercase letters, digits, _ - {}",
-      "list_programmingtips: input 'title_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
-      "list_programmingtips: input 'description_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
-      "list_programmingtips: input 'title_eq' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
-      "search_programmingtips: path '/programmingtips/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+      "search_teaching_philosophy: search input 'q' needs 'fields' that are text fields of TeachingPhilosophy; bad: ['d', 'e', 's', 'c', 'r', 'i', 'p', 't', 'i', 'o', 'n']",
+      "search_useful_link: search input 'q' needs 'fields' that are text fields of UsefulLink; bad: ['d', 'e', 's', 'c', 'r', 'i', 'p', 't', 'i', 'o', 'n']",
+      "search_course: search input 'q' needs 'fields' that are text fields of Course; bad: ['t', 'i', 't', 'l', 'e', ',', 'd', 'e', 't', 'a', 'i', 'l', 's']",
+      "search_guideline: search input 'q' needs 'fields' that are text fields of Guideline; bad: ['g', 'u', 'i', 'd', 'e', 'l', 'i', 'n', 'e']",
+      "search_schedule: search input 'q' needs 'fields' that are text fields of Schedule; bad: ['t', 'o', 'p', 'i', 'c']",
+      "search_project: search input 'q' needs 'fields' that are text fields of Project; bad: ['d', 'e', 's', 'c', 'r', 'i', 'p', 't', 'i', 'o', 'n', ',', 't', 'i', 't', 'l', 'e']"
     ],
     "dropped": [
       {
-        "name": "list_professors",
+        "name": "search_teaching_philosophy",
         "problems": [
-          "list_professors: input 'class_list_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'welcome_message_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'note_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'note_detail_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'professor_name_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'professor_title_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'photo_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'department_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'university_url_contains' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)",
-          "list_professors: input 'class_list_eq' uses field 'None', which Professor does not have (fields: class_list, welcome_message, professor_name, professor_title, photo_url, department_url, university_url, note, note_detail, legacy_id)"
+          "search_teaching_philosophy: search input 'q' needs 'fields' that are text fields of TeachingPhilosophy; bad: ['d', 'e', 's', 'c', 'r', 'i', 'p', 't', 'i', 'o', 'n']"
         ]
       },
       {
-        "name": "search_professors",
+        "name": "search_useful_link",
         "problems": [
-          "search_professors: path '/professors/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+          "search_useful_link: search input 'q' needs 'fields' that are text fields of UsefulLink; bad: ['d', 'e', 's', 'c', 'r', 'i', 'p', 't', 'i', 'o', 'n']"
         ]
       },
       {
-        "name": "list_facultymembers",
+        "name": "search_course",
         "problems": [
-          "list_facultymembers: input 'navigation_items_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
-          "list_facultymembers: input 'welcome_message_contains' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)",
-          "list_facultymembers: input 'navigation_items_eq' uses field 'None', which FacultyMember does not have (fields: navigation_items, welcome_message, legacy_id)"
+          "search_course: search input 'q' needs 'fields' that are text fields of Course; bad: ['t', 'i', 't', 'l', 'e', ',', 'd', 'e', 't', 'a', 'i', 'l', 's']"
         ]
       },
       {
-        "name": "search_facultymembers",
+        "name": "search_guideline",
         "problems": [
-          "search_facultymembers: path '/facultymembers/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+          "search_guideline: search input 'q' needs 'fields' that are text fields of Guideline; bad: ['g', 'u', 'i', 'd', 'e', 'l', 'i', 'n', 'e']"
         ]
       },
       {
-        "name": "list_programmingtips",
+        "name": "search_schedule",
         "problems": [
-          "list_programmingtips: input 'title_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
-          "list_programmingtips: input 'description_contains' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)",
-          "list_programmingtips: input 'title_eq' uses field 'None', which ProgrammingTip does not have (fields: title, description, author, university, date, legacy_id)"
+          "search_schedule: search input 'q' needs 'fields' that are text fields of Schedule; bad: ['t', 'o', 'p', 'i', 'c']"
         ]
       },
       {
-        "name": "search_programmingtips",
+        "name": "search_project",
         "problems": [
-          "search_programmingtips: path '/programmingtips/search?q=' must start with / and use lowercase letters, digits, _ - {}"
+          "search_project: search input 'q' needs 'fields' that are text fields of Project; bad: ['d', 'e', 's', 'c', 'r', 'i', 'p', 't', 'i', 'o', 'n', ',', 't', 'i', 't', 'l', 'e']"
         ]
       }
     ],
-    "added_by_code": [
-      "list_professors",
-      "list_faculty_members",
-      "list_programming_tips"
-    ]
+    "added_by_code": []
+  },
+  "cleaned_by": {
+    "by": "nemotron",
+    "dropped_entities": [
+      {
+        "entity": "Announcement",
+        "why": "page layout or duplicate (Nemotron)"
+      }
+    ],
+    "dropped_fields": [
+      {
+        "entity": "Course",
+        "count": 6,
+        "why": "never had a value"
+      }
+    ],
+    "renamed": [
+      {
+        "from": "TeachingPhilosophy",
+        "to": "TeachingPhilosophy",
+        "fields": {},
+        "dropped_fields": []
+      },
+      {
+        "from": "UsefulLink",
+        "to": "UsefulLink",
+        "fields": {},
+        "dropped_fields": []
+      },
+      {
+        "from": "Course",
+        "to": "Course",
+        "fields": {},
+        "dropped_fields": []
+      },
+      {
+        "from": "Guideline",
+        "to": "Guideline",
+        "fields": {},
+        "dropped_fields": []
+      },
+      {
+        "from": "Schedule",
+        "to": "Schedule",
+        "fields": {},
+        "dropped_fields": []
+      }
+    ],
+    "merged": [],
+    "moved": [
+      {
+        "from": "Announcement",
+        "page": "/~John.cole/Projects/Projects.html",
+        "to": "Project",
+        "count": 4
+      }
+    ],
+    "problems": [],
+    "nemotron_ms": 21036
   },
   "entities": {
-    "Professor": {
-      "key": "legacy_id",
-      "record_count": 18,
-      "fields": [
-        {
-          "name": "class_list",
-          "label": "Classes Office Notes for Students Links Announcements Projects Reading List Teac",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "welcome_message",
-          "label": "Welcome to my online home. I'm a Professor of Instruction in the Compu",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "professor_name",
-          "label": "John Cole",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "professor_title",
-          "label": "Professor of Instruction in the Compu",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "photo_url",
-          "label": "John Cole photo",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "department_url",
-          "label": "Computer Science Department",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "university_url",
-          "label": "University of Texas at Dallas",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "note",
-          "label": "Some general notes for anyone taking my classes These are general guidelines. Some, such as attendance or grading policy, may differ from what is in any course syllabus. The syllabus always takes precedence.",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "note_detail",
-          "label": "I believe in you. I believe you are here at UTD because you are capable of doing excellent work. Please show me that this is true. Here are some guidelines for success.",
-          "type": "string",
-          "required": false
-        }
-      ]
-    },
-    "FacultyMember": {
+    "TeachingPhilosophy": {
       "key": "legacy_id",
       "record_count": 1,
+      "description": "A statement describing the teaching approach for courses.",
       "fields": [
         {
-          "name": "navigation_items",
-          "label": "navigation_items",
+          "name": "description",
+          "label": "description",
           "type": "string",
-          "required": false
-        },
-        {
-          "name": "welcome_message",
-          "label": "welcome_message",
-          "type": "string",
-          "required": false
+          "required": false,
+          "description": "Narrative describing the teaching philosophy."
         }
       ]
     },
-    "ProgrammingTip": {
+    "UsefulLink": {
       "key": "legacy_id",
-      "record_count": 10,
+      "record_count": 1,
+      "description": "A link or resource providing useful code samples for classes.",
       "fields": [
         {
-          "name": "title",
-          "label": "col1",
-          "type": "string",
-          "required": true
-        },
-        {
           "name": "description",
-          "label": "Random-access file example program in C++.",
+          "label": "description",
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Text describing the useful link or resource."
+        }
+      ]
+    },
+    "Course": {
+      "key": "legacy_id",
+      "record_count": 89,
+      "description": "A course offering for a specific term.",
+      "fields": [
+        {
+          "name": "term",
+          "label": "term",
+          "type": "string",
+          "required": false,
+          "description": "Term identifier, e.g., Fall 2026."
         },
         {
-          "name": "author",
-          "label": "John Cole",
+          "name": "course_info",
+          "label": "course_info",
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Details about the course schedule and section."
         },
         {
-          "name": "university",
-          "label": "The University of Texas at Dallas",
+          "name": "title",
+          "label": "title",
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Course title or identifier."
+        },
+        {
+          "name": "details",
+          "label": "details",
+          "type": "string",
+          "required": false,
+          "description": "Additional course details such as room and update date."
+        }
+      ]
+    },
+    "Guideline": {
+      "key": "legacy_id",
+      "record_count": 20,
+      "description": "A rule or recommendation for grading or programming.",
+      "fields": [
+        {
+          "name": "guideline",
+          "label": "guideline",
+          "type": "string",
+          "required": false,
+          "description": "Text of the guideline or recommendation."
+        }
+      ]
+    },
+    "Schedule": {
+      "key": "legacy_id",
+      "record_count": 17,
+      "description": "Weekly schedule listing dates, topics, and assignments.",
+      "fields": [
+        {
+          "name": "week",
+          "label": "Week",
+          "type": "string",
+          "required": false,
+          "source_type": "int",
+          "description": "Week number."
         },
         {
           "name": "date",
-          "label": "November 1, 2016",
-          "type": "date",
-          "required": false
+          "label": "Date",
+          "type": "string",
+          "required": false,
+          "note": "values are not ISO dates (for example relative times)",
+          "source_type": "date",
+          "description": "Date of the class session."
+        },
+        {
+          "name": "topic",
+          "label": "Topic",
+          "type": "string",
+          "required": false,
+          "description": "Topic covered in the class."
+        },
+        {
+          "name": "assignments",
+          "label": "Assignments",
+          "type": "string",
+          "required": false,
+          "description": "Assignments due for the week."
         }
       ]
     },
-    "DatabaseConnection": {
+    "Project": {
       "key": "legacy_id",
-      "record_count": 0,
-      "fields": []
-    },
-    "Fibonacci": {
-      "key": "legacy_id",
-      "record_count": 0,
-      "fields": []
+      "record_count": 4,
+      "description": "Project entries from the Projects page.",
+      "fields": [
+        {
+          "name": "description",
+          "label": "description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "title",
+          "label": "title",
+          "type": "string",
+          "required": false
+        }
+      ]
     }
   },
   "operations": [
     {
-      "name": "get_professor",
+      "name": "list_teaching_philosophy",
       "method": "GET",
-      "path": "/professors/{id}",
-      "entity": "Professor",
-      "kind": "get",
-      "source": "database",
-      "summary": "Retrieve a single professor by its legacy ID.",
-      "inputs": [
-        {
-          "name": "id",
-          "in": "path",
-          "type": "string",
-          "field": "legacy_id",
-          "match": "id",
-          "required": true
-        }
-      ],
-      "output": {
-        "type": "record",
-        "entity": "Professor"
-      },
-      "legacy": {
-        "form_page": null,
-        "steps": []
-      },
-      "example": {
-        "request": "/professors/~John.cole",
-        "response": {
-          "legacy_id": "~John.cole",
-          "class_list": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
-          "welcome_message": "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
-        }
-      }
-    },
-    {
-      "name": "get_facultymember",
-      "method": "GET",
-      "path": "/facultymembers/{id}",
-      "entity": "FacultyMember",
-      "kind": "get",
-      "source": "database",
-      "summary": "Retrieve a single faculty member by its legacy ID.",
-      "inputs": [
-        {
-          "name": "id",
-          "in": "path",
-          "type": "string",
-          "field": "legacy_id",
-          "match": "id",
-          "required": true
-        }
-      ],
-      "output": {
-        "type": "record",
-        "entity": "FacultyMember"
-      },
-      "legacy": {
-        "form_page": null,
-        "steps": []
-      },
-      "example": {
-        "request": "/facultymembers/d2f00fffdcc2",
-        "response": {
-          "legacy_id": "d2f00fffdcc2",
-          "navigation_items": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
-          "welcome_message": "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
-        }
-      }
-    },
-    {
-      "name": "get_programmingtip",
-      "method": "GET",
-      "path": "/programmingtips/{id}",
-      "entity": "ProgrammingTip",
-      "kind": "get",
-      "source": "database",
-      "summary": "Retrieve a single programming tip by its legacy ID.",
-      "inputs": [
-        {
-          "name": "id",
-          "in": "path",
-          "type": "string",
-          "field": "legacy_id",
-          "match": "id",
-          "required": true
-        }
-      ],
-      "output": {
-        "type": "record",
-        "entity": "ProgrammingTip"
-      },
-      "legacy": {
-        "form_page": null,
-        "steps": []
-      },
-      "example": {
-        "request": "/programmingtips/AndroidFileIO.html",
-        "response": {
-          "legacy_id": "AndroidFileIO.html",
-          "title": "Android Programming Android File I/O examples Android File I/O problem and solution Code snippets for animation using a thread on a timer Low-Pass Filter Array Adapter for ListView"
-        }
-      }
-    },
-    {
-      "name": "list_databaseconnections",
-      "method": "GET",
-      "path": "/databaseconnections",
-      "entity": "DatabaseConnection",
+      "path": "/teaching_philosophy",
+      "entity": "TeachingPhilosophy",
       "kind": "list",
       "source": "database",
-      "summary": "List database connection records (currently none).",
+      "summary": "Retrieve teaching philosophy statements with optional filtering and pagination.",
       "inputs": [
         {
           "name": "limit",
           "in": "query",
           "type": "integer",
+          "field": "id",
           "match": "limit",
           "required": false
         },
@@ -357,323 +280,719 @@
           "name": "offset",
           "in": "query",
           "type": "integer",
+          "field": "id",
           "match": "offset",
-          "required": false
-        }
-      ],
-      "output": {
-        "type": "list",
-        "entity": "DatabaseConnection"
-      },
-      "legacy": {
-        "form_page": null,
-        "steps": []
-      },
-      "example": {
-        "request": "/databaseconnections?limit=3",
-        "response": {
-          "total": 0,
-          "limit": 3,
-          "offset": 0,
-          "items": []
-        }
-      }
-    },
-    {
-      "name": "get_databaseconnection",
-      "method": "GET",
-      "path": "/databaseconnections/{id}",
-      "entity": "DatabaseConnection",
-      "kind": "get",
-      "source": "database",
-      "summary": "Retrieve a single database connection by its legacy ID.",
-      "inputs": [
-        {
-          "name": "id",
-          "in": "path",
-          "type": "string",
-          "field": "legacy_id",
-          "match": "id",
-          "required": true
-        }
-      ],
-      "output": {
-        "type": "record",
-        "entity": "DatabaseConnection"
-      },
-      "legacy": {
-        "form_page": null,
-        "steps": []
-      },
-      "example": {
-        "request": "/databaseconnections/",
-        "response": {
-          "error": "not found"
-        }
-      }
-    },
-    {
-      "name": "list_fibonacci",
-      "method": "GET",
-      "path": "/fibonacci",
-      "entity": "Fibonacci",
-      "kind": "list",
-      "source": "database",
-      "summary": "List Fibonacci records (currently none).",
-      "inputs": [
-        {
-          "name": "limit",
-          "in": "query",
-          "type": "integer",
-          "match": "limit",
           "required": false
         },
         {
-          "name": "offset",
+          "name": "description_contains",
           "in": "query",
-          "type": "integer",
-          "match": "offset",
+          "type": "string",
+          "field": "description",
+          "match": "contains",
           "required": false
-        }
-      ],
-      "output": {
-        "type": "list",
-        "entity": "Fibonacci"
-      },
-      "legacy": {
-        "form_page": null,
-        "steps": []
-      },
-      "example": {
-        "request": "/fibonacci?limit=3",
-        "response": {
-          "total": 0,
-          "limit": 3,
-          "offset": 0,
-          "items": []
-        }
-      }
-    },
-    {
-      "name": "get_fibonacci",
-      "method": "GET",
-      "path": "/fibonacci/{id}",
-      "entity": "Fibonacci",
-      "kind": "get",
-      "source": "database",
-      "summary": "Retrieve a single Fibonacci record by its legacy ID.",
-      "inputs": [
+        },
         {
-          "name": "id",
-          "in": "path",
-          "type": "string",
-          "field": "legacy_id",
-          "match": "id",
-          "required": true
-        }
-      ],
-      "output": {
-        "type": "record",
-        "entity": "Fibonacci"
-      },
-      "legacy": {
-        "form_page": null,
-        "steps": []
-      },
-      "example": {
-        "request": "/fibonacci/",
-        "response": {
-          "error": "not found"
-        }
-      }
-    },
-    {
-      "name": "list_professors",
-      "method": "GET",
-      "path": "/professors",
-      "entity": "Professor",
-      "kind": "list",
-      "source": "database",
-      "summary": "List Professor records, with filters",
-      "inputs": [
-        {
-          "name": "class_list",
+          "name": "description_eq",
           "in": "query",
           "type": "string",
-          "field": "class_list",
+          "field": "description",
           "match": "eq",
-          "values": [
-            "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *"
-          ],
-          "required": false
-        },
-        {
-          "name": "welcome_message",
-          "in": "query",
-          "type": "string",
-          "field": "welcome_message",
-          "match": "eq",
-          "values": [
-            "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
-          ],
-          "required": false
-        },
-        {
-          "name": "note_detail",
-          "in": "query",
-          "type": "string",
-          "field": "note_detail",
-          "match": "eq",
-          "values": [
-            "Academic Integrity. All assignments, unless explicitly stated in writing in the assignment, are individual. That is, you are to turn in your own work. You are not to work in a group, then each of you ",
-            "Robot built for the workshop at PES University.",
-            "Home Monitoring and Control system running at my house. This uses a combination of Arduino and Raspberry Pi boards.",
-            "Android Pong Game. This is the first app I have released to the Google Play Store. It's available free, and was done in part as a UTD project. You can find it using my name and \"Pong.\"",
-            "Section 052: Tuesday/Thursday from 8:00 AM to 8:50 AM 8-week session from January 20 to March 9, 2026 Section 051: Tuesday/Thursday from 9:00 AM to 9:50 AM 8-week session from January 20 to March 9, 2",
-            "Room: SCI 1.220",
-            "Last update: 5/15/2026",
-            "Schedule for Section 051 & 052 Schedule for Section 091 & 092"
-          ],
-          "required": false
-        },
-        {
-          "name": "limit",
-          "in": "query",
-          "type": "integer",
-          "match": "limit",
-          "required": false
-        },
-        {
-          "name": "offset",
-          "in": "query",
-          "type": "integer",
-          "match": "offset",
-          "required": false
-        }
-      ],
-      "output": {
-        "type": "list",
-        "entity": "Professor"
-      },
-      "example": {
-        "request": "/professors?class_list=Classes+Office+Notes+for+Students+Links+Announcements+Projects+Reading+List+Teaching+Philosophy+ACM+at+UTD+%2A&limit=3",
-        "response": {
-          "total": 1,
-          "limit": 3,
-          "offset": 0,
-          "items": [
-            {
-              "legacy_id": "~John.cole",
-              "class_list": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
-              "welcome_message": "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "list_faculty_members",
-      "method": "GET",
-      "path": "/faculty_members",
-      "entity": "FacultyMember",
-      "kind": "list",
-      "source": "database",
-      "summary": "List FacultyMember records, with filters",
-      "inputs": [
-        {
-          "name": "limit",
-          "in": "query",
-          "type": "integer",
-          "match": "limit",
-          "required": false
-        },
-        {
-          "name": "offset",
-          "in": "query",
-          "type": "integer",
-          "match": "offset",
-          "required": false
-        }
-      ],
-      "output": {
-        "type": "list",
-        "entity": "FacultyMember"
-      },
-      "example": {
-        "request": "/faculty_members?limit=3",
-        "response": {
-          "total": 1,
-          "limit": 3,
-          "offset": 0,
-          "items": [
-            {
-              "legacy_id": "d2f00fffdcc2",
-              "navigation_items": "Classes Office Notes for Students Links Announcements Projects Reading List Teaching Philosophy ACM at UTD *",
-              "welcome_message": "John Cole Welcome to my online home. I'm a Professor of Instruction in the Computer Science Department here at the University of Texas at Dallas. I taught part-time at Collin County Community College "
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "list_programming_tips",
-      "method": "GET",
-      "path": "/programming_tips",
-      "entity": "ProgrammingTip",
-      "kind": "list",
-      "source": "database",
-      "summary": "List ProgrammingTip records, with filters",
-      "inputs": [
-        {
-          "name": "limit",
-          "in": "query",
-          "type": "integer",
-          "match": "limit",
-          "required": false
-        },
-        {
-          "name": "offset",
-          "in": "query",
-          "type": "integer",
-          "match": "offset",
           "required": false
         },
         {
           "name": "sort",
           "in": "query",
           "type": "string",
+          "field": "description",
           "match": "sort",
-          "values": [
-            "date",
-            "-date"
-          ],
           "required": false
         }
       ],
       "output": {
         "type": "list",
-        "entity": "ProgrammingTip"
+        "entity": "TeachingPhilosophy"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
       },
       "example": {
-        "request": "/programming_tips?limit=3",
+        "request": "/teaching_philosophy?description_eq=Nearly+every+course+I+teach+with+the+exception+of+CS1200+will+involve+lots+of+programming.+There+is+an+ancient+saying+attributed+to+Confucius+that+goes+like+this%3A+%22I+hear+and+I+forget.+I+see+and+I+remember.+I+do+and+I+understand.%22+In+my+classes%2C+I+use+a+combination+of+PowerPoint+slides%2C+lecture%2C+examples%2C+and+in-class+exercises+so+you+can+both+see+and+hear%2C+and+sometimes+do%2C+as+well.+More...&limit=3",
         "response": {
-          "total": 10,
+          "total": 1,
           "limit": 3,
           "offset": 0,
           "items": [
             {
-              "legacy_id": "AndroidFileIO.html",
-              "title": "Android Programming Android File I/O examples Android File I/O problem and solution Code snippets for animation using a thread on a timer Low-Pass Filter Array Adapter for ListView"
-            },
-            {
-              "legacy_id": "BinaryIO-CPP.html",
-              "title": "Database Programming C++ Binary File I/O Sample C++ Random-Access File I/O Sample Java Random-Access I/O Sample Connect to a MS SQL Server database from Java Connect to a MySQL database from Java"
-            },
-            {
-              "legacy_id": "CSScreenSize.html",
-              "title": "C# Programming Maximizing the screen and adjusting controls Comparator Class for ListView Capturing keystrokes at the Form level C++ Programming Example of \"friend\" classes MIPS Assembly Language Fibo"
+              "legacy_id": "75e0160ac56a",
+              "description": "Nearly every course I teach with the exception of CS1200 will involve lots of programming. There is an ancient saying attributed to Confucius that goes like this: \"I hear and I forget. I see and I remember. I do and I understand.\" In my classes, I use a combination of PowerPoint slides, lecture, examples, and in-class exercises so you can both see and hear, and sometimes do, as well. More..."
             }
           ]
+        }
+      }
+    },
+    {
+      "name": "get_teaching_philosophy",
+      "method": "GET",
+      "path": "/teaching_philosophy/{id}",
+      "entity": "TeachingPhilosophy",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single teaching philosophy by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "TeachingPhilosophy"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/teaching_philosophy/75e0160ac56a",
+        "response": {
+          "legacy_id": "75e0160ac56a",
+          "description": "Nearly every course I teach with the exception of CS1200 will involve lots of programming. There is an ancient saying attributed to Confucius that goes like this: \"I hear and I forget. I see and I remember. I do and I understand.\" In my classes, I use a combination of PowerPoint slides, lecture, examples, and in-class exercises so you can both see and hear, and sometimes do, as well. More..."
+        }
+      }
+    },
+    {
+      "name": "list_useful_link",
+      "method": "GET",
+      "path": "/useful_link",
+      "entity": "UsefulLink",
+      "kind": "list",
+      "source": "database",
+      "summary": "Retrieve useful link resources with optional filtering and pagination.",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "description_contains",
+          "in": "query",
+          "type": "string",
+          "field": "description",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "description_eq",
+          "in": "query",
+          "type": "string",
+          "field": "description",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": "description",
+          "match": "sort",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "UsefulLink"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/useful_link?description_eq=Programming+Tips%2C+including+Android%2C+C%2B%2B%2C+etc.+These+are+code+samples+you+can+use+for+some+of+my+classes.+Some+useful+Software+Engineering+Basics+to+help+you+create+better+programs.+Uncommented+code+is+bad+and+wrong.+Learn+How+to+comment+your+code.+%28You+should+comment+it+before+you+write+it.+That%27s+why+this+section+is+first.%29+This+is+critical+if+you+are+taking+one+of+my+programming+classes+where+at+least+10%25+of+your+grade+is+based+on+the+code+comments.+Spending+far+too+much+time+writing+programs%3F+Learn+How+to+write+code.+A+succinct+explanation+of+a+technique+that+will+save+you+time+and+give+you+good+results.+ScanTron+form%2C+correctly+filled+out.+%28Only+for+tests+in+the+classroom.%29+The+entire+form%2C+including+your+name+and+course%2C+must+be+completed+in+number+2+pencil+only.+Pen+does+not+scan+and+you+will+lose+10+points+for+any+corrections+I+must+make+to+your+form%2C+including+using+the+wrong+one%2C+using+pen%2C+etc.+The+%22ID%22+field+is+a+number+that+will+be+assigned+to+you+as+a+%22grade%22+in+eLearning.+Ideally%2C+you+should+have+filled+in+the+information+other+than+the+answers+%28I+have+shown+a+few+sample+answers%2C+but+ignore+those%29+before+you+come+to+class.+Grader+Guidelines+for+graders+to+follow+and+students+to+understand.+You+will+find+assignments%2C+grades%2C+and+other+class+material+on+eLearning%2C+also+called+Blackboard.+The+Computer+Science+Department+main+page+contains+recent+events+and+other+information.+It%27s+also+pretty+cool.+UTD+International+Student+Services+Organization.+Given+the+importance+of+writing+in+most+of+my+classes%2C+if+English+is+not+your+first+language+you+will+find+useful+events%2C+such+as+conversation+workshops%2C+writing+help%2C+and+other+help+here.+You+can+also+get+writing+help+from+the+Student+Success+Center%27s+Writing+Center.+I+cannot+stress+enough+the+importance+of+good+writing.+The+Computer+Science+Mentor+Center+can+help+you+with+CS1336%2C+CS1337%2C+CS2340%2C+and+CS2336%2C+among+other+classes.+Click+here+to+go+to+the+Center%27s+official+page.+Many+books+and+journals+that+are+useful+in+my+classes+are+online+at+the+UTD+Library.&limit=3",
+        "response": {
+          "total": 1,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "6e1b9bfb19be",
+              "description": "Programming Tips, including Android, C++, etc. These are code samples you can use for some of my classes. Some useful Software Engineering Basics to help you create better programs. Uncommented code is bad and wrong. Learn How to comment your code. (You should comment it before you write it. That's why this section is first.) This is critical if you are taking one of my programming classes where at least 10% of your grade is based on the code comments. Spending far too much time writing programs? Learn How to write code. A succinct explanation of a technique that will save you time and give you good results. ScanTron form, correctly filled out. (Only for tests in the classroom.) The entire form, including your name and course, must be completed in number 2 pencil only. Pen does not scan and you will lose 10 points for any corrections I must make to your form, including using the wrong one, using pen, etc. The \"ID\" field is a number that will be assigned to you as a \"grade\" in eLearning. Ideally, you should have filled in the information other than the answers (I have shown a few sample answers, but ignore those) before you come to class. Grader Guidelines for graders to follow and students to understand. You will find assignments, grades, and other class material on eLearning, also called Blackboard. The Computer Science Department main page contains recent events and other information. It's also pretty cool. UTD International Student Services Organization. Given the importance of writing in most of my classes, if English is not your first language you will find useful events, such as conversation workshops, writing help, and other help here. You can also get writing help from the Student Success Center's Writing Center. I cannot stress enough the importance of good writing. The Computer Science Mentor Center can help you with CS1336, CS1337, CS2340, and CS2336, among other classes. Click here to go to the Center's official page. Many books and journals that are useful in my classes are online at the UTD Library."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_useful_link",
+      "method": "GET",
+      "path": "/useful_link/{id}",
+      "entity": "UsefulLink",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single useful link by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "UsefulLink"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/useful_link/6e1b9bfb19be",
+        "response": {
+          "legacy_id": "6e1b9bfb19be",
+          "description": "Programming Tips, including Android, C++, etc. These are code samples you can use for some of my classes. Some useful Software Engineering Basics to help you create better programs. Uncommented code is bad and wrong. Learn How to comment your code. (You should comment it before you write it. That's why this section is first.) This is critical if you are taking one of my programming classes where at least 10% of your grade is based on the code comments. Spending far too much time writing programs? Learn How to write code. A succinct explanation of a technique that will save you time and give you good results. ScanTron form, correctly filled out. (Only for tests in the classroom.) The entire form, including your name and course, must be completed in number 2 pencil only. Pen does not scan and you will lose 10 points for any corrections I must make to your form, including using the wrong one, using pen, etc. The \"ID\" field is a number that will be assigned to you as a \"grade\" in eLearning. Ideally, you should have filled in the information other than the answers (I have shown a few sample answers, but ignore those) before you come to class. Grader Guidelines for graders to follow and students to understand. You will find assignments, grades, and other class material on eLearning, also called Blackboard. The Computer Science Department main page contains recent events and other information. It's also pretty cool. UTD International Student Services Organization. Given the importance of writing in most of my classes, if English is not your first language you will find useful events, such as conversation workshops, writing help, and other help here. You can also get writing help from the Student Success Center's Writing Center. I cannot stress enough the importance of good writing. The Computer Science Mentor Center can help you with CS1336, CS1337, CS2340, and CS2336, among other classes. Click here to go to the Center's official page. Many books and journals that are useful in my classes are online at the UTD Library."
+        }
+      }
+    },
+    {
+      "name": "list_course",
+      "method": "GET",
+      "path": "/course",
+      "entity": "Course",
+      "kind": "list",
+      "source": "database",
+      "summary": "List courses with optional filtering on term, title, details, and course info.",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "term_contains",
+          "in": "query",
+          "type": "string",
+          "field": "term",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "term_eq",
+          "in": "query",
+          "type": "string",
+          "field": "term",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "title_contains",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "title_eq",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "details_contains",
+          "in": "query",
+          "type": "string",
+          "field": "details",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "details_eq",
+          "in": "query",
+          "type": "string",
+          "field": "details",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "sort",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Course"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/course?term_eq=Courses+Fall+2017&limit=3",
+        "response": {
+          "total": 6,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "30dde88d901f",
+              "term": "Courses Fall 2017",
+              "course_info": "CS6360.004 Database Design on Monday/Wednesday from 8:30 to 9:45 AM in JSOM 11.206"
+            },
+            {
+              "legacy_id": "05c2abd43264",
+              "term": "Courses Fall 2017",
+              "course_info": "CS6326.001 Human-Computer Interaction on Monday/Wednesday from 11:30 AM to 12:45 PM in GR 3.302"
+            },
+            {
+              "legacy_id": "f8bf8ccc9314",
+              "term": "Courses Fall 2017",
+              "course_info": "CS1200.011 Introduction to Computer Science and Software Engineering on Tuesday/Thursday from 10:00 to 10:50 PM in ECSN 2.110"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_course",
+      "method": "GET",
+      "path": "/course/{id}",
+      "entity": "Course",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single course by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Course"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/course/CS3162Fall2026.htm",
+        "response": {
+          "legacy_id": "CS3162Fall2026.htm",
+          "term": "Courses Fall 2026",
+          "course_info": "CS3162 Professional Responsibility in CS and SE on Tuesday/Thursday from 8:00 AM to 8:50 (Section 052) and 9:00 to 9:50 (Section 051) in SCI 1.220"
+        }
+      }
+    },
+    {
+      "name": "list_guideline",
+      "method": "GET",
+      "path": "/guideline",
+      "entity": "Guideline",
+      "kind": "list",
+      "source": "database",
+      "summary": "List guidelines with optional filtering on the guideline text.",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "guideline_contains",
+          "in": "query",
+          "type": "string",
+          "field": "guideline",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "guideline_eq",
+          "in": "query",
+          "type": "string",
+          "field": "guideline",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": "guideline",
+          "match": "sort",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Guideline"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/guideline?guideline_eq=Assembly+Code+Assembler+is+different.+It+requires+far+better+documentation+than+high-level+language.+See+the+examples+below+for+what+good+code+and+documentation+look+like.+Here+are+some+rules%3A+1.+Nearly+every+line+should+have+a+comment.+Without+this%2C+many+assembly+language+programs+are+nearly+impossible+to+read+and+understand%2C+even+if+you+are+the+one+who+wrote+it.+Make+the+comments+useful%2C+same+as+for+a+high-level+language.+Not+%22Add+one+to+%24a0%22+but+%22Move+pointer+to+next+byte.%22+See+the+difference%3F+Keep+line+comments+short+and+to+the+point.+2.+Since+register+names+are+not+particularly+descriptive%2C+it+helps+to+have+comments+above+a+block+of+code+describing+the+register+contents+when+you+enter+that+block+along+with+what+the+block+accomplishes.+Use+margins.+Do+not+type+past+column+80+or+90+so+I+don%27t+have+to+side-scroll+to+read+your+code.+3.+Every+assembly+language+has+a+directive+that+lets+you+set+a+symbol+equal+to+a+value.+In+MIPS+this+is+the+.eqv+directive%2C+which+sets+the+symbol%2C+the+first+argument%2C+equal+to+the+second+thing.+%28This+is+very+similar+to+the+C%2FC%2B%2B+%23define+directive.%29+This+can+be+especially+helpful+for+local+variables+that+are+at+some+offset+from+the+stack+pointer.+See+the+example+below.+You+can+also+use+this+to+make+your+register+names+mean+something.+This+helps+you+avoid+what+I+call+%22magic+numbers%2C%22+numerical+constants+whose+meaning+you+will+forget+within+10+minutes+of+using+them+and+the+meaning+of+which+is+completely+opaque+to+anyone+else+reading+your+code.+4.+Use+labels+where+you+need+them.+While+many+of+us+have+a+tendency+to+use+short+labels+and+put+them+on+the+same+line+as+code%2C+this+is+not+necessary%2C+and+a+longer%2C+more+descriptive+label+above+a+section+of+code+may+be+much+better.+Speaking+of+labels%2C+if+you+have+a+function+named%2C+for+example%2C+strcpy%2C+if+you+have+labels+within+it%2C+use+the+name+of+the+function+and+a+number%2C+for+example%2C+strcpy5.+You+will+find+that+you+need+many+more+labels+in+assembly+language+because+there+are+no+looping+constructs%2C+just+branch+or+jump+instructions+that+require+a+label.+Convention+is+that+labels+start+in+column+1.+Do+not+use+labels+that+you+never+reference.+5.+Do+not+indent+assembly+code+the+way+you+would+C%2B%2B+or+other+high-level+languages.+Line+up+your+instruction+menemonics+in+colum+10+or+11%2C+tab+to+the+next+column%2C+and+align+the+operands.+To+clarify%3A+Labels+in+column+1.+Instructions+and+pseudo-operations+in+column+10+or+11.+Operands+in+column+19+or+20.+Comments+in+30+or+so.+Line+up+everything+neatly+to+the+extent+that+this+is+possible.+6.+As+you+would+with+a+high-level+language%2C+modularize.+Put+your+simple+utility+functions+such+as+copying+strings%2C+searches%2C+and+the+like+into+a+separately-assembled+module.+Once+you+have+those+working%2C+you+never+need+to+look+at+them+again.+Do+not+use+the+.include+directive+for+this+code.+7.+This+is+not+strictly+about+documentation%2C+but+readability.+Unless+you+have+a+loop%2C+the+control+flow+in+your+program+should+be+generally+from+top+to+bottom.+Since+assembly+code+has+no+inherent+structure%2C+you+must+provide+one.+For+example%2C+testing+something+and+branching+if+equal+to+a+place+further+down+in+the+code+is+fine.+Branching+from+that+place+to+someplace+further+up+in+the+code+is+usually+not%3B+the+technical+term+for+this+is+%22spaghetti+code%2C%22+because+it+goes+everywhere.+Similarly%2C+don%27t+put+your+subroutines+in+the+middle+and+branch+around+them.+Don%27t+branch+to+a+label+that+your+code+would+fall+through+to+anyway.+See+the+bad+example+below.+See+the+good+example+in+Fibonacci.asm.&limit=3",
+        "response": {
+          "total": 1,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "c2c1975c9950",
+              "guideline": "Assembly Code Assembler is different. It requires far better documentation than high-level language. See the examples below for what good code and documentation look like. Here are some rules: 1. Nearly every line should have a comment. Without this, many assembly language programs are nearly impossible to read and understand, even if you are the one who wrote it. Make the comments useful, same as for a high-level language. Not \"Add one to $a0\" but \"Move pointer to next byte.\" See the difference? Keep line comments short and to the point. 2. Since register names are not particularly descriptive, it helps to have comments above a block of code describing the register contents when you enter that block along with what the block accomplishes. Use margins. Do not type past column 80 or 90 so I don't have to side-scroll to read your code. 3. Every assembly language has a directive that lets you set a symbol equal to a value. In MIPS this is the .eqv directive, which sets the symbol, the first argument, equal to the second thing. (This is very similar to the C/C++ #define directive.) This can be especially helpful for local variables that are at some offset from the stack pointer. See the example below. You can also use this to make your register names mean something. This helps you avoid what I call \"magic numbers,\" numerical constants whose meaning you will forget within 10 minutes of using them and the meaning of which is completely opaque to anyone else reading your code. 4. Use labels where you need them. While many of us have a tendency to use short labels and put them on the same line as code, this is not necessary, and a longer, more descriptive label above a section of code may be much better. Speaking of labels, if you have a function named, for example, strcpy, if you have labels within it, use the name of the function and a number, for example, strcpy5. You will find that you need many more labels in assembly language because there are no looping constructs, just branch or jump instructions that require a label. Convention is that labels start in column 1. Do not use labels that you never reference. 5. Do not indent assembly code the way you would C++ or other high-level languages. Line up your instruction menemonics in colum 10 or 11, tab to the next column, and align the operands. To clarify: Labels in column 1. Instructions and pseudo-operations in column 10 or 11. Operands in column 19 or 20. Comments in 30 or so. Line up everything neatly to the extent that this is possible. 6. As you would with a high-level language, modularize. Put your simple utility functions such as copying strings, searches, and the like into a separately-assembled module. Once you have those working, you never need to look at them again. Do not use the .include directive for this code. 7. This is not strictly about documentation, but readability. Unless you have a loop, the control flow in your program should be generally from top to bottom. Since assembly code has no inherent structure, you must provide one. For example, testing something and branching if equal to a place further down in the code is fine. Branching from that place to someplace further up in the code is usually not; the technical term for this is \"spaghetti code,\" because it goes everywhere. Similarly, don't put your subroutines in the middle and branch around them. Don't branch to a label that your code would fall through to anyway. See the bad example below. See the good example in Fibonacci.asm."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_guideline",
+      "method": "GET",
+      "path": "/guideline/{id}",
+      "entity": "Guideline",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single guideline by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Guideline"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/guideline/fddd10e3c9d1",
+        "response": {
+          "legacy_id": "fddd10e3c9d1",
+          "guideline": "1. Always give feedback in the comments section on eLearning. If you take off points, the student must know why, so explain clearly. For example, \"No header comments: -5. Program doesn't check for invalid input: -10\" If the student does well, praise is in order. This also helps me track student progress. Remember that the point of having them write programs is so they can learn, and your feedback is an important part of that process."
+        }
+      }
+    },
+    {
+      "name": "list_schedule",
+      "method": "GET",
+      "path": "/schedule",
+      "entity": "Schedule",
+      "kind": "list",
+      "source": "database",
+      "summary": "List schedule entries with optional filtering on week, date, topic, or assignments.",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "week_contains",
+          "in": "query",
+          "type": "string",
+          "field": "week",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "week_eq",
+          "in": "query",
+          "type": "string",
+          "field": "week",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "date_contains",
+          "in": "query",
+          "type": "string",
+          "field": "date",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "topic_contains",
+          "in": "query",
+          "type": "string",
+          "field": "topic",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "assignments_contains",
+          "in": "query",
+          "type": "string",
+          "field": "assignments",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": "week",
+          "match": "sort",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Schedule"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/schedule?week_eq=7&limit=3",
+        "response": {
+          "total": 2,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "8d9f2dfbb7b5",
+              "week": 7,
+              "date": "Dec 1",
+              "topic": "Chapter 9 -- Professional Ethics and Responsibilities"
+            },
+            {
+              "legacy_id": "7f8c4147f489",
+              "week": 7,
+              "date": "Dec 8",
+              "topic": "Test Review"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_schedule",
+      "method": "GET",
+      "path": "/schedule/{id}",
+      "entity": "Schedule",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single schedule entry by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Schedule"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/schedule/404b4ac5cf1c",
+        "response": {
+          "legacy_id": "404b4ac5cf1c",
+          "week": "Week",
+          "date": "Date",
+          "topic": "Topic",
+          "assignments": "Assignments"
+        }
+      }
+    },
+    {
+      "name": "list_project",
+      "method": "GET",
+      "path": "/project",
+      "entity": "Project",
+      "kind": "list",
+      "source": "database",
+      "summary": "List project entries with optional filtering on title or description.",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": "id",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "description_contains",
+          "in": "query",
+          "type": "string",
+          "field": "description",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "description_eq",
+          "in": "query",
+          "type": "string",
+          "field": "description",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "title_contains",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "title_eq",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "sort",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Project"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/project?description_eq=Personal+Projects+Below+are+some+of+the+things+I+have+done+in+my+spare+time%2C+not+always+directly+affiliated+with+UTD.+I%27m+a+tinkerer%2C+and+I+really+like+embedded+programming+as+well+as+Android+projects+in+Java.&limit=3",
+        "response": {
+          "total": 1,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "a3c192c2f158",
+              "description": "Personal Projects Below are some of the things I have done in my spare time, not always directly affiliated with UTD. I'm a tinkerer, and I really like embedded programming as well as Android projects in Java."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_project",
+      "method": "GET",
+      "path": "/project/{id}",
+      "entity": "Project",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single project by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Project"
+      },
+      "legacy": {
+        "form_page": null,
+        "steps": []
+      },
+      "example": {
+        "request": "/project/a3c192c2f158",
+        "response": {
+          "legacy_id": "a3c192c2f158",
+          "description": "Personal Projects Below are some of the things I have done in my spare time, not always directly affiliated with UTD. I'm a tinkerer, and I really like embedded programming as well as Android projects in Java."
         }
       }
     }

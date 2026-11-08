@@ -191,6 +191,24 @@ const explorer = {
    feed({ phase: 'reading'|'drafting'|'proposed'|'fixed'|'done', model: { name, fields, rows },
           endpoints: [{ method, path, name, summary, example, total, first }], problems: [...] })
    ========================================================= */
+// Many endpoints (3 per entity) don't fit a tile: show one row per resource ("/courses  list · by id · search").
+const baseOf = (path) => '/' + String(path || '').split('/').filter(Boolean)[0];
+const kindOf = (path, base) => (path === base ? 'list' : /\{/.test(path) ? 'by id' : path.endsWith('/search') ? 'search' : path.slice(base.length + 1));
+function groupByBase(list, pathOf) {
+  const out = [], by = {};
+  for (const x of list) {
+    const b = baseOf(pathOf(x));
+    if (!by[b]) { by[b] = { base: b, items: [] }; out.push(by[b]); }
+    by[b].items.push(x);
+  }
+  return out;
+}
+// how many rows fit, keeping the last one for "+N more" when needed
+function fitRows(n, top, bot, rowH) {
+  const max = Math.max(1, Math.floor((bot - top) / rowH) + 1);
+  return n <= max ? n : max - 1;
+}
+
 const operator = {
   init(tile) { tile.s = { phase: '', model: null, eps: [], problems: [], traffic: [], think: 0, fixedAt: 0 }; },
   layout() {},
@@ -212,7 +230,7 @@ const operator = {
     s.fixedAt = Math.max(0, s.fixedAt - dt * 0.5);
     let ready = true;
     for (const e of s.eps) { if (ready) e.t = Math.min(1, e.t + dt * 3); ready = e.t >= 1; }
-    if (s.phase === 'done' && s.eps.length && Math.random() < dt * 1.2) s.traffic.push({ i: Math.floor(Math.random() * s.eps.length), t: 0, dir: 1 });
+    if (s.phase === 'done' && s.rowCount && s.traffic.length < 4 && Math.random() < dt * 1.2) s.traffic.push({ i: Math.floor(Math.random() * s.rowCount), t: 0, dir: 1 });
     for (const p of s.traffic) { p.t += dt * 1.2; if (p.t >= 1 && p.dir === 1) { p.dir = -1; p.t = 0; } }
     s.traffic = s.traffic.filter((x) => x.t < 1);
   },
@@ -243,28 +261,40 @@ const operator = {
       text(c, s.phase === 'drafting' ? 'Nemotron is drafting endpoints from this model…' : 'reading the data model…', colX, bottom, 0.6, 'left', 8.5, tile.w - colX - 10);
       return;
     }
-    const n = s.eps.length, top = 14, bot = tile.h - 34, rowGap = n === 1 ? 0 : (bot - top) / (n - 1);
+    const groups = groupByBase(s.eps, (e) => e.path);
+    const top = 14, bot = tile.h - 34, shown = fitRows(groups.length, top, bot, 26);
+    const rows = groups.length > shown ? shown + 1 : shown;
+    const rowY = (i) => (rows === 1 ? (top + bot) / 2 : top + i * ((bot - top) / (rows - 1)));
     const bad = new Set(s.problems.map((p) => String(p).split(':')[0].trim()));
-    s.eps.forEach((e, i) => {
-      const p = { x: colX, y: n === 1 ? (top + bot) / 2 : top + i * rowGap }, path = curve(src, p);
-      strokePath(c, path, e.t, 0.3, [2, 3]);
-      if (e.t < 1) { const q = path(e.t); dot(c, q.x, q.y, 3.4, 1); return; }
-      const isBad = bad.has(e.name);
+    s.rowCount = shown;
+    groups.slice(0, shown).forEach((g, i) => {
+      const t = Math.max(...g.items.map((e) => e.t));
+      const p = { x: colX, y: rowY(i) }, path = curve(src, p);
+      strokePath(c, path, t, 0.3, [2, 3]);
+      if (t < 1) { const q = path(t); dot(c, q.x, q.y, 3.4, 1); return; }
+      const isBad = g.items.some((e) => bad.has(e.name));
       if (isBad) { const b = Math.floor(tile.t * 4) % 2 ? 1 : 0.4; line(c, p.x - 3, p.y - 3, p.x + 3, p.y + 3, b); line(c, p.x - 3, p.y + 3, p.x + 3, p.y - 3, b); }
       else dot(c, p.x, p.y, 3.2, 0.95);
-      text(c, e.method, p.x + 9, p.y - 5, 0.5, 'left', 8);
-      text(c, e.path, p.x + 42, p.y - 5, isBad ? 0.5 : 0.95, 'left', 9, tile.w - p.x - 50);
-      text(c, e.summary || e.name, p.x + 42, p.y + 6, 0.42, 'left', 8, tile.w - p.x - 50);
+      const ready = g.items.filter((e) => e.t >= 1);
+      text(c, ready[0].method, p.x + 9, p.y - 5, 0.5, 'left', 8);
+      text(c, g.base + '   ' + ready.map((e) => kindOf(e.path, g.base)).join(' · '), p.x + 42, p.y - 5, isBad ? 0.5 : 0.95, 'left', 9, tile.w - p.x - 50);
+      const main = g.items.find((e) => e.path === g.base) || g.items[0];
+      text(c, main.summary || main.name, p.x + 42, p.y + 6, 0.42, 'left', 8, tile.w - p.x - 50);
     });
+    if (groups.length > shown) {
+      const rest = groups.slice(shown), p = { x: colX, y: rowY(shown) };
+      dot(c, p.x, p.y, 2.2, 0.4);
+      text(c, `+${rest.length} more: ${rest.map((g) => g.base).join(', ')}`, p.x + 42, p.y, 0.5, 'left', 8.5, tile.w - p.x - 50);
+    }
     for (const t of s.traffic) {
-      const i = Math.min(t.i, n - 1), p = { x: colX, y: n === 1 ? (top + bot) / 2 : top + i * rowGap }, path = curve(src, p);
+      const i = Math.min(t.i, Math.max(0, shown - 1)), p = { x: colX, y: rowY(i) }, path = curve(src, p);
       comet(c, t.dir === 1 ? (x) => path(1 - x) : path, t.t, 2.8, 0.9, 4, 0.05);
     }
     let msg, a = 0.55;
     if (s.problems.length) { msg = `✕ checker: ${s.problems[0]}`; a = 0.85; }
     else if (s.fixedAt > 0) { msg = '↻ Nemotron fixed it · checker: 0 problems'; a = 0.85; }
     else if (s.phase === 'done') {
-      const e = s.eps[Math.floor(tile.t / 2.6) % n];
+      const e = s.eps[Math.floor(tile.t / 2.6) % s.eps.length];
       msg = e.example ? `${e.method} ${e.example}${e.total != null ? ` → ${fmt(e.total)} rows` : ''}${e.first ? `  “${e.first}”` : ''}` : `${e.method} ${e.path}`;
     } else msg = 'checking the design against the real data…';
     text(c, msg, colX, bottom, a, 'left', 8.5, tile.w - colX - 10);
@@ -357,8 +387,22 @@ const server = {
     const srv = { x: Math.max(110, tile.w * 0.24), y: tile.h / 2 - 8, w: 74, h: 54 };
     return { db, srv, colX: srv.x + srv.w + 50 };
   },
+  // rows: one per resource (its routes together), then one row for all MCP tools, then "+N more" if needed
+  rows(tile) {
+    const s = tile.s, top = 12, bot = tile.h - 28;
+    const groups = groupByBase(s.items.filter((x) => x.kind === 'route'), (x) => x.label)
+      .map((g) => ({ kind: 'route', label: g.base, items: g.items }));
+    const tools = s.items.filter((x) => x.kind === 'tool');
+    const room = fitRows(groups.length + (tools.length ? 1 : 0), top, bot, 20) - (tools.length ? 1 : 0);
+    const shown = groups.slice(0, Math.max(1, room));
+    const out = [...shown];
+    if (groups.length > shown.length) out.push({ kind: 'more', label: `+${groups.length - shown.length} more`, items: groups.slice(shown.length).flatMap((g) => g.items) });
+    if (tools.length) out.push({ kind: 'tool', label: 'MCP', items: tools });
+    return out;
+  },
+  rowOf(tile, key) { return Math.max(0, this.rows(tile).findIndex((r) => r.items.some((x) => x.key === key))); },
   pos(tile, i) {
-    const n = Math.max(1, tile.s.items.length), top = 12, bot = tile.h - 28;
+    const n = Math.max(1, this.rows(tile).length), top = 12, bot = tile.h - 28;
     return { x: this.geo(tile).colX, y: n === 1 ? (top + bot) / 2 : lerp(top, bot, i / (n - 1)) };
   },
   step(tile, dt) {
@@ -374,11 +418,11 @@ const server = {
       s.cur.t += dt / s.cur.dur;
       if (s.cur.t >= 1) {
         const it = s.items.find((x) => x.key === s.cur.key);
-        if (it) { it.state = s.cur.ok === false ? 'bad' : 'ok'; it.total = s.cur.total; const p = this.pos(tile, s.items.indexOf(it)); pulse(tile, p.x, p.y, 0.9); }
+        if (it) { it.state = s.cur.ok === false ? 'bad' : 'ok'; it.total = s.cur.total; const p = this.pos(tile, this.rowOf(tile, it.key)); pulse(tile, p.x, p.y, 0.9); }
         s.cur = null;
       }
     }
-    if (s.phase === 'live' && s.items.length && Math.random() < dt * 1.1) s.traffic.push({ i: Math.floor(Math.random() * s.items.length), t: 0 });
+    if (s.phase === 'live' && s.items.length && s.traffic.length < 4 && Math.random() < dt * 1.1) s.traffic.push({ i: Math.floor(Math.random() * this.rows(tile).length), t: 0 });
     for (const p of s.traffic) p.t += dt * 0.9;
     s.traffic = s.traffic.filter((p) => p.t < 1);
   },
@@ -398,27 +442,35 @@ const server = {
     text(c, 'MCP', S.x + S.w / 2, S.y + 10, 0.55, 'center', 8);
     if (!s.items.length) { text(c, s.phase === 'loading' ? 'loading the API design + records…' : 'starting…', g.colX, tile.h / 2, 0.55, 'left', 8.5); }
     const from = { x: S.x + S.w, y: S.y };
-    s.items.forEach((it, i) => {
-      const p = this.pos(tile, i), path = curve(from, p);
-      strokePath(c, path, it.t, 0.3, [2, 3]);
-      if (it.t < 1) { const q = path(it.t); dot(c, q.x, q.y, 3.2, 1); return; }
-      if (it.kind === 'tool') { c.save(); c.translate(p.x, p.y); c.rotate(Math.PI / 4); box(c, -3, -3, 6, 6, it.state ? 0.95 : 0.35); if (it.state === 'ok') fillBox(c, -1.5, -1.5, 3, 3, 1); c.restore(); }
-      else dot(c, p.x, p.y, it.state ? 3.4 : 2.4, it.state ? 0.95 : 0.35);
-      text(c, it.m, p.x + 9, p.y, 0.45, 'left', 8);
-      text(c, it.label, p.x + 40, p.y, it.state ? 0.95 : 0.5, 'left', 8.5, tile.w - p.x - 130);
-      const res = it.state === 'bad' ? '✕ failed' : it.state === 'ok' ? (it.total != null ? `✓ ${fmt(it.total)} results` : '✓ ok') : 'not tested yet';
-      text(c, res, tile.w - 10, p.y, it.state ? 0.8 : 0.3, 'right', 8);
+    this.rows(tile).forEach((row, i) => {
+      const p = this.pos(tile, i), path = curve(from, p), its = row.items;
+      const t = Math.max(...its.map((x) => x.t));
+      strokePath(c, path, t, 0.3, [2, 3]);
+      if (t < 1) { const q = path(t); dot(c, q.x, q.y, 3.2, 1); return; }
+      const ok = its.filter((x) => x.state === 'ok').length, bad = its.some((x) => x.state === 'bad');
+      const state = bad ? 'bad' : ok === its.length ? 'ok' : '';
+      if (row.kind === 'tool') { c.save(); c.translate(p.x, p.y); c.rotate(Math.PI / 4); box(c, -3, -3, 6, 6, state ? 0.95 : 0.35); if (state === 'ok') fillBox(c, -1.5, -1.5, 3, 3, 1); c.restore(); }
+      else dot(c, p.x, p.y, state ? 3.4 : 2.4, state ? 0.95 : 0.35);
+      let label = row.label;
+      if (row.kind === 'route') label = `${row.label}   ${its.map((x) => kindOf(x.label, row.label)).join(' · ')}`;
+      if (row.kind === 'tool') label = `${its.length} tools for AI assistants`;
+      text(c, row.kind === 'tool' ? 'MCP' : row.kind === 'more' ? '' : 'GET', p.x + 9, p.y, 0.45, 'left', 8);
+      text(c, label, p.x + 40, p.y, state ? 0.95 : 0.5, 'left', 8.5, tile.w - p.x - 140);
+      const list = its.find((x) => x.label === row.label && x.total != null);
+      const res = bad ? '✕ failed' : ok ? `✓ ${ok}/${its.length} ok${list ? ` · ${fmt(list.total)} rows` : ''}` : 'not tested yet';
+      text(c, res, tile.w - 10, p.y, state ? 0.8 : 0.3, 'right', 8);
     });
     // the request being tested travels server → data → server → route
     if (s.cur) {
-      const i = s.items.findIndex((x) => x.key === s.cur.key), p = this.pos(tile, Math.max(0, i)), k = s.cur.t;
+      const p = this.pos(tile, this.rowOf(tile, s.cur.key)), k = s.cur.t;
       if (k < 0.5) comet(c, (t) => ({ x: lerp(S.x, db.x + 13, t), y: S.y }), k * 2, 3, 1, 4, 0.06);
       else comet(c, curve(from, p), (k - 0.5) * 2, 3, 1, 4, 0.06);
       text(c, `testing ${s.cur.label}`, 10, tile.h - 9, 0.7, 'left', 8.5, tile.w - 20);
     } else if (s.phase === 'live') {
       text(c, `LIVE · ${s.api}  ·  MCP ${s.mcp}`, 10, tile.h - 9, 0.85, 'left', 8.5, tile.w - 20);
     }
-    for (const t of s.traffic) { const p = this.pos(tile, Math.min(t.i, s.items.length - 1)); comet(c, curve(from, p), t.t, 2.6, 0.8, 4, 0.05); }
+    const nRows = this.rows(tile).length;
+    for (const t of s.traffic) { const p = this.pos(tile, Math.min(t.i, nRows - 1)); comet(c, curve(from, p), t.t, 2.6, 0.8, 4, 0.05); }
   },
   stat(tile) {
     if (!active(tile)) return 'Waiting for the database';

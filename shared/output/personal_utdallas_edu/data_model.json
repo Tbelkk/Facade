@@ -2,148 +2,167 @@
   "site": "https://personal.utdallas.edu/~John.cole/",
   "entities": [
     {
-      "name": "Professor",
-      "record_count": 18,
-      "fields": [
-        {
-          "name": "class_list",
-          "label": "Classes Office Notes for Students Links Announcements Projects Reading List Teac",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "welcome_message",
-          "label": "Welcome to my online home. I'm a Professor of Instruction in the Compu",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "professor_name",
-          "label": "John Cole",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "professor_title",
-          "label": "Professor of Instruction in the Compu",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "photo_url",
-          "label": "John Cole photo",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "department_url",
-          "label": "Computer Science Department",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "university_url",
-          "label": "University of Texas at Dallas",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "note",
-          "label": "Some general notes for anyone taking my classes These are general guidelines. Some, such as attendance or grading policy, may differ from what is in any course syllabus. The syllabus always takes precedence.",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "note_detail",
-          "label": "I believe in you. I believe you are here at UTD because you are capable of doing excellent work. Please show me that this is true. Here are some guidelines for success.",
-          "type": "string",
-          "required": false
-        }
-      ],
-      "rules": [],
-      "key": "legacy_id",
-      "forms": [],
-      "relations": []
-    },
-    {
-      "name": "FacultyMember",
+      "name": "TeachingPhilosophy",
       "record_count": 1,
       "fields": [
         {
-          "name": "navigation_items",
-          "label": "navigation_items",
+          "name": "description",
+          "label": "description",
           "type": "string",
-          "required": false
-        },
-        {
-          "name": "welcome_message",
-          "label": "welcome_message",
-          "type": "string",
-          "required": false
+          "required": false,
+          "description": "Narrative describing the teaching philosophy."
         }
       ],
       "rules": [],
       "key": "legacy_id",
       "forms": [],
-      "relations": []
+      "relations": [],
+      "description": "A statement describing the teaching approach for courses."
     },
     {
-      "name": "ProgrammingTip",
-      "record_count": 10,
+      "name": "UsefulLink",
+      "record_count": 1,
       "fields": [
         {
-          "name": "title",
-          "label": "col1",
-          "type": "string",
-          "required": true
-        },
-        {
           "name": "description",
-          "label": "Random-access file example program in C++.",
+          "label": "description",
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Text describing the useful link or resource."
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": [],
+      "description": "A link or resource providing useful code samples for classes."
+    },
+    {
+      "name": "Course",
+      "record_count": 89,
+      "fields": [
+        {
+          "name": "term",
+          "label": "term",
+          "type": "string",
+          "required": false,
+          "description": "Term identifier, e.g., Fall 2026."
         },
         {
-          "name": "author",
-          "label": "John Cole",
+          "name": "course_info",
+          "label": "course_info",
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Details about the course schedule and section."
         },
         {
-          "name": "university",
-          "label": "The University of Texas at Dallas",
+          "name": "title",
+          "label": "title",
           "type": "string",
-          "required": false
+          "required": false,
+          "description": "Course title or identifier."
+        },
+        {
+          "name": "details",
+          "label": "details",
+          "type": "string",
+          "required": false,
+          "description": "Additional course details such as room and update date."
+        }
+      ],
+      "rules": [
+        "instructor is required",
+        "room is required",
+        "section is required",
+        "title is required"
+      ],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": [],
+      "description": "A course offering for a specific term."
+    },
+    {
+      "name": "Guideline",
+      "record_count": 20,
+      "fields": [
+        {
+          "name": "guideline",
+          "label": "guideline",
+          "type": "string",
+          "required": false,
+          "description": "Text of the guideline or recommendation."
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": [],
+      "description": "A rule or recommendation for grading or programming."
+    },
+    {
+      "name": "Schedule",
+      "record_count": 17,
+      "fields": [
+        {
+          "name": "week",
+          "label": "Week",
+          "type": "string",
+          "required": false,
+          "source_type": "int",
+          "description": "Week number."
         },
         {
           "name": "date",
-          "label": "November 1, 2016",
-          "type": "date",
-          "required": false
+          "label": "Date",
+          "type": "string",
+          "required": false,
+          "note": "values are not ISO dates (for example relative times)",
+          "source_type": "date",
+          "description": "Date of the class session."
+        },
+        {
+          "name": "topic",
+          "label": "Topic",
+          "type": "string",
+          "required": false,
+          "description": "Topic covered in the class."
+        },
+        {
+          "name": "assignments",
+          "label": "Assignments",
+          "type": "string",
+          "required": false,
+          "description": "Assignments due for the week."
         }
       ],
       "rules": [],
       "key": "legacy_id",
       "forms": [],
-      "relations": []
+      "relations": [],
+      "description": "Weekly schedule listing dates, topics, and assignments."
     },
     {
-      "name": "DatabaseConnection",
-      "record_count": 0,
-      "fields": [],
+      "name": "Project",
+      "description": "Project entries from the Projects page.",
+      "fields": [
+        {
+          "name": "description",
+          "label": "description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "title",
+          "label": "title",
+          "type": "string",
+          "required": false
+        }
+      ],
       "rules": [],
-      "key": "legacy_id",
       "forms": [],
-      "relations": []
-    },
-    {
-      "name": "Fibonacci",
-      "record_count": 0,
-      "fields": [],
-      "rules": [],
+      "relations": [],
       "key": "legacy_id",
-      "forms": [],
-      "relations": []
+      "record_count": 4
     }
   ]
 }

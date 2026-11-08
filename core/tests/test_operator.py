@@ -73,6 +73,8 @@ def test_nemotron_designs_then_fixes_once(tmp_path, monkeypatch):
     calls = []
 
     def fake_chat(messages, purpose="call", model=None, **kw):
+        if purpose == "operator_tidy":   # the clean-up pass: keep the names as they are
+            return {"text": "{}", "ms": 1}
         calls.append(messages[-1]["content"])
         return {"text": json.dumps({"operations": broken if len(calls) == 1 else good}), "ms": 7}
 

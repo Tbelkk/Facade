@@ -152,13 +152,13 @@ function Endpoint({ op, flagged, records, server }) {
   );
 }
 
-function TagSection({ entity, ops, flagged, records, server }) {
+function TagSection({ entity, ops, flagged, records, server, count }) {
   const [open, setOpen] = useState(true);
   return (
     <section className={'tag-sec' + (open ? ' open' : '')}>
       <button type="button" className="tag-head" aria-expanded={open} onClick={() => setOpen(!open)}>
         <h3>{entity}</h3>
-        <span className="tag-desc">{(records[entity] || []).length.toLocaleString('en-US')} records</span>
+        <span className="tag-desc">{(count ?? (records[entity] || []).length).toLocaleString('en-US')} records</span>
         <span className="tag-count">{ops.length}</span>
         <ChevronIcon />
       </button>
@@ -178,6 +178,12 @@ export default function ApiView({ store, host, on }) {
     return [...g.entries()];
   }, [ops]);
   const by = st.designedBy;
+  // record counts from the live server (the database), not from the rows streamed while exploring
+  const [counts, setCounts] = useState({});
+  useEffect(() => {
+    if (!st.server?.api) { setCounts({}); return; }
+    fetch(st.server.api.replace(/\/$/, '') + '/').then((r) => r.json()).then((j) => setCounts(j.records || {})).catch(() => {});
+  }, [st.server?.api]);
   const status = !ops.length
     ? (st.phase === 'exploring' || st.phase === 'designing' ? 'The operator agent hasn’t proposed endpoints yet. They appear here as Nemotron designs them.' : 'Run the agents on a site to design its API.')
     : st.flagged.length ? 'Nemotron proposed these. The checker flagged a problem and Nemotron is fixing it.'
@@ -198,7 +204,7 @@ export default function ApiView({ store, host, on }) {
         </div>
       </section>
       <section id="apiList">
-        {groups.map(([entity, list]) => <TagSection key={entity} entity={entity} ops={list} flagged={st.flagged || []} records={st.records || {}} server={st.server} />)}
+        {groups.map(([entity, list]) => <TagSection key={entity} entity={entity} ops={list} flagged={st.flagged || []} records={st.records || {}} server={st.server} count={counts[entity]} />)}
       </section>
     </main>
   );

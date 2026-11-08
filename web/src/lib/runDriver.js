@@ -8,7 +8,7 @@
 //   { stage: 'model', entities: [{ name, record_count, fields: [{ name, type }] }] }        the data model
 //   { stage: 'explore', ...one run_log.jsonl line, rows?: [[...]] }   explore.agent (page, done, ...)
 //   { stage: 'records', entity, records: [{...}] }                    extracted records (for the API tab)
-//   { stage: 'operator', kind: 'start' | 'proposed' | 'fixed' | 'done', operations?, problems?, designed_by? }
+//   { stage: 'operator', kind: 'start' | 'tidied' | 'proposed' | 'fixed' | 'done', operations?, problems?, designed_by?, report? }
 //   { stage: 'database', target, tables: [{ name, done, total, note }] }   store.load_run progress
 //   { stage: 'run', kind: 'done' }
 //
@@ -190,6 +190,21 @@ export function createRunDriver(D) {
         return;
       }
       if (evt.stage === 'operator') {
+        if (evt.kind === 'tidied') {
+          const rep = evt.report || {};
+          const parts = [
+            ...(rep.renamed || []).filter((r) => r.from !== r.to).map((r) => `${r.from} → ${r.to}`),
+            ...(rep.merged || []).map((m) => `merged ${m.from} into ${m.into}`),
+            ...(rep.moved || []).map((m) => `moved ${m.count} ${m.from} rows from ${m.page} into ${m.to}`),
+            ...(rep.dropped_entities || []).map((d) => `dropped ${d.entity} (${d.why})`),
+          ];
+          const nf = (rep.renamed || []).reduce((n, r) => n + Object.keys(r.fields || {}).length, 0);
+          D.set('operator', { status: 'working', progress: 0.25, stat: null });
+          note('operator', parts.length || nf
+            ? `Cleaned up the names before designing, so endpoints say what they return: ${parts.join('; ') || 'entity names kept'}${nf ? `; ${nf} fields renamed to say what they hold` : ''}.`
+            : 'Checked the names: they already describe the data, nothing to clean up.', 'Cleaned up names');
+          return;
+        }
         if (evt.kind === 'start') {
           D.feed('operator', { phase: 'drafting', model: modelCard() });
           D.set('operator', { status: 'working', progress: 0.1, stat: null });

@@ -45,6 +45,10 @@ def from_spacetime(site):
         except ValueError:
             continue
         records.setdefault(r["entity"], []).append({"legacy_id": str(r["legacy_id"]), **data})
+    # rows streamed in live during exploring keep the Explorer's first names; the Operator's tidy step may have
+    # renamed or dropped those entities, so serve only the entities in the final design
+    wanted = set(ops.get("entities") or {}) | {o.get("entity") for o in ops["operations"]}
+    records = {k: v for k, v in records.items() if k in wanted}
     return {"site": site, "ops": ops, "model": model, "records": records, "source": f"SpacetimeDB {db.HOST}/{db.DB}"}
 
 

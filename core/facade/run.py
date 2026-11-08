@@ -38,6 +38,7 @@ def run(url, login=False, headed=False, offline_design=False, full=False, live=T
     emit({"stage": "operator", "kind": "start"})
     doc = operator.run(r.dir, use_nemotron=False if offline_design else None)
     meta = doc.get("designed_by") or {}
+    emit({"stage": "operator", "kind": "tidied", "report": doc.get("cleaned_by") or {}})
     emit({"stage": "operator", "kind": "proposed", "operations": doc["operations"], "problems": meta.get("problems_found") or []})
     if meta.get("problems_found"):
         emit({"stage": "operator", "kind": "fixed", "problems": meta.get("problems_after_fix") or []})
@@ -47,7 +48,8 @@ def run(url, login=False, headed=False, offline_design=False, full=False, live=T
     dest = publish(r.dir)
 
     print("\n== 4/5  Load into SpacetimeDB ==")
-    load(dest, progress=lambda tables: emit({"stage": "database", "target": "SpacetimeDB", "tables": tables}))
+    # clear=True: the live rows streamed while exploring used the Explorer's first names; the tidied set replaces them
+    load(dest, clear=True, progress=lambda tables: emit({"stage": "database", "target": "SpacetimeDB", "tables": tables}))
 
     print(f"\n== 5/5  Start the API + MCP server ==   (steps 1-4 took {(time.time() - t0) / 60:.1f} min, output: {dest})")
     from serve.run import run as serve_run

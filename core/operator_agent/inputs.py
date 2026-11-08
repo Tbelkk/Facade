@@ -114,7 +114,7 @@ def profile_field(field, rows):
     present = [v for v in vals if v is not None and v != ""]
     p = {"name": name, "label": field.get("label"), "type": field["type"], "non_null": len(present),
          "distinct": len({json.dumps(v) for v in present})}
-    for k in ("format", "to", "values", "display_of"):
+    for k in ("description", "format", "to", "values", "display_of"):
         if field.get(k):
             p[k] = field[k]
     if field["type"] in ("integer", "number") and present:
@@ -142,7 +142,7 @@ def profile(dm, records):
     for e in dm["entities"]:
         rows = records.get(e["name"], [])
         out.append({
-            "entity": e["name"], "record_count": len(rows), "key": "legacy_id",
+            "entity": e["name"], "description": e.get("description", ""), "record_count": len(rows), "key": "legacy_id",
             "key_samples": [r["legacy_id"] for r in rows[:3]],
             "fields": [profile_field(f, rows) for f in e["fields"]],
             "relations": e.get("relations", []),

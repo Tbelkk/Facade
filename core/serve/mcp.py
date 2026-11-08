@@ -13,7 +13,7 @@ JSON_TYPE = {"integer": "integer", "number": "number", "float": "number", "int":
              "boolean": "boolean"}
 
 
-def tool_for(op):
+def tool_for(op, entities=None):
     """operations.json entry -> MCP tool definition."""
     props, required = {}, []
     for i in op.get("inputs", []):
@@ -34,7 +34,12 @@ def tool_for(op):
     schema = {"type": "object", "properties": props}
     if required:
         schema["required"] = required
-    return {"name": op["name"], "description": op.get("summary") or op["name"].replace("_", " "), "inputSchema": schema}
+    desc = op.get("summary") or op["name"].replace("_", " ")
+    e = (entities or {}).get(op.get("entity")) or {}
+    if e.get("fields"):   # tell the calling agent what each record holds
+        fields = ", ".join(f["name"] + (f" ({f['description']})" if f.get("description") else "") for f in e["fields"][:15])
+        desc += f". Each {op.get('entity')}" + (f" ({e['description'].rstrip('.')})" if e.get("description") else "") + f" has: {fields}."
+    return {"name": op["name"], "description": desc[:1000], "inputSchema": schema}
 
 
 class MCPServer:
@@ -47,7 +52,7 @@ class MCPServer:
         return [o for o in self.state["ops"]["operations"] if o.get("source") == "database" and o.get("method") == "GET"]
 
     def tools(self):
-        return [tool_for(o) for o in self.read_ops]
+        return [tool_for(o, self.state["ops"].get("entities")) for o in self.read_ops]
 
     def call(self, name, args):
         op = next((o for o in self.read_ops if o["name"] == name), None)
