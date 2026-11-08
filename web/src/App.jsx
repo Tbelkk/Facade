@@ -7,7 +7,6 @@ import Intake from './components/Intake.jsx';
 import Board from './components/Board.jsx';
 import ApiView from './components/ApiView.jsx';
 import SettingsDrawer from './components/SettingsDrawer.jsx';
-import ExplorerView from './run/ExplorerView.jsx';
 import { createDashboard } from './lib/dashboard.js';
 import { createMock } from './lib/mockRun.js';
 import { facadeSettings } from './lib/settings.js';
@@ -91,11 +90,9 @@ export default function App() {
         <Board dashboard={dashboard} working={summary.working} total={summary.total} clock={clock} />
       </main>
 
-      <ExplorerView on={view === 'explorer'} />
-
       <ApiView host={host} on={view === 'api'} />
 
-      <SettingsDrawer open={settingsOpen} onClose={closeSettings} />
+      <SettingsDrawer open={settingsOpen} onClose={closeSettings} url={url} />
     </>
   );
 }
