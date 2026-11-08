@@ -4,219 +4,67 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Facade</title>
-<meta name="description" content="Facade uses NVIDIA Nemotron agents to give any legacy desktop app a modern interface, live, in its own style.">
+<meta name="description" content="Give Facade the address of an old website. AI agents copy its data into a modern database and build an API and MCP server so new apps and AI can use it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="agents.css">
 </head>
-<body>
+<body class="page-home">
 
+<div class="dither" aria-hidden="true"></div>
 
-<!-- ============ HERO: 1998 → 2026 rerender on scroll ============ -->
-<section class="stage" id="stage" aria-label="Facade homepage, rerendered from 1998 style to modern as you scroll">
-  <div class="viewport">
+<!-- first screen: just the name and the download -->
+<section class="hero" aria-label="Facade">
+  <canvas id="flow" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
 
-    <!-- ===== OLD (1998) ===== -->
-    <div class="layer old" id="oldLayer">
-      <div class="fit">
-        <div class="r-top">
-          <div class="marquee"><span>★ WELCOME TO FACADE!!! ★ The #1 Legacy Software Modernizer on the World Wide Web!!! ★ Now with ARTIFICIAL INTELLIGENCE!!! ★ SCROLL DOWN to see the FUTURE!!! ★ Sign our Guestbook!!! ★ WELCOME TO FACADE!!! ★ The #1 Legacy Software Modernizer on the World Wide Web!!! ★</span></div>
-        </div>
-
-        <div class="r-head">
-          <div class="burst"><span>NEW!</span></div>
-          <div class="wordart-wrap">
-            <div class="wordart">FACADE</div>
-            <div class="tagline">~*~ Make yer OLD software look COOL!!! ~*~</div>
-          </div>
-          <div class="mailme"><div class="env">✉</div><a href="#" tabindex="-1">E-MAIL ME!</a></div>
-        </div>
-
-        <div class="r-left">
-          <div class="navbox">
-            <div class="navtitle">~ NAVIGATION ~</div>
-            <a class="btn95" href="#" tabindex="-1">Home</a>
-            <a class="btn95" href="#" tabindex="-1">What is it??</a>
-            <a class="btn95" href="#" tabindex="-1">How it Works</a>
-            <a class="btn95" href="#" tabindex="-1">Demo</a>
-            <a class="btn95" href="#" tabindex="-1">Da Team</a>
-            <a class="btn95" href="#" tabindex="-1">Guestbook</a>
-          </div>
-          <div class="counter">
-            <div>You are visitor #</div>
-            <div class="led"><b>0</b><b>0</b><b>1</b><b>3</b><b>3</b><b>7</b><b>0</b></div>
-          </div>
-          <div class="construction"><span>UNDER CONSTRUCTION</span></div>
-        </div>
-
-        <div class="r-center">
-          <div class="win">
-            <h2 class="welcome">Welcome to FACADE!!!</h2>
-            <hr class="rainbow">
-            <p>FACADE uses <b>NVIDIA Nemotron</b> agents to give <u>ANY</u> legacy desktop app a modern interface <font color="#cc0000"><b>LIVE</b></font>, in its own style!!! No rewrite. No API. The screen is the only way in.</p>
-            <ul class="balls">
-              <li>Live Rerender <span class="blink">NEW!</span></li>
-              <li>Keeps your app's own colors &amp; personality</li>
-              <li>Faithful &amp; Enhanced quality modes</li>
-              <li>Plain-English AI agent does REAL work</li>
-              <li>Approvals + audit log for safety</li>
-            </ul>
-            <div class="center-btns">
-              <a class="btn95 big" href="#" tabindex="-1">CLICK HERE to Download!</a>
-              <a class="guest" href="#" tabindex="-1">Sign my Guestbook!</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="r-right">
-          <div class="dyk">
-            <div class="dyk-title">DID YOU KNOW??</div>
-            <table>
-              <tr><td class="num">8/11</td><td>critical federal legacy systems use OUTDATED languages!!</td></tr>
-              <tr><td class="num">80%</td><td>of $100B+ gov IT $$$ goes to keeping OLD systems running!!</td></tr>
-              <tr><td class="num">3/10</td><td>flagged systems actually got modernized!!</td></tr>
-            </table>
-          </div>
-          <div class="badges">
-            <span class="b88 nv">NVIDIA<br><small>NEMOTRON</small></span>
-            <span class="b88 ns">Netscape<br><small>NOW!</small></span>
-            <span class="b88 np">Made with<br><small>NOTEPAD</small></span>
-          </div>
-          <div class="bestviewed">Best viewed in <b>Netscape Navigator 4.0</b> at <b>800x600</b></div>
-        </div>
-
-        <div class="r-foot">
-          <div class="webring">&lt;&lt; Prev | ☆ Legacy Software WebRing ☆ | Random | Next &gt;&gt;</div>
-          <div class="copy">© 1998 FACADE Corp. All rights reserved. Last updated 11/07/98. <a href="#" tabindex="-1">Email the Webmaster</a></div>
-        </div>
-      </div>
+  <div class="hero-center">
+    <div class="card hub" id="hub">
+      <h1 id="title"><span class="w"><span>Facade</span></span></h1>
+      <a class="btn primary big" href="download.html">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download
+      </a>
     </div>
-
-    <!-- ===== NEW (2026) ===== -->
-    <div class="layer new" id="newLayer" aria-hidden="true">
-      <div class="fit">
-        <div class="r-top">
-          <div class="announce"><span class="dot"></span>HackUTD 2026 · NVIDIA Nemotron Prize Track<a href="#how" tabindex="-1">See how it works →</a></div>
-        </div>
-
-        <div class="r-head">
-          <div class="pill-badge"><span class="pulse"></span>Live Rerender</div>
-          <div class="brand">
-            <div class="wordmark">Facade<span>.</span></div>
-            <div class="sub">Legacy software, rendered for this decade.</div>
-          </div>
-          <div class="head-spacer" aria-hidden="true"></div>
-        </div>
-
-        <div class="r-left">
-          <nav class="m-card m-nav">
-            <a class="on" href="#" tabindex="-1"><i>⌂</i>Home</a>
-            <a href="#what" tabindex="-1"><i>◇</i>What it is</a>
-            <a href="#how" tabindex="-1"><i>↯</i>How it works</a>
-            <a href="#how" tabindex="-1"><i>▶</i>Demo</a>
-            <a href="#what" tabindex="-1"><i>◎</i>Team &amp; stack</a>
-            <a href="#safety" tabindex="-1"><i>✓</i>Safety</a>
-          </nav>
-          <div class="m-card metric">
-            <div class="m-label">Screens rerendered</div>
-            <div class="m-value">13,370</div>
-            <svg class="spark" viewBox="0 0 160 32" preserveAspectRatio="none"><polyline points="0,28 20,24 40,26 60,18 80,20 100,12 120,14 140,6 160,4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
-          </div>
-          <div class="m-card status"><span class="ok"></span>Agent online<em>v1.0</em></div>
-        </div>
-
-        <div class="r-center">
-          <div class="m-card hero">
-            <h2>Give any legacy app a modern interface. <span>Live.</span></h2>
-            <p>Facade uses NVIDIA Nemotron agents to rerender decades-old desktop software in its own style, and runs real multi-step work through it, without touching the original.</p>
-            <ul class="checks">
-              <li>Live Rerender</li>
-              <li>Style preservation</li>
-              <li>Faithful &amp; Enhanced modes</li>
-              <li>Plain-English agent</li>
-              <li>Approvals &amp; audit log</li>
-              <li>One-click ON/OFF</li>
-            </ul>
-            <div class="center-btns">
-              <a class="m-btn primary" href="#how" tabindex="-1">See how it works</a>
-              <a class="m-btn ghost" href="download.html">Download for Windows</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="r-right">
-          <div class="m-card stats">
-            <div class="m-label">Why it matters</div>
-            <div class="stat"><b>8 / 11</b><span>critical federal legacy systems run outdated languages</span></div>
-            <div class="stat"><b>80%</b><span>of $100B+ yearly federal IT spend goes to maintenance</span></div>
-            <div class="stat"><b>3 / 10</b><span>flagged systems modernized six years later</span></div>
-          </div>
-          <div class="chips">
-            <span class="chip nv">NVIDIA Nemotron</span>
-            <span class="chip">NIM</span>
-            <span class="chip">No API needed</span>
-          </div>
-          <div class="works">Works with Win32 · WinForms · WPF · MFC</div>
-        </div>
-
-        <div class="r-foot">
-          <div class="m-foot-links"><a href="#what" tabindex="-1">Product</a><a href="#how" tabindex="-1">Pipeline</a><a href="#how" tabindex="-1">Modes</a><a href="#what" tabindex="-1">Stack</a><a href="#safety" tabindex="-1">Safety</a></div>
-          <div class="m-copy">© 2026 Facade · Built at HackUTD</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="scan" aria-hidden="true"></div>
-    <!-- controls -->
-    <a class="dl-float" href="download.html">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Download for Windows
-    </a>
-    <button type="button" class="hint" id="hint">
-      <span class="arrows">▼ ▼ ▼</span>
-      <span class="hint-text">SCROLL DOWN to modernize this page!!!</span>
-      <span class="arrows">▼ ▼ ▼</span>
-    </button>
   </div>
 </section>
 
-<!-- ============ MODERN CONTENT ============ -->
-<main class="content">
-
-  <section id="what" class="sec">
-    <div class="eyebrow">What Facade does</div>
-    <h2 class="h">Facade makes old software easy to use, without replacing it.</h2>
-    <p class="lead">Hospitals, offices and governments still run on desktop software from the '90s and 2000s. It's too important to replace and too painful to use. Facade sits on top of that software and gives it a clean, modern look, plus an AI assistant that does tasks for you in plain English.</p>
+<!-- what it does -->
+<main class="explain">
+  <section id="what" class="ex-block reveal">
+    <div class="ex-eyebrow">What it does</div>
+    <h2>Old software holds your data hostage. <span>Facade sets it free.</span></h2>
+    <p>Lots of businesses still run on websites from 2005, with no export button and no way for other software to connect. Give Facade the address. A team of AI agents copies everything into a modern database and builds a plug so new apps and AI assistants can use it, without touching the old system’s code.</p>
   </section>
 
-  <section id="how" class="sec">
-    <div class="eyebrow">How it works</div>
-    <ol class="steps">
-      <li><b>Open your old app.</b><span>Facade reads the screen the same way a screen reader does. No code changes, no API needed.</span></li>
-      <li><b>It gets a modern look.</b><span>NVIDIA Nemotron understands each screen and redraws it in a modern version of the app's own style.</span></li>
-      <li><b>Ask it to do the work.</b><span>Type something like "text everyone with an appointment tomorrow" and Facade clicks through the app for you.</span></li>
+  <section class="ex-block reveal" aria-labelledby="howTitle">
+    <div class="ex-eyebrow" id="howTitle">How it works</div>
+    <ol class="ex-steps">
+      <li><b>01</b><h3>Explore</h3><p>An agent clicks through the whole site and maps every page.</p></li>
+      <li><b>02</b><h3>Understand</h3><p>It works out what’s stored, like patients and appointments, and the rules.</p></li>
+      <li><b>03</b><h3>Copy</h3><p>Every record moves into a modern database, checked as it goes.</p></li>
+      <li><b>04</b><h3>Plug in</h3><p>An API and MCP server let apps and AI read the data and even book an appointment for real.</p></li>
     </ol>
   </section>
 
-  <section id="safety" class="sec">
-    <div class="eyebrow">Why it's safe</div>
-    <ul class="safe">
-      <li>The original app is never changed. Switch Facade off anytime.</li>
-      <li>Every value you see comes from the real app, not the AI.</li>
-      <li>Anything risky waits for your approval, and every action is logged.</li>
-    </ul>
+  <section class="ex-block ex-end reveal">
+    <p class="ex-big">Give it a URL. Get back your data, plus a way for modern apps and AI to use the old system.</p>
+    <a class="btn primary big" href="download.html">Download for Windows</a>
   </section>
 
-  <footer class="foot">
-    <div class="wordmark sm">Facade<span>.</span></div>
-    <p>Built with NVIDIA Nemotron at HackUTD 2026.</p>
-    <div class="foot-btns">
-      <a class="m-btn ghost" href="#stage">↑ Back to 1998</a>
-    </div>
-  </footer>
+  <footer class="ex-foot">HackUTD 2026 · Built on NVIDIA Nemotron</footer>
 </main>
 
-<script src="script.js"></script>
+<script src="agents.js"></script>
+<script>
+  // fade sections in as they scroll into view
+  (function () {
+    const els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { els.forEach((e) => e.classList.add('in')); return; }
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.2 });
+    els.forEach((e) => io.observe(e));
+  })();
+</script>
 </body>
 </html>
