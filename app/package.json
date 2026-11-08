@@ -1,0 +1,36 @@
+{
+  "name": "facade-desktop",
+  "productName": "Facade",
+  "version": "1.0.0",
+  "description": "Facade desktop app: modernize legacy Windows software with NVIDIA Nemotron agents.",
+  "main": "main.js",
+  "author": "Facade team",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/start.js",
+    "dist:win": "electron-builder --win nsis --x64"
+  },
+  "build": {
+    "appId": "com.facade.desktop",
+    "productName": "Facade",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "artifactName": "Facade-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false
+    }
+  },
+  "devDependencies": {
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0"
+  }
+}
