@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "site": "http://127.0.0.1:49524",
+  "generated_at": "2026-11-08T00:14:05",
+  "site_map": "site_map.json",
+  "recipes": [
+    {
+      "page_id": "user_list",
+      "kind": "list",
+      "entity": "User",
+      "url_pattern": "/users",
+      "url_regex": "^/users$",
+      "example_url": "http://127.0.0.1:49524/users",
+      "table": {
+        "index": 1,
+        "selector": "table >> nth=1",
+        "header_row": true,
+        "headers": [
+          "Username",
+          "Karma",
+          "Joined"
+        ],
+        "rows_seen": 10,
+        "columns": [
+          {
+            "index": 0,
+            "header": "Username",
+            "field": "username",
+            "is_link": true,
+            "samples": [
+              "alice",
+              "bob",
+              "carol"
+            ]
+          },
+          {
+            "index": 1,
+            "header": "Karma",
+            "field": "karma",
+            "is_link": false,
+            "samples": [
+              "14,833",
+              "19,257",
+              "16,784"
+            ],
+            "type": "number"
+          },
+          {
+            "index": 2,
+            "header": "Joined",
+            "field": "joined",
+            "is_link": false,
+            "samples": [
+              "08/17/2022",
+              "03/26/2014",
+              "11/20/2023"
+            ],
+            "type": "date",
+            "format": "MM/DD/YYYY"
+          }
+        ]
+      },
+      "detail_link": {
+        "where": "table_cell",
+        "column_index": 0,
+        "column_header": "Username",
+        "url_pattern": "/users/{id}",
+        "url_regex": "^/users/(?P<id>[^/?&#]+)$",
+        "id_param": "id",
+        "goes_to": "user_detail",
+        "example": "http://127.0.0.1:49524/users/u101",
+        "links_seen": 10
+      },
+      "next_page": {
+        "how": "follow the link with this text until there is none",
+        "link": {
+          "role": "link",
+          "name": "Next >>"
+        },
+        "text_regex": "^\\s*(next|next page|more|older)\\b|(>>|»|›|→)\\s*$|^\\s*(>|»|›)\\s*$",
+        "url_pattern": "/users?page={page}&q={q}",
+        "page_param": "page",
+        "page_size": 10
+      }
+    },
+    {
+      "page_id": "post_list",
+      "kind": "list",
+      "entity": "Post",
+      "url_pattern": "/posts",
+      "url_regex": "^/posts$",
+      "example_url": "http://127.0.0.1:49524/posts",
+      "table": {
+        "index": 1,
+        "selector": "table >> nth=1",
+        "header_row": true,
+        "headers": [
+          "Title",
+          "Points",
+          "Comments"
+        ],
+        "rows_seen": 10,
+        "columns": [
+          {
+            "index": 0,
+            "header": "Title",
+            "field": "title",
+            "is_link": true,
+            "samples": [
+              "Show HN: A Postgres extension for vector search",
+              "Why legacy COBOL still runs the banks",
+              "SQLite is not a toy database"
+            ]
+          },
+          {
+            "index": 1,
+            "header": "Points",
+            "field": "points",
+            "is_link": false,
+            "samples": [
+              "294",
+              "177",
+              "7"
+            ],
+            "type": "number"
+          },
+          {
+            "index": 2,
+            "header": "Comments",
+            "field": "comments",
+            "is_link": false,
+            "samples": [
+              "260",
+              "110",
+              "218"
+            ],
+            "type": "number"
+          }
+        ]
+      },
+      "detail_link": {
+        "where": "table_cell",
+        "column_index": 0,
+        "column_header": "Title",
+        "url_pattern": "/posts/{id}",
+        "url_regex": "^/posts/(?P<id>[^/?&#]+)$",
+        "id_param": "id",
+        "goes_to": "post_detail",
+        "example": "http://127.0.0.1:49524/posts/40100",
+        "links_seen": 10
+      },
+      "next_page": {
+        "how": "follow the link with this text until there is none",
+        "link": {
+          "role": "link",
+          "name": "Next >>"
+        },
+        "text_regex": "^\\s*(next|next page|more|older)\\b|(>>|»|›|→)\\s*$|^\\s*(>|»|›)\\s*$",
+        "url_pattern": "/posts?page={page}&q={q}",
+        "page_param": "page",
+        "page_size": 10
+      }
+    },
+    {
+      "page_id": "post_detail",
+      "kind": "detail",
+      "entity": "Post",
+      "url_pattern": "/posts/{id}",
+      "url_regex": "^/posts/(?P<id>[^/?&#]+)$",
+      "example_url": "http://127.0.0.1:49524/posts/40100",
+      "id_param": "id",
+      "labels": [
+        {
+          "label": "Title",
+          "field": "title",
+          "table_index": 1,
+          "source": "table",
+          "sample": "Show HN: A Postgres extension for vector search"
+        },
+        {
+          "label": "Points",
+          "field": "points",
+          "table_index": 1,
+          "source": "table",
+          "sample": "294",
+          "type": "number"
+        },
+        {
+          "label": "Author",
+          "field": "author",
+          "table_index": 1,
+          "source": "table",
+          "sample": "ines"
+        },
+        {
+          "label": "Time",
+          "field": "time",
+          "table_index": 1,
+          "source": "table",
+          "sample": "09/23/2026",
+          "type": "date",
+          "format": "MM/DD/YYYY"
+        },
+        {
+          "label": "Comments",
+          "field": "comments",
+          "table_index": 1,
+          "source": "table",
+          "sample": "260",
+          "type": "number"
+        },
+        {
+          "label": "Domain",
+          "field": "domain",
+          "table_index": 1,
+          "source": "table",
+          "sample": "blog.dev"
+        }
+      ],
+      "how": "for each label, read the cell next to it (row whose first cell == label)"
+    },
+    {
+      "page_id": "user_detail",
+      "kind": "detail",
+      "entity": "User",
+      "url_pattern": "/users/{id}",
+      "url_regex": "^/users/(?P<id>[^/?&#]+)$",
+      "example_url": "http://127.0.0.1:49524/users/u101",
+      "id_param": "id",
+      "labels": [
+        {
+          "label": "Username",
+          "field": "username",
+          "table_index": 1,
+          "source": "table",
+          "sample": "alice"
+        },
+        {
+          "label": "Karma",
+          "field": "karma",
+          "table_index": 1,
+          "source": "table",
+          "sample": "14,833",
+          "type": "number"
+        },
+        {
+          "label": "Joined",
+          "field": "joined",
+          "table_index": 1,
+          "source": "table",
+          "sample": "08/17/2022",
+          "type": "date",
+          "format": "MM/DD/YYYY"
+        }
+      ],
+      "how": "for each label, read the cell next to it (row whose first cell == label)"
+    }
+  ]
+}

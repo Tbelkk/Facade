@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Patient",
+    "fields_json": "[{\"name\": \"last_name\", \"label\": \"Last Name\", \"type\": \"string\", \"required\": true}, {\"name\": \"first_name\", \"label\": \"First Name\", \"type\": \"string\", \"required\": false}, {\"name\": \"dob\", \"label\": \"DOB\", \"type\": \"date\", \"format\": \"YYYY-MM-DD\", \"legacy_format\": \"MM/DD/YYYY\", \"required\": false}, {\"name\": \"phone\", \"label\": \"Phone\", \"type\": \"string\", \"format\": \"phone\", \"required\": false}, {\"name\": \"insurance_id\", \"label\": \"Insurance ID\", \"type\": \"string\", \"required\": false}]",
+    "rules_json": "[{\"id\": \"r1\", \"entity\": \"Patient\", \"text\": \"Last Name is required\", \"source\": \"required marker on the form\"}]"
+  },
+  {
+    "name": "Appointment",
+    "fields_json": "[{\"name\": \"date\", \"label\": \"Date\", \"type\": \"date\", \"format\": \"YYYY-MM-DD\", \"legacy_format\": \"MM/DD/YYYY\", \"required\": true}, {\"name\": \"time\", \"label\": \"Time\", \"type\": \"string\", \"format\": \"time\", \"required\": true}, {\"name\": \"patient\", \"label\": \"Patient\", \"type\": \"string\", \"display_of\": \"patient_id\"}, {\"name\": \"patient_id\", \"label\": \"Patient\", \"type\": \"ref\", \"to\": \"Patient\", \"required\": true}, {\"name\": \"provider\", \"label\": \"Provider\", \"type\": \"enum\", \"values\": [\"Dr. Lee\", \"Dr. Patel\", \"Hyg. Kim\"], \"required\": false}, {\"name\": \"status\", \"label\": \"Status\", \"type\": \"enum\", \"values\": [\"Booked\", \"Completed\", \"No-show\", \"Cancelled\"], \"required\": false}, {\"name\": \"reason\", \"label\": \"Reason\", \"type\": \"string\", \"required\": false}]",
+    "rules_json": "[{\"id\": \"r2\", \"entity\": \"Appointment\", \"text\": \"Date is required\", \"source\": \"required marker on the form\"}, {\"id\": \"r3\", \"entity\": \"Appointment\", \"text\": \"Time is required\", \"source\": \"required marker on the form\"}, {\"id\": \"r4\", \"entity\": \"Appointment\", \"text\": \"Patient is required\", \"source\": \"required marker on the form\"}]"
+  }
+]

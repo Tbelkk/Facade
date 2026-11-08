@@ -1,0 +1,854 @@
+{
+  "schema_version": 1,
+  "site": "http://127.0.0.1:65355",
+  "generated_at": "2026-11-08T00:09:27",
+  "site_map": "site_map.json",
+  "recipes": [
+    {
+      "page_id": "patient_list",
+      "kind": "list",
+      "entity": "Patient",
+      "url_pattern": "/patients",
+      "url_regex": "^/patients$",
+      "example_url": "http://127.0.0.1:65355/patients",
+      "table": {
+        "index": 1,
+        "selector": "table >> nth=1",
+        "header_row": true,
+        "headers": [
+          "Name",
+          "DOB",
+          "Phone"
+        ],
+        "rows_seen": 10,
+        "columns": [
+          {
+            "index": 0,
+            "header": "Name",
+            "field": "name",
+            "is_link": true,
+            "samples": [
+              "Smith, John",
+              "Johnson, Raj",
+              "Lee, Amy"
+            ],
+            "split": {
+              "separator": ", ",
+              "into": [
+                "last_name",
+                "first_name"
+              ],
+              "regex": "^(.+?),\\ (.+?)$",
+              "example": "Smith, John"
+            }
+          },
+          {
+            "index": 1,
+            "header": "DOB",
+            "field": "dob",
+            "is_link": false,
+            "samples": [
+              "03/13/1960",
+              "01/03/1981",
+              "06/19/1946"
+            ],
+            "type": "date",
+            "format": "MM/DD/YYYY"
+          },
+          {
+            "index": 2,
+            "header": "Phone",
+            "field": "phone",
+            "is_link": false,
+            "samples": [
+              "",
+              "(214) 555-1037",
+              "(214) 555-1074"
+            ],
+            "type": "phone"
+          }
+        ]
+      },
+      "detail_link": {
+        "where": "table_cell",
+        "column_index": 0,
+        "column_header": "Name",
+        "url_pattern": "/patients/{id}",
+        "url_regex": "^/patients/(?P<id>[^/?&#]+)$",
+        "id_param": "id",
+        "goes_to": "patient_detail",
+        "example": "http://127.0.0.1:65355/patients/1",
+        "links_seen": 10
+      },
+      "next_page": {
+        "how": "follow the link with this text until there is none",
+        "link": {
+          "role": "link",
+          "name": "Next >>"
+        },
+        "text_regex": "^\\s*(next|next page|more|older)\\b|(>>|»|›|→)\\s*$|^\\s*(>|»|›)\\s*$",
+        "url_pattern": "/patients?page={page}&q={q}",
+        "page_param": "page",
+        "page_size": 10
+      }
+    },
+    {
+      "page_id": "patient_detail",
+      "kind": "detail",
+      "entity": "Patient",
+      "url_pattern": "/patients/{id}",
+      "url_regex": "^/patients/(?P<id>[^/?&#]+)$",
+      "example_url": "http://127.0.0.1:65355/patients/1",
+      "id_param": "id",
+      "labels": [
+        {
+          "label": "Last Name",
+          "field": "last_name",
+          "table_index": 1,
+          "source": "table",
+          "sample": "Smith"
+        },
+        {
+          "label": "First Name",
+          "field": "first_name",
+          "table_index": 1,
+          "source": "table",
+          "sample": "John"
+        },
+        {
+          "label": "DOB",
+          "field": "dob",
+          "table_index": 1,
+          "source": "table",
+          "sample": "03/13/1960",
+          "type": "date",
+          "format": "MM/DD/YYYY"
+        },
+        {
+          "label": "Phone",
+          "field": "phone",
+          "table_index": 1,
+          "source": "table",
+          "sample": ""
+        },
+        {
+          "label": "Insurance ID",
+          "field": "insurance_id",
+          "table_index": 1,
+          "source": "table",
+          "sample": ""
+        }
+      ],
+      "how": "for each label, read the cell next to it (row whose first cell == label)"
+    },
+    {
+      "page_id": "appointment_list",
+      "kind": "list",
+      "entity": "Appointment",
+      "url_pattern": "/appointments",
+      "url_regex": "^/appointments$",
+      "example_url": "http://127.0.0.1:65355/appointments",
+      "table": {
+        "index": 1,
+        "selector": "table >> nth=1",
+        "header_row": true,
+        "headers": [
+          "Date",
+          "Time",
+          "Patient",
+          "Provider"
+        ],
+        "rows_seen": 10,
+        "columns": [
+          {
+            "index": 0,
+            "header": "Date",
+            "field": "date",
+            "is_link": true,
+            "samples": [
+              "04/10/2026",
+              "01/16/2026",
+              "04/28/2026"
+            ],
+            "type": "date",
+            "format": "MM/DD/YYYY"
+          },
+          {
+            "index": 1,
+            "header": "Time",
+            "field": "time",
+            "is_link": false,
+            "samples": [
+              "14:30",
+              "8:00",
+              "15:00"
+            ],
+            "type": "time",
+            "format": "HH:MM"
+          },
+          {
+            "index": 2,
+            "header": "Patient",
+            "field": "patient",
+            "is_link": false,
+            "samples": [
+              "Johnson, Raj",
+              "Hill, John",
+              "Clark, Lena"
+            ],
+            "split": {
+              "separator": ", ",
+              "into": [
+                "patient_1",
+                "patient_2"
+              ],
+              "regex": "^(.+?),\\ (.+?)$",
+              "example": "Johnson, Raj"
+            }
+          },
+          {
+            "index": 3,
+            "header": "Provider",
+            "field": "provider",
+            "is_link": false,
+            "samples": [
+              "Dr. Patel",
+              "Dr. Lee",
+              "Dr. Patel"
+            ]
+          }
+        ]
+      },
+      "detail_link": {
+        "where": "table_cell",
+        "column_index": 0,
+        "column_header": "Date",
+        "url_pattern": "/appointments/{id}",
+        "url_regex": "^/appointments/(?P<id>[^/?&#]+)$",
+        "id_param": "id",
+        "goes_to": "appointment_detail",
+        "example": "http://127.0.0.1:65355/appointments/1000",
+        "links_seen": 10
+      },
+      "next_page": {
+        "how": "follow the link with this text until there is none",
+        "link": {
+          "role": "link",
+          "name": "Next >>"
+        },
+        "text_regex": "^\\s*(next|next page|more|older)\\b|(>>|»|›|→)\\s*$|^\\s*(>|»|›)\\s*$",
+        "url_pattern": "/appointments?page={page}&q={q}",
+        "page_param": "page",
+        "page_size": 10
+      }
+    },
+    {
+      "page_id": "appointment_detail",
+      "kind": "detail",
+      "entity": "Appointment",
+      "url_pattern": "/appointments/{id}",
+      "url_regex": "^/appointments/(?P<id>[^/?&#]+)$",
+      "example_url": "http://127.0.0.1:65355/appointments/1000",
+      "id_param": "id",
+      "labels": [
+        {
+          "label": "Date",
+          "field": "date",
+          "table_index": 1,
+          "source": "table",
+          "sample": "04/10/2026",
+          "type": "date",
+          "format": "MM/DD/YYYY"
+        },
+        {
+          "label": "Time",
+          "field": "time",
+          "table_index": 1,
+          "source": "table",
+          "sample": "14:30",
+          "type": "time",
+          "format": "HH:MM"
+        },
+        {
+          "label": "Patient",
+          "field": "patient",
+          "table_index": 1,
+          "source": "table",
+          "sample": "Johnson, Raj"
+        },
+        {
+          "label": "Provider",
+          "field": "provider",
+          "table_index": 1,
+          "source": "table",
+          "sample": "Dr. Patel"
+        },
+        {
+          "label": "Status",
+          "field": "status",
+          "table_index": 1,
+          "source": "table",
+          "sample": "No-show"
+        },
+        {
+          "label": "Reason",
+          "field": "reason",
+          "table_index": 1,
+          "source": "table",
+          "sample": "Checkup"
+        }
+      ],
+      "how": "for each label, read the cell next to it (row whose first cell == label)"
+    },
+    {
+      "page_id": "patient_new",
+      "kind": "form",
+      "entity": "Patient",
+      "url_pattern": "/patients/new",
+      "url_regex": "^/patients/new$",
+      "example_url": "http://127.0.0.1:65355/patients/new",
+      "form": {
+        "index": 0,
+        "method": "post",
+        "action_pattern": "/patients/new",
+        "fields": [
+          {
+            "label": "Last Name",
+            "field": "last_name",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Last Name",
+              "label": "Last Name",
+              "css": "input[name=\"last_name\"]"
+            }
+          },
+          {
+            "label": "First Name",
+            "field": "first_name",
+            "type": "text",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "First Name",
+              "label": "First Name",
+              "css": "input[name=\"first_name\"]"
+            }
+          },
+          {
+            "label": "DOB (MM/DD/YYYY)",
+            "field": "dob",
+            "type": "text",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "DOB (MM/DD/YYYY)",
+              "label": "DOB (MM/DD/YYYY)",
+              "css": "input[name=\"dob\"]"
+            }
+          },
+          {
+            "label": "Phone",
+            "field": "phone",
+            "type": "text",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "Phone",
+              "label": "Phone",
+              "css": "input[name=\"phone\"]"
+            }
+          },
+          {
+            "label": "Insurance ID",
+            "field": "insurance_id",
+            "type": "text",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "Insurance ID",
+              "label": "Insurance ID",
+              "css": "input[name=\"insurance_id\"]"
+            }
+          }
+        ],
+        "submit": [
+          {
+            "text": "Save",
+            "type": "submit",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(1)"
+          },
+          {
+            "text": "Clear",
+            "type": "reset",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(2)"
+          }
+        ]
+      },
+      "id_params": [],
+      "messages_seen": [
+        "*"
+      ]
+    },
+    {
+      "page_id": "patient_edit",
+      "kind": "form",
+      "entity": "Patient",
+      "url_pattern": "/patients/{id}/edit",
+      "url_regex": "^/patients/(?P<id>[^/?&#]+)/edit$",
+      "example_url": "http://127.0.0.1:65355/patients/1/edit",
+      "form": {
+        "index": 0,
+        "method": "post",
+        "action_pattern": "/patients/{id}/edit",
+        "fields": [
+          {
+            "label": "Last Name",
+            "field": "last_name",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Last Name",
+              "label": "Last Name",
+              "css": "input[name=\"last_name\"]"
+            },
+            "current_value": "Smith"
+          },
+          {
+            "label": "First Name",
+            "field": "first_name",
+            "type": "text",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "First Name",
+              "label": "First Name",
+              "css": "input[name=\"first_name\"]"
+            },
+            "current_value": "John"
+          },
+          {
+            "label": "DOB (MM/DD/YYYY)",
+            "field": "dob",
+            "type": "text",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "DOB (MM/DD/YYYY)",
+              "label": "DOB (MM/DD/YYYY)",
+              "css": "input[name=\"dob\"]"
+            },
+            "current_value": "03/13/1960"
+          },
+          {
+            "label": "Phone",
+            "field": "phone",
+            "type": "text",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "Phone",
+              "label": "Phone",
+              "css": "input[name=\"phone\"]"
+            }
+          },
+          {
+            "label": "Insurance ID",
+            "field": "insurance_id",
+            "type": "text",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "Insurance ID",
+              "label": "Insurance ID",
+              "css": "input[name=\"insurance_id\"]"
+            }
+          }
+        ],
+        "submit": [
+          {
+            "text": "Save",
+            "type": "submit",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(1)"
+          },
+          {
+            "text": "Clear",
+            "type": "reset",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(2)"
+          }
+        ]
+      },
+      "id_params": [
+        "id"
+      ],
+      "messages_seen": [
+        "*"
+      ]
+    },
+    {
+      "page_id": "appointment_new",
+      "kind": "form",
+      "entity": "Appointment",
+      "url_pattern": "/appointments/new?patient_id={patient_id}",
+      "url_regex": "^/appointments/new\\?patient_id=(?P<patient_id>[^/?&#]+)$",
+      "example_url": "http://127.0.0.1:65355/appointments/new?patient_id=1",
+      "form": {
+        "index": 0,
+        "method": "post",
+        "action_pattern": "/appointments/new",
+        "fields": [
+          {
+            "label": "Date (MM/DD/YYYY)",
+            "field": "date",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Date (MM/DD/YYYY)",
+              "label": "Date (MM/DD/YYYY)",
+              "css": "input[name=\"date\"]"
+            }
+          },
+          {
+            "label": "Time",
+            "field": "time",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Time",
+              "label": "Time",
+              "css": "input[name=\"time\"]"
+            }
+          },
+          {
+            "label": "Patient",
+            "field": "patient",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Patient",
+              "label": "Patient",
+              "css": "input[name=\"patient_id\"]"
+            },
+            "current_value": "1"
+          },
+          {
+            "label": "Provider",
+            "field": "provider",
+            "type": "select",
+            "required": false,
+            "locator": {
+              "role": "combobox",
+              "name": "Provider",
+              "label": "Provider",
+              "css": "select[name=\"provider\"]"
+            },
+            "options": [
+              "-- choose --",
+              "Dr. Lee",
+              "Dr. Patel",
+              "Hyg. Kim"
+            ],
+            "current_value": "-- choose --"
+          },
+          {
+            "label": "Status",
+            "field": "status",
+            "type": "select",
+            "required": false,
+            "locator": {
+              "role": "combobox",
+              "name": "Status",
+              "label": "Status",
+              "css": "select[name=\"status\"]"
+            },
+            "options": [
+              "-- choose --",
+              "Booked",
+              "Completed",
+              "No-show",
+              "Cancelled"
+            ],
+            "current_value": "-- choose --"
+          },
+          {
+            "label": "Reason",
+            "field": "reason",
+            "type": "textarea",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "Reason",
+              "label": "Reason",
+              "css": "textarea[name=\"reason\"]"
+            }
+          }
+        ],
+        "submit": [
+          {
+            "text": "Save",
+            "type": "submit",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(1)"
+          },
+          {
+            "text": "Clear",
+            "type": "reset",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(2)"
+          }
+        ]
+      },
+      "id_params": [
+        "patient_id"
+      ],
+      "messages_seen": [
+        "*"
+      ]
+    },
+    {
+      "page_id": "appointment_new_2",
+      "kind": "form",
+      "entity": "Appointment",
+      "url_pattern": "/appointments/new",
+      "url_regex": "^/appointments/new$",
+      "example_url": "http://127.0.0.1:65355/appointments/new",
+      "form": {
+        "index": 0,
+        "method": "post",
+        "action_pattern": "/appointments/new",
+        "fields": [
+          {
+            "label": "Date (MM/DD/YYYY)",
+            "field": "date",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Date (MM/DD/YYYY)",
+              "label": "Date (MM/DD/YYYY)",
+              "css": "input[name=\"date\"]"
+            }
+          },
+          {
+            "label": "Time",
+            "field": "time",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Time",
+              "label": "Time",
+              "css": "input[name=\"time\"]"
+            }
+          },
+          {
+            "label": "Patient",
+            "field": "patient",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Patient",
+              "label": "Patient",
+              "css": "input[name=\"patient_id\"]"
+            }
+          },
+          {
+            "label": "Provider",
+            "field": "provider",
+            "type": "select",
+            "required": false,
+            "locator": {
+              "role": "combobox",
+              "name": "Provider",
+              "label": "Provider",
+              "css": "select[name=\"provider\"]"
+            },
+            "options": [
+              "-- choose --",
+              "Dr. Lee",
+              "Dr. Patel",
+              "Hyg. Kim"
+            ],
+            "current_value": "-- choose --"
+          },
+          {
+            "label": "Status",
+            "field": "status",
+            "type": "select",
+            "required": false,
+            "locator": {
+              "role": "combobox",
+              "name": "Status",
+              "label": "Status",
+              "css": "select[name=\"status\"]"
+            },
+            "options": [
+              "-- choose --",
+              "Booked",
+              "Completed",
+              "No-show",
+              "Cancelled"
+            ],
+            "current_value": "-- choose --"
+          },
+          {
+            "label": "Reason",
+            "field": "reason",
+            "type": "textarea",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "Reason",
+              "label": "Reason",
+              "css": "textarea[name=\"reason\"]"
+            }
+          }
+        ],
+        "submit": [
+          {
+            "text": "Save",
+            "type": "submit",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(1)"
+          },
+          {
+            "text": "Clear",
+            "type": "reset",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(2)"
+          }
+        ]
+      },
+      "id_params": [],
+      "messages_seen": [
+        "*"
+      ]
+    },
+    {
+      "page_id": "appointment_edit",
+      "kind": "form",
+      "entity": "Appointment",
+      "url_pattern": "/appointments/{id}/edit",
+      "url_regex": "^/appointments/(?P<id>[^/?&#]+)/edit$",
+      "example_url": "http://127.0.0.1:65355/appointments/1000/edit",
+      "form": {
+        "index": 0,
+        "method": "post",
+        "action_pattern": "/appointments/{id}/edit",
+        "fields": [
+          {
+            "label": "Date (MM/DD/YYYY)",
+            "field": "date",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Date (MM/DD/YYYY)",
+              "label": "Date (MM/DD/YYYY)",
+              "css": "input[name=\"date\"]"
+            },
+            "current_value": "04/10/2026"
+          },
+          {
+            "label": "Time",
+            "field": "time",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Time",
+              "label": "Time",
+              "css": "input[name=\"time\"]"
+            },
+            "current_value": "14:30"
+          },
+          {
+            "label": "Patient",
+            "field": "patient",
+            "type": "text",
+            "required": true,
+            "locator": {
+              "role": "textbox",
+              "name": "Patient",
+              "label": "Patient",
+              "css": "input[name=\"patient_id\"]"
+            },
+            "current_value": "2"
+          },
+          {
+            "label": "Provider",
+            "field": "provider",
+            "type": "select",
+            "required": false,
+            "locator": {
+              "role": "combobox",
+              "name": "Provider",
+              "label": "Provider",
+              "css": "select[name=\"provider\"]"
+            },
+            "options": [
+              "-- choose --",
+              "Dr. Lee",
+              "Dr. Patel",
+              "Hyg. Kim"
+            ],
+            "current_value": "Dr. Patel"
+          },
+          {
+            "label": "Status",
+            "field": "status",
+            "type": "select",
+            "required": false,
+            "locator": {
+              "role": "combobox",
+              "name": "Status",
+              "label": "Status",
+              "css": "select[name=\"status\"]"
+            },
+            "options": [
+              "-- choose --",
+              "Booked",
+              "Completed",
+              "No-show",
+              "Cancelled"
+            ],
+            "current_value": "No-show"
+          },
+          {
+            "label": "Reason",
+            "field": "reason",
+            "type": "textarea",
+            "required": false,
+            "locator": {
+              "role": "textbox",
+              "name": "Reason",
+              "label": "Reason",
+              "css": "textarea[name=\"reason\"]"
+            },
+            "current_value": "Checkup"
+          }
+        ],
+        "submit": [
+          {
+            "text": "Save",
+            "type": "submit",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(1)"
+          },
+          {
+            "text": "Clear",
+            "type": "reset",
+            "css": "html:nth-of-type(1) > body:nth-of-type(1) > form:nth-of-type(1) > input:nth-of-type(2)"
+          }
+        ]
+      },
+      "id_params": [
+        "id"
+      ],
+      "messages_seen": [
+        "*"
+      ]
+    }
+  ]
+}

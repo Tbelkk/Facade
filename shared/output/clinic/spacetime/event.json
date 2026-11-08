@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "ts": "2026-11-08T00:09:27",
+    "actor": "operator",
+    "level": "info",
+    "message": "Logging in",
+    "data_json": "{\"action\": \"login\", \"mode\": \"env\"}"
+  },
+  {
+    "id": 2,
+    "ts": "2026-11-08T00:09:27",
+    "actor": "operator",
+    "level": "info",
+    "message": "Extracting Patient: list /patients -> detail /patients/{id}",
+    "data_json": "{\"action\": \"extract_start\", \"entity\": \"Patient\"}"
+  },
+  {
+    "id": 3,
+    "ts": "2026-11-08T00:09:27",
+    "actor": "operator",
+    "level": "info",
+    "message": "Patient: list page 1: 10 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Patient\", \"page\": 1, \"rows\": 10}"
+  },
+  {
+    "id": 4,
+    "ts": "2026-11-08T00:09:27",
+    "actor": "operator",
+    "level": "info",
+    "message": "Patient: list page 2: 10 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Patient\", \"page\": 2, \"rows\": 10}"
+  },
+  {
+    "id": 5,
+    "ts": "2026-11-08T00:09:27",
+    "actor": "operator",
+    "level": "info",
+    "message": "Patient: list page 3: 10 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Patient\", \"page\": 3, \"rows\": 10}"
+  },
+  {
+    "id": 6,
+    "ts": "2026-11-08T00:09:27",
+    "actor": "operator",
+    "level": "info",
+    "message": "Patient: list page 4: 5 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Patient\", \"page\": 4, \"rows\": 5}"
+  },
+  {
+    "id": 7,
+    "ts": "2026-11-08T00:09:28",
+    "actor": "operator",
+    "level": "info",
+    "message": "Patient: 35 records read from 4 list page(s)",
+    "data_json": "{\"action\": \"extract_done\", \"entity\": \"Patient\", \"records\": 35, \"pages\": 4}"
+  },
+  {
+    "id": 8,
+    "ts": "2026-11-08T00:09:28",
+    "actor": "operator",
+    "level": "warn",
+    "message": "Possible duplicate Patient: ['1', '35'] share {'last_name': 'smith', 'first_name': 'john', 'dob': '1960-03-13'}",
+    "data_json": "{\"action\": \"duplicate\", \"entity\": \"Patient\", \"match\": {\"last_name\": \"smith\", \"first_name\": \"john\", \"dob\": \"1960-03-13\"}, \"legacy_ids\": [\"1\", \"35\"]}"
+  },
+  {
+    "id": 9,
+    "ts": "2026-11-08T00:09:28",
+    "actor": "operator",
+    "level": "info",
+    "message": "Extracting Appointment: list /appointments -> detail /appointments/{id}",
+    "data_json": "{\"action\": \"extract_start\", \"entity\": \"Appointment\"}"
+  },
+  {
+    "id": 10,
+    "ts": "2026-11-08T00:09:28",
+    "actor": "operator",
+    "level": "info",
+    "message": "Appointment: list page 1: 10 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Appointment\", \"page\": 1, \"rows\": 10}"
+  },
+  {
+    "id": 11,
+    "ts": "2026-11-08T00:09:28",
+    "actor": "operator",
+    "level": "info",
+    "message": "Appointment: list page 2: 10 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Appointment\", \"page\": 2, \"rows\": 10}"
+  },
+  {
+    "id": 12,
+    "ts": "2026-11-08T00:09:28",
+    "actor": "operator",
+    "level": "info",
+    "message": "Appointment: list page 3: 7 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Appointment\", \"page\": 3, \"rows\": 7}"
+  },
+  {
+    "id": 13,
+    "ts": "2026-11-08T00:09:29",
+    "actor": "operator",
+    "level": "warn",
+    "message": "Session expired (login page shown). Logging in again and resuming.",
+    "data_json": "{\"action\": \"relogin\", \"url\": \"http://127.0.0.1:65355/appointments/1016\"}"
+  },
+  {
+    "id": 14,
+    "ts": "2026-11-08T00:09:29",
+    "actor": "operator",
+    "level": "info",
+    "message": "Appointment: 27 records read from 3 list page(s)",
+    "data_json": "{\"action\": \"extract_done\", \"entity\": \"Appointment\", \"records\": 27, \"pages\": 3}"
+  },
+  {
+    "id": 15,
+    "ts": "2026-11-08T00:09:29",
+    "actor": "operator",
+    "level": "info",
+    "message": "Done: 62 records ({'new': 62, 'changed': 0, 'unchanged': 0}), 1 re-login(s), 1 possible duplicate group(s) in 2.6s",
+    "data_json": "{\"action\": \"done\", \"records\": 62, \"relogins\": 1, \"new\": 62, \"changed\": 0, \"unchanged\": 0}"
+  }
+]

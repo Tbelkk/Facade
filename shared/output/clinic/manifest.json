@@ -1,0 +1,30 @@
+{
+  "name": "clinic",
+  "site": "http://127.0.0.1:65355",
+  "published_at": "2026-11-08T00:51:49",
+  "source_run": "core/cache/mock/clinic_20261108-000924",
+  "records": {
+    "Appointment": 27,
+    "Patient": 35
+  },
+  "operations": {
+    "count": 10,
+    "designed_by": "nemotron",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+  },
+  "files": [
+    "data_model.json",
+    "site_map.json",
+    "operations.json",
+    "api_docs.md",
+    "recipes.json",
+    "schema.json",
+    "records/Appointment.jsonl",
+    "records/Patient.jsonl",
+    "spacetime/entity_schema.json",
+    "spacetime/event.json",
+    "spacetime/job.json",
+    "spacetime/record.json",
+    "spacetime/site.json"
+  ]
+}

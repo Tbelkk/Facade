@@ -1,0 +1,306 @@
+[
+  {
+    "id": 1,
+    "entity": "User",
+    "legacy_id": "u101",
+    "data_json": "{\"username\": \"alice\", \"karma\": 14833, \"joined\": \"2022-08-17\"}",
+    "hash": "f53eb2532652b65e",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 2,
+    "entity": "User",
+    "legacy_id": "u102",
+    "data_json": "{\"username\": \"bob\", \"karma\": 19257, \"joined\": \"2014-03-26\"}",
+    "hash": "3d7d2dbd7f29db4d",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 3,
+    "entity": "User",
+    "legacy_id": "u103",
+    "data_json": "{\"username\": \"carol\", \"karma\": 16784, \"joined\": \"2023-11-20\"}",
+    "hash": "922fbe0b5962bda2",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 4,
+    "entity": "User",
+    "legacy_id": "u104",
+    "data_json": "{\"username\": \"dmitri\", \"karma\": 6110, \"joined\": \"2011-08-10\"}",
+    "hash": "a9b9293d2c672f08",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 5,
+    "entity": "User",
+    "legacy_id": "u105",
+    "data_json": "{\"username\": \"esme\", \"karma\": 4656, \"joined\": \"2010-09-26\"}",
+    "hash": "399b430c6aace288",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 6,
+    "entity": "User",
+    "legacy_id": "u106",
+    "data_json": "{\"username\": \"farouk\", \"karma\": 22732, \"joined\": \"2009-10-13\"}",
+    "hash": "9b0ae77683ff3c13",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 7,
+    "entity": "User",
+    "legacy_id": "u107",
+    "data_json": "{\"username\": \"grace\", \"karma\": 14853, \"joined\": \"2013-10-01\"}",
+    "hash": "10422c99f6aa92b0",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 8,
+    "entity": "User",
+    "legacy_id": "u108",
+    "data_json": "{\"username\": \"hiro\", \"karma\": 17323, \"joined\": \"2010-01-02\"}",
+    "hash": "c888b3faca5a40cc",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 9,
+    "entity": "User",
+    "legacy_id": "u109",
+    "data_json": "{\"username\": \"ines\", \"karma\": 6242, \"joined\": \"2015-10-01\"}",
+    "hash": "ba8ce2ca93db2c38",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 10,
+    "entity": "User",
+    "legacy_id": "u110",
+    "data_json": "{\"username\": \"jamal\", \"karma\": 15212, \"joined\": \"2018-08-19\"}",
+    "hash": "6ed77a0ae05edce0",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 11,
+    "entity": "User",
+    "legacy_id": "u111",
+    "data_json": "{\"username\": \"kenji\", \"karma\": 6410, \"joined\": \"2024-04-21\"}",
+    "hash": "0ab0d361aa1429da",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 12,
+    "entity": "User",
+    "legacy_id": "u112",
+    "data_json": "{\"username\": \"lucia\", \"karma\": 9648, \"joined\": \"2023-01-22\"}",
+    "hash": "d04a67629a71fe08",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 13,
+    "entity": "Post",
+    "legacy_id": "40100",
+    "data_json": "{\"title\": \"Show HN: A Postgres extension for vector search\", \"points\": 294, \"author\": \"ines\", \"author_id\": \"u109\", \"time\": \"2026-09-23\", \"comments\": 260, \"domain\": \"blog.dev\"}",
+    "hash": "f38cbebbb3a9ca61",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 14,
+    "entity": "Post",
+    "legacy_id": "40103",
+    "data_json": "{\"title\": \"Why legacy COBOL still runs the banks\", \"points\": 177, \"author\": \"alice\", \"author_id\": \"u101\", \"time\": \"2026-09-19\", \"comments\": 110, \"domain\": \"nytimes.com\"}",
+    "hash": "e9fd38a5e29e4fed",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 15,
+    "entity": "Post",
+    "legacy_id": "40106",
+    "data_json": "{\"title\": \"SQLite is not a toy database\", \"points\": 7, \"author\": \"alice\", \"author_id\": \"u101\", \"time\": \"2026-11-01\", \"comments\": 218, \"domain\": \"example.org\"}",
+    "hash": "8410e7ee2dc36de7",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 16,
+    "entity": "Post",
+    "legacy_id": "40109",
+    "data_json": "{\"title\": \"A 2005 web app is still running our clinic\", \"points\": 86, \"author\": \"lucia\", \"author_id\": \"u112\", \"time\": \"2026-10-14\", \"comments\": 74, \"domain\": \"arxiv.org\"}",
+    "hash": "3c81945ebd6f7629",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 17,
+    "entity": "Post",
+    "legacy_id": "40112",
+    "data_json": "{\"title\": \"Rust in the Linux kernel: one year later\", \"points\": 161, \"author\": \"bob\", \"author_id\": \"u102\", \"time\": \"2026-10-11\", \"comments\": 15, \"domain\": \"nytimes.com\"}",
+    "hash": "3ac6bdec099b10b2",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 18,
+    "entity": "Post",
+    "legacy_id": "40115",
+    "data_json": "{\"title\": \"How we cut our AWS bill by 60%\", \"points\": 49, \"author\": \"lucia\", \"author_id\": \"u112\", \"time\": \"2026-09-01\", \"comments\": 61, \"domain\": \"nytimes.com\"}",
+    "hash": "65444757334eacda",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 19,
+    "entity": "Post",
+    "legacy_id": "40118",
+    "data_json": "{\"title\": \"The unreasonable effectiveness of plain text\", \"points\": 763, \"author\": \"ines\", \"author_id\": \"u109\", \"time\": \"2026-09-15\", \"comments\": 521, \"domain\": \"example.org\"}",
+    "hash": "8309b2384edcbb81",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 20,
+    "entity": "Post",
+    "legacy_id": "40121",
+    "data_json": "{\"title\": \"Ask HN: How do you document an old system?\", \"points\": 1258, \"author\": \"grace\", \"author_id\": \"u107\", \"time\": \"2026-09-13\", \"comments\": 430, \"domain\": \"example.org\"}",
+    "hash": "749348484b396ce3",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 21,
+    "entity": "Post",
+    "legacy_id": "40124",
+    "data_json": "{\"title\": \"Building an MCP server in a weekend\", \"points\": 1, \"author\": \"dmitri\", \"author_id\": \"u104\", \"time\": \"2026-09-13\", \"comments\": 590, \"domain\": \"github.com\"}",
+    "hash": "67d49596b7a076b3",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 22,
+    "entity": "Post",
+    "legacy_id": "40127",
+    "data_json": "{\"title\": \"Reverse engineering a printer protocol\", \"points\": 134, \"author\": \"esme\", \"author_id\": \"u105\", \"time\": \"2026-09-25\", \"comments\": 336, \"domain\": \"blog.dev\"}",
+    "hash": "e1bf740d22c81f3e",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 23,
+    "entity": "Post",
+    "legacy_id": "40130",
+    "data_json": "{\"title\": \"Why we moved off microservices\", \"points\": 25, \"author\": \"dmitri\", \"author_id\": \"u104\", \"time\": \"2026-11-21\", \"comments\": 248, \"domain\": \"github.com\"}",
+    "hash": "a8292a249aa0c2ef",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 24,
+    "entity": "Post",
+    "legacy_id": "40133",
+    "data_json": "{\"title\": \"Writing a tiny HTTP server in C\", \"points\": 1161, \"author\": \"hiro\", \"author_id\": \"u108\", \"time\": \"2026-09-19\", \"comments\": 495, \"domain\": \"arxiv.org\"}",
+    "hash": "c8ae6ec3a5988634",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 25,
+    "entity": "Post",
+    "legacy_id": "40136",
+    "data_json": "{\"title\": \"The hidden cost of no API\", \"points\": 774, \"author\": \"carol\", \"author_id\": \"u103\", \"time\": \"2026-10-08\", \"comments\": 255, \"domain\": null}",
+    "hash": "017c09d5e162efa3",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 26,
+    "entity": "Post",
+    "legacy_id": "40139",
+    "data_json": "{\"title\": \"Datalog for everyday queries\", \"points\": 802, \"author\": \"grace\", \"author_id\": \"u107\", \"time\": \"2026-10-20\", \"comments\": 80, \"domain\": \"nytimes.com\"}",
+    "hash": "7206e4323ea590d6",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 27,
+    "entity": "Post",
+    "legacy_id": "40142",
+    "data_json": "{\"title\": \"A field guide to screen scraping ethically\", \"points\": 4, \"author\": \"ines\", \"author_id\": \"u109\", \"time\": \"2026-10-08\", \"comments\": 401, \"domain\": \"blog.dev\"}",
+    "hash": "dc7ecdca5f8ec3dc",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 28,
+    "entity": "Post",
+    "legacy_id": "40145",
+    "data_json": "{\"title\": \"Nemotron agents in production\", \"points\": 365, \"author\": \"ines\", \"author_id\": \"u109\", \"time\": \"2026-09-24\", \"comments\": 70, \"domain\": \"example.org\"}",
+    "hash": "543e734312ff1a64",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 29,
+    "entity": "Post",
+    "legacy_id": "40148",
+    "data_json": "{\"title\": \"What I learned maintaining a 20-year-old codebase\", \"points\": 305, \"author\": \"dmitri\", \"author_id\": \"u104\", \"time\": \"2026-09-24\", \"comments\": 16, \"domain\": \"github.com\"}",
+    "hash": "7823320174918929",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 30,
+    "entity": "Post",
+    "legacy_id": "40151",
+    "data_json": "{\"title\": \"Making tables accessible again\", \"points\": 18, \"author\": \"alice\", \"author_id\": \"u101\", \"time\": \"2026-09-06\", \"comments\": 288, \"domain\": \"blog.dev\"}",
+    "hash": "27f07c6213149750",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 31,
+    "entity": "Post",
+    "legacy_id": "40154",
+    "data_json": "{\"title\": \"GPU prices are finally dropping\", \"points\": 34, \"author\": \"farouk\", \"author_id\": \"u106\", \"time\": \"2026-09-15\", \"comments\": 338, \"domain\": null}",
+    "hash": "d0191510d5abd8b4",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 32,
+    "entity": "Post",
+    "legacy_id": "40157",
+    "data_json": "{\"title\": \"The art of the boring database\", \"points\": 687, \"author\": \"alice\", \"author_id\": \"u101\", \"time\": \"2026-09-16\", \"comments\": 366, \"domain\": null}",
+    "hash": "0b15a5074a16b8f0",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 33,
+    "entity": "Post",
+    "legacy_id": "40160",
+    "data_json": "{\"title\": \"Migrating 6,000 patients without an export\", \"points\": 443, \"author\": \"kenji\", \"author_id\": \"u111\", \"time\": \"2026-09-16\", \"comments\": 68, \"domain\": null}",
+    "hash": "ba5694a15f77e2ab",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 34,
+    "entity": "Post",
+    "legacy_id": "40163",
+    "data_json": "{\"title\": \"Ask HN: Favorite legacy system horror story?\", \"points\": 20, \"author\": \"bob\", \"author_id\": \"u102\", \"time\": \"2026-10-18\", \"comments\": 376, \"domain\": null}",
+    "hash": "bdd21374e14029c8",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 35,
+    "entity": "Post",
+    "legacy_id": "40166",
+    "data_json": "{\"title\": \"SpacetimeDB: a database that is also a server\", \"points\": 126, \"author\": \"bob\", \"author_id\": \"u102\", \"time\": \"2026-11-16\", \"comments\": 79, \"domain\": \"nytimes.com\"}",
+    "hash": "59e10acb5bd4b444",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 36,
+    "entity": "Post",
+    "legacy_id": "40169",
+    "data_json": "{\"title\": \"Typed schemas from untyped HTML\", \"points\": 1423, \"author\": \"alice\", \"author_id\": \"u101\", \"time\": \"2026-11-22\", \"comments\": 391, \"domain\": \"nytimes.com\"}",
+    "hash": "c4dc23c0844bbca5",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 37,
+    "entity": "Post",
+    "legacy_id": "40172",
+    "data_json": "{\"title\": \"Why every form needs a required marker\", \"points\": 38, \"author\": \"bob\", \"author_id\": \"u102\", \"time\": \"2026-11-04\", \"comments\": 263, \"domain\": \"nytimes.com\"}",
+    "hash": "45b8503569853186",
+    "extracted_at": "2026-11-08T00:14:06"
+  },
+  {
+    "id": 38,
+    "entity": "Post",
+    "legacy_id": "40175",
+    "data_json": "{\"title\": \"Show HN: Turn any website into an API\", \"points\": 1195, \"author\": \"lucia\", \"author_id\": \"u112\", \"time\": \"2026-11-15\", \"comments\": 451, \"domain\": \"nytimes.com\"}",
+    "hash": "c2b485f0f57b8d5f",
+    "extracted_at": "2026-11-08T00:14:06"
+  }
+]

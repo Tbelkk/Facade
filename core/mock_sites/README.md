@@ -21,7 +21,7 @@ fails if anything is wrong or if any write reached the site.
 
 ## Where the next agent finds it
 
-Every run also replaces **`core/cache/latest/`**, a fixed folder for the SpacetimeDB server:
+Every run also replaces **`shared/output/<site>/`**, a fixed folder for the SpacetimeDB server:
 `data_model.json`, `records/<Entity>.jsonl`, `operations.json`, `site_map.json`, `spacetime/*.json`,
 `manifest.json`. See `operator_agent/README.md`. Use `--no-publish` to leave it alone.
 

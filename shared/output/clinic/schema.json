@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "http://127.0.0.1:65355 records",
+  "$defs": {
+    "Patient": {
+      "type": "object",
+      "title": "Patient",
+      "properties": {
+        "legacy_id": {
+          "type": "string",
+          "description": "id in the legacy system"
+        },
+        "last_name": {
+          "type": "string",
+          "title": "Last Name"
+        },
+        "first_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "First Name"
+        },
+        "dob": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date",
+          "title": "DOB"
+        },
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Phone"
+        },
+        "insurance_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Insurance ID"
+        }
+      },
+      "required": [
+        "legacy_id",
+        "last_name"
+      ],
+      "additionalProperties": false
+    },
+    "Appointment": {
+      "type": "object",
+      "title": "Appointment",
+      "properties": {
+        "legacy_id": {
+          "type": "string",
+          "description": "id in the legacy system"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "title": "Date"
+        },
+        "time": {
+          "type": "string",
+          "title": "Time"
+        },
+        "patient": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Patient"
+        },
+        "patient_id": {
+          "type": "string",
+          "x-ref": "Patient",
+          "description": "legacy_id of a Patient",
+          "title": "Patient"
+        },
+        "provider": {
+          "enum": [
+            "Dr. Lee",
+            "Dr. Patel",
+            "Hyg. Kim",
+            null
+          ],
+          "title": "Provider"
+        },
+        "status": {
+          "enum": [
+            "Booked",
+            "Completed",
+            "No-show",
+            "Cancelled",
+            null
+          ],
+          "title": "Status"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "legacy_id",
+        "date",
+        "time",
+        "patient_id"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

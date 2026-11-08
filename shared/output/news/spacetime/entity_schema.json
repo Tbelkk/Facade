@@ -1,0 +1,12 @@
+[
+  {
+    "name": "User",
+    "fields_json": "[{\"name\": \"username\", \"label\": \"Username\", \"type\": \"string\", \"required\": false}, {\"name\": \"karma\", \"label\": \"Karma\", \"type\": \"integer\", \"required\": false}, {\"name\": \"joined\", \"label\": \"Joined\", \"type\": \"date\", \"format\": \"YYYY-MM-DD\", \"legacy_format\": \"MM/DD/YYYY\", \"required\": false}]",
+    "rules_json": "[]"
+  },
+  {
+    "name": "Post",
+    "fields_json": "[{\"name\": \"title\", \"label\": \"Title\", \"type\": \"string\", \"required\": false}, {\"name\": \"points\", \"label\": \"Points\", \"type\": \"integer\", \"required\": false}, {\"name\": \"author\", \"label\": \"Author\", \"type\": \"string\", \"display_of\": \"author_id\"}, {\"name\": \"author_id\", \"label\": \"Author\", \"type\": \"ref\", \"to\": \"User\", \"required\": false}, {\"name\": \"time\", \"label\": \"Time\", \"type\": \"date\", \"format\": \"YYYY-MM-DD\", \"legacy_format\": \"MM/DD/YYYY\", \"required\": false}, {\"name\": \"comments\", \"label\": \"Comments\", \"type\": \"integer\", \"required\": false}, {\"name\": \"domain\", \"label\": \"Domain\", \"type\": \"string\", \"required\": false}]",
+    "rules_json": "[]"
+  }
+]

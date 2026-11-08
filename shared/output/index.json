@@ -1,0 +1,43 @@
+{
+  "sites": {
+    "clinic": {
+      "site": "http://127.0.0.1:65355",
+      "published_at": "2026-11-08T00:51:49",
+      "records": {
+        "Appointment": 27,
+        "Patient": 35
+      },
+      "operations": {
+        "count": 10,
+        "designed_by": "nemotron",
+        "model": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+      }
+    },
+    "hackernews": {
+      "site": "https://news.ycombinator.com",
+      "published_at": "2026-11-08T00:52:16",
+      "records": {
+        "Post": 2582
+      },
+      "operations": {
+        "count": 3,
+        "designed_by": "nemotron",
+        "model": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+      }
+    },
+    "news": {
+      "site": "http://127.0.0.1:49524",
+      "published_at": "2026-11-08T00:51:49",
+      "records": {
+        "Post": 26,
+        "User": 12
+      },
+      "operations": {
+        "count": 5,
+        "designed_by": "nemotron",
+        "model": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+      }
+    }
+  },
+  "latest": "hackernews"
+}

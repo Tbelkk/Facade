@@ -5,7 +5,9 @@
     python -m operator_agent.run operator_agent/examples/news
 
 Reads  <run folder>/data_model.json, site_map.json, records/<Entity>.jsonl
-Writes <run folder>/operations.json and api_docs.md
+Writes <run folder>/operations.json and api_docs.md, then publishes the folder to shared/output/<site>/
+(the tracked handoff the SpacetimeDB server reads). Accepts both explorers' output (records with legacy_id+data,
+or Daniel's flat records with _key).
 """
 import argparse
 import json
@@ -41,7 +43,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="Facade Operator: design the API for extracted data")
     ap.add_argument("run_dir")
     ap.add_argument("--offline", action="store_true", help="code-only design (no Nemotron)")
-    ap.add_argument("--no-publish", action="store_true", help="do not update the handoff folder core/cache/latest/")
+    ap.add_argument("--no-publish", action="store_true", help="do not publish to shared/output/<name>/")
+    ap.add_argument("--name", default=None, help="site name in shared/output/ (default: from the folder name)")
     a = ap.parse_args(argv)
     try:
         from dotenv import load_dotenv
@@ -53,7 +56,7 @@ def main(argv=None):
         print(f"  {o['method']:6} {o['path']:32} {o['source']:8} {o['name']}")
     if not a.no_publish:
         from extract.handoff import publish
-        publish(a.run_dir)
+        publish(a.run_dir, name=a.name)
 
 
 if __name__ == "__main__":

@@ -62,7 +62,7 @@ def main(argv=None):
     ap.add_argument("--out", default="")
     ap.add_argument("--serve", action="store_true", help="then serve the results page (http://127.0.0.1:5070)")
     ap.add_argument("--port", type=int, default=5070)
-    ap.add_argument("--no-publish", action="store_true", help="do not update the handoff folder core/cache/latest/")
+    ap.add_argument("--no-publish", action="store_true", help="do not publish to shared/output/<site>/")
     a = ap.parse_args(argv)
     try:
         from dotenv import load_dotenv

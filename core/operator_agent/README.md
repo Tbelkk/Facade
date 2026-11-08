@@ -62,21 +62,12 @@ To hand-make one, copy an example and edit the JSON.
 
 **`api_docs.md`**: every endpoint with its inputs and a real example request/response.
 
-## Handoff to SpacetimeDB: `core/cache/latest/`
+## Handoff to SpacetimeDB: `shared/output/<site>/` (tracked in git)
 
-Every command-line run (`mock_sites.run`, `extract.run`, `operator_agent.run`) replaces this folder with the
-newest run's outputs, so the SpacetimeDB server always reads the same path. Skip with `--no-publish`; move it
-with `FACADE_HANDOFF_DIR=/some/path`.
+Every command-line run (`operator_agent.run`, `mock_sites.run`, `extract.run`) publishes its folder to
+`shared/output/<site>/` and records it in `shared/output/index.json` (`"latest"` = newest). Commit and push
+those files; the SpacetimeDB server reads them from the repo. Both explorers end up here: run the Operator on
+Daniel's output folder (`cache/extract/<run>/` or `shared/samples/<site>/`) or on Tyler's (`cache/explore/...`,
+`cache/mock/...`). Skip with `--no-publish`; pick the folder name with `--name`.
 
-| File | Use it for |
-|---|---|
-| `manifest.json` | which run, when, record counts, endpoint count, files present |
-| `data_model.json` | `upsert_schema` per entity |
-| `records/<Entity>.jsonl` | `upsert_record` per line (`legacy_id`, `hash`, `extracted_at`, `data`) |
-| `operations.json` | the endpoints + MCP tools to create |
-| `site_map.json` | `save_site` |
-| `spacetime/<table>.json` | the same data as ready-made rows for every table (plan 7.5) |
-| `schema.json`, `api_docs.md`, `recipes.json` | JSON Schema per entity, docs, read/fill recipes |
-
-The folder is replaced as a whole (never a mix of two runs). `core/cache/` is git-ignored, so on another machine
-use the tracked `operator_agent/examples/<name>/` folders, which have the same layout.
+See `shared/output/README.md` for the file list and how the server should load it.

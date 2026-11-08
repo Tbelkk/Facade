@@ -1,0 +1,22 @@
+{
+  "name": "hackernews",
+  "site": "https://news.ycombinator.com",
+  "published_at": "2026-11-08T00:52:16",
+  "source_run": "shared/samples/hackernews",
+  "records": {
+    "Post": 2582
+  },
+  "operations": {
+    "count": 3,
+    "designed_by": "nemotron",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+  },
+  "files": [
+    "data_model.json",
+    "site_map.json",
+    "operations.json",
+    "api_docs.md",
+    "records/Post.jsonl"
+  ],
+  "normalized_from_flat_records": true
+}

@@ -42,6 +42,12 @@ def heuristic(dm, prof):
         filters, text = [], []
         for f in p["fields"]:
             t, n = f["type"], f["name"]
+            if not f["non_null"]:
+                continue  # never had a value: nothing to filter on
+            if t == "boolean":
+                filters.append({"name": n, "in": "query", "type": "boolean", "field": n, "match": "eq",
+                                "values": [True, False]})
+                continue
             if f.get("display_of"):  # readable twin of a reference (?author=alice); the id filter comes too
                 filters.append({"name": n, "in": "query", "type": "string", "field": n, "match": "contains"})
                 continue
@@ -244,7 +250,8 @@ Decide, from the entity profiles you are given (fields, types, REAL value statis
 1. Endpoints: a list endpoint per entity (GET /<plural>), a get-one endpoint (GET /<plural>/{id}),
    and a search endpoint (GET /<plural>/search?q=) when the entity has free-text fields.
 2. Filters on the list endpoint that make sense for the REAL values:
-   numbers/dates -> min_/max_ (or <field>_from/<field>_to) with match gte/lte; few distinct values -> exact
+   numbers/dates -> min_/max_ (only for type integer/number/date; text that looks like time, e.g. "2 hours ago",
+   is a string); booleans -> eq; fields with non_null 0 never had a value, so give them no filter; (or <field>_from/<field>_to) with match gte/lte; few distinct values -> exact
    match eq (list them in "values"); short text such as names -> contains; references -> eq on the <x>_id field.
    Add limit/offset (match limit/offset) and, when there are numbers/dates, sort (values like "points", "-points").
 3. Write endpoints ONLY from forms that were seen: a "create" form -> POST /<plural>; an "edit" form ->

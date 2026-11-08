@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "kind": "extract",
+    "entity": "User",
+    "status": "done",
+    "done": 12,
+    "total": 12,
+    "started_at": "2026-11-08T00:14:05"
+  },
+  {
+    "id": 2,
+    "kind": "extract",
+    "entity": "Post",
+    "status": "done",
+    "done": 26,
+    "total": 26,
+    "started_at": "2026-11-08T00:14:06"
+  }
+]

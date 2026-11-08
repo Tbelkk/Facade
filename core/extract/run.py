@@ -18,7 +18,7 @@ def main(argv=None):
     ap.add_argument("--headed", action="store_true")
     ap.add_argument("--limit", type=int, default=0, help="max records per entity (0 = all)")
     ap.add_argument("--out", default="", help="output folder (default <run folder>/extract)")
-    ap.add_argument("--no-publish", action="store_true", help="do not update the handoff folder core/cache/latest/")
+    ap.add_argument("--no-publish", action="store_true", help="do not publish to shared/output/<site>/")
     a = ap.parse_args(argv)
     try:
         from dotenv import load_dotenv

@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "ts": "2026-11-08T00:14:05",
+    "actor": "operator",
+    "level": "info",
+    "message": "Extracting User: list /users -> detail /users/{id}",
+    "data_json": "{\"action\": \"extract_start\", \"entity\": \"User\"}"
+  },
+  {
+    "id": 2,
+    "ts": "2026-11-08T00:14:05",
+    "actor": "operator",
+    "level": "info",
+    "message": "User: list page 1: 10 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"User\", \"page\": 1, \"rows\": 10}"
+  },
+  {
+    "id": 3,
+    "ts": "2026-11-08T00:14:05",
+    "actor": "operator",
+    "level": "info",
+    "message": "User: list page 2: 2 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"User\", \"page\": 2, \"rows\": 2}"
+  },
+  {
+    "id": 4,
+    "ts": "2026-11-08T00:14:06",
+    "actor": "operator",
+    "level": "info",
+    "message": "User: 12 records read from 2 list page(s)",
+    "data_json": "{\"action\": \"extract_done\", \"entity\": \"User\", \"records\": 12, \"pages\": 2}"
+  },
+  {
+    "id": 5,
+    "ts": "2026-11-08T00:14:06",
+    "actor": "operator",
+    "level": "info",
+    "message": "Extracting Post: list /posts -> detail /posts/{id}",
+    "data_json": "{\"action\": \"extract_start\", \"entity\": \"Post\"}"
+  },
+  {
+    "id": 6,
+    "ts": "2026-11-08T00:14:06",
+    "actor": "operator",
+    "level": "info",
+    "message": "Post: list page 1: 10 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Post\", \"page\": 1, \"rows\": 10}"
+  },
+  {
+    "id": 7,
+    "ts": "2026-11-08T00:14:06",
+    "actor": "operator",
+    "level": "info",
+    "message": "Post: list page 2: 10 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Post\", \"page\": 2, \"rows\": 10}"
+  },
+  {
+    "id": 8,
+    "ts": "2026-11-08T00:14:06",
+    "actor": "operator",
+    "level": "info",
+    "message": "Post: list page 3: 6 rows",
+    "data_json": "{\"action\": \"list_page\", \"entity\": \"Post\", \"page\": 3, \"rows\": 6}"
+  },
+  {
+    "id": 9,
+    "ts": "2026-11-08T00:14:06",
+    "actor": "operator",
+    "level": "info",
+    "message": "Post: 26 records read from 3 list page(s)",
+    "data_json": "{\"action\": \"extract_done\", \"entity\": \"Post\", \"records\": 26, \"pages\": 3}"
+  },
+  {
+    "id": 10,
+    "ts": "2026-11-08T00:14:06",
+    "actor": "operator",
+    "level": "info",
+    "message": "Done: 38 records ({'new': 38, 'changed': 0, 'unchanged': 0}), 0 re-login(s), 0 possible duplicate group(s) in 1.8s",
+    "data_json": "{\"action\": \"done\", \"records\": 38, \"relogins\": 0, \"new\": 38, \"changed\": 0, \"unchanged\": 0}"
+  }
+]
