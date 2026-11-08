@@ -1,0 +1,8 @@
+# Facade Explorer as a NeMo Agent Toolkit workflow, NO Nemotron (works without an API key).
+#   nat run --config_file explore/configs/explorer_offline.yml --input "http://localhost:5005"
+workflow:
+  _type: facade_explorer
+  reader: heuristic
+  planner: heuristic
+  page_budget: 25
+  login: none        # 'env' = log in with FACADE_LOGIN_USER / FACADE_LOGIN_PASS from core/.env

@@ -1,0 +1,106 @@
+{
+  "site": "http://127.0.0.1:65294",
+  "generated_at": "2026-11-08T00:06:58",
+  "entities": [
+    {
+      "name": "Post",
+      "key": "legacy_id",
+      "fields": [
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "points",
+          "label": "Points",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "author",
+          "label": "Author",
+          "type": "string",
+          "display_of": "author_id"
+        },
+        {
+          "name": "author_id",
+          "label": "Author",
+          "type": "ref",
+          "to": "User",
+          "required": false
+        },
+        {
+          "name": "time",
+          "label": "Time",
+          "type": "date",
+          "format": "YYYY-MM-DD",
+          "legacy_format": "MM/DD/YYYY",
+          "required": false
+        },
+        {
+          "name": "comments",
+          "label": "Comments",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "label": "Domain",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "relations": [
+        {
+          "field": "author_id",
+          "to": "User"
+        }
+      ],
+      "record_count": 26,
+      "pages": {
+        "list": "post_list",
+        "detail": "post_detail"
+      },
+      "forms": []
+    },
+    {
+      "name": "User",
+      "key": "legacy_id",
+      "fields": [
+        {
+          "name": "username",
+          "label": "Username",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "karma",
+          "label": "Karma",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "joined",
+          "label": "Joined",
+          "type": "date",
+          "format": "YYYY-MM-DD",
+          "legacy_format": "MM/DD/YYYY",
+          "required": false
+        }
+      ],
+      "relations": [],
+      "record_count": 12,
+      "pages": {
+        "list": "user_list",
+        "detail": "user_detail"
+      },
+      "forms": []
+    }
+  ],
+  "rules": [],
+  "not_visible": [
+    "Anything the screens do not show (server-side logic, permissions, nightly jobs)"
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "version": 1,
+  "site": "https://news.ycombinator.com",
+  "generated_at": "2026-11-08T00:51:49",
+  "designed_by": {
+    "by": "nemotron",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "attempts": 1,
+    "nemotron_ms": 16199,
+    "problems_found": [],
+    "problems_after_fix": [],
+    "dropped": [],
+    "added_by_code": []
+  },
+  "entities": {
+    "Post": {
+      "key": "legacy_id",
+      "record_count": 2582,
+      "fields": [
+        {
+          "name": "title",
+          "label": "col3",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "points",
+          "label": "col5",
+          "type": "integer",
+          "required": true,
+          "source_type": "int"
+        },
+        {
+          "name": "author",
+          "label": "col5",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "time",
+          "label": "col5",
+          "type": "string",
+          "required": true,
+          "note": "values are not ISO dates (for example relative times)",
+          "source_type": "date"
+        },
+        {
+          "name": "rank",
+          "label": "col1",
+          "type": "integer",
+          "required": true,
+          "source_type": "int"
+        },
+        {
+          "name": "hide",
+          "label": "col5",
+          "type": "boolean",
+          "required": false,
+          "source_type": "bool"
+        },
+        {
+          "name": "comments",
+          "label": "col5",
+          "type": "integer",
+          "required": false,
+          "source_type": "int"
+        },
+        {
+          "name": "text",
+          "label": "Text",
+          "type": "string",
+          "required": true,
+          "source_type": "textarea"
+        }
+      ]
+    }
+  },
+  "operations": [
+    {
+      "name": "list_posts",
+      "method": "GET",
+      "path": "/posts",
+      "entity": "Post",
+      "kind": "list",
+      "source": "database",
+      "summary": "Returns a paginated list of posts with optional filters by title, author, points, comments, and time.",
+      "inputs": [
+        {
+          "name": "title",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "author",
+          "in": "query",
+          "type": "string",
+          "field": "author",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "min_points",
+          "in": "query",
+          "type": "integer",
+          "field": "points",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_points",
+          "in": "query",
+          "type": "integer",
+          "field": "points",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "min_comments",
+          "in": "query",
+          "type": "integer",
+          "field": "comments",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_comments",
+          "in": "query",
+          "type": "integer",
+          "field": "comments",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "time",
+          "in": "query",
+          "type": "string",
+          "field": "time",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": null,
+          "match": "sort",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts?min_points=3&time=13+hours+ago&limit=3",
+        "response": {
+          "total": 29,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "50405782",
+              "title": "Every processor die anyone has photographed and given away (sheets.works)",
+              "points": 99,
+              "author": "user_7832",
+              "time": "13 hours ago"
+            },
+            {
+              "legacy_id": "50405674",
+              "title": "Terry Pratchett's Study (sussi.dk)",
+              "points": 118,
+              "author": "ColinWright",
+              "time": "13 hours ago"
+            },
+            {
+              "legacy_id": "50405789",
+              "title": "How Long Can Life Wait? (mceglowski.substack.com)",
+              "points": 133,
+              "author": "Ariarule",
+              "time": "13 hours ago"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_post",
+      "method": "GET",
+      "path": "/posts/{id}",
+      "entity": "Post",
+      "kind": "get",
+      "source": "database",
+      "summary": "Returns a single post by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts/50410107",
+        "response": {
+          "legacy_id": "50410107",
+          "title": "Goodbye Claude, Hello Pi (caleb.software)",
+          "points": 62,
+          "author": "karagenit",
+          "time": "2 hours ago"
+        }
+      }
+    },
+    {
+      "name": "search_posts",
+      "method": "GET",
+      "path": "/posts/search",
+      "entity": "Post",
+      "kind": "search",
+      "source": "database",
+      "summary": "Searches posts by free-text query across title and author.",
+      "inputs": [
+        {
+          "name": "q",
+          "in": "query",
+          "type": "string",
+          "match": "search",
+          "fields": [
+            "title",
+            "author"
+          ],
+          "required": false
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "offset",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts/search?q=%28github.com%2Fcrmne%29&limit=3",
+        "response": {
+          "total": 1,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "50409855",
+              "title": "ZapFast: A fast, native WhatsApp client in Rust and egui (github.com/crmne)",
+              "points": 30,
+              "author": "handfuloflight",
+              "time": "3 hours ago"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

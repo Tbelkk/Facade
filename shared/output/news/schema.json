@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "http://127.0.0.1:49524 records",
+  "$defs": {
+    "User": {
+      "type": "object",
+      "title": "User",
+      "properties": {
+        "legacy_id": {
+          "type": "string",
+          "description": "id in the legacy system"
+        },
+        "username": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Username"
+        },
+        "karma": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "title": "Karma"
+        },
+        "joined": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date",
+          "title": "Joined"
+        }
+      },
+      "required": [
+        "legacy_id"
+      ],
+      "additionalProperties": false
+    },
+    "Post": {
+      "type": "object",
+      "title": "Post",
+      "properties": {
+        "legacy_id": {
+          "type": "string",
+          "description": "id in the legacy system"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Title"
+        },
+        "points": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "title": "Points"
+        },
+        "author": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Author"
+        },
+        "author_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "x-ref": "User",
+          "description": "legacy_id of a User",
+          "title": "Author"
+        },
+        "time": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date",
+          "title": "Time"
+        },
+        "comments": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "title": "Comments"
+        },
+        "domain": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Domain"
+        }
+      },
+      "required": [
+        "legacy_id"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "legacy-test-site",
+      "runtimeExecutable": "core/.venv/bin/python",
+      "runtimeArgs": [
+        "core/tests/legacy_site.py"
+      ],
+      "port": 5055
+    },
+    {
+      "name": "extract-output",
+      "runtimeExecutable": "core/.venv/bin/python",
+      "runtimeArgs": [
+        "core/extract/view.py"
+      ],
+      "port": 5070
+    },
+    {
+      "name": "mock-clinic",
+      "runtimeExecutable": "core/.venv/bin/python",
+      "runtimeArgs": [
+        "-c",
+        "import sys; sys.path.insert(0,'core'); from mock_sites.server import main; main(['clinic','5060'])"
+      ],
+      "port": 5060
+    }
+  ]
+}

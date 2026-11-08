@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "kind": "extract",
+    "entity": "Patient",
+    "status": "done",
+    "done": 35,
+    "total": 35,
+    "started_at": "2026-11-08T00:09:27"
+  },
+  {
+    "id": 2,
+    "kind": "extract",
+    "entity": "Appointment",
+    "status": "done",
+    "done": 27,
+    "total": 27,
+    "started_at": "2026-11-08T00:09:28"
+  }
+]

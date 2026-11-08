@@ -23,3 +23,6 @@ _to_delete/
 # os
 .DS_Store
 Thumbs.db
+
+# python packaging
+*.egg-info/

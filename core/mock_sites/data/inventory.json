@@ -1,0 +1,417 @@
+{
+ "name": "Lone Star Parts",
+ "brand": "PartsDesk 98",
+ "login": null,
+ "page_size": 8,
+ "entities": [
+  {
+   "name": "Product",
+   "path": "products",
+   "title": "Inventory",
+   "display": "{name}",
+   "fields": [
+    {
+     "key": "sku",
+     "label": "SKU",
+     "required": true
+    },
+    {
+     "key": "name",
+     "label": "Description",
+     "required": true
+    },
+    {
+     "key": "category",
+     "label": "Category",
+     "options": [
+      "Fasteners",
+      "Electrical",
+      "Plumbing",
+      "Hydraulics",
+      "Tools",
+      "Bearings"
+     ]
+    },
+    {
+     "key": "price",
+     "label": "Unit Price",
+     "type": "money"
+    },
+    {
+     "key": "stock",
+     "label": "Qty On Hand",
+     "type": "number"
+    },
+    {
+     "key": "supplier_id",
+     "label": "Supplier",
+     "ref": "Supplier"
+    },
+    {
+     "key": "last_ordered",
+     "label": "Last Ordered",
+     "type": "date"
+    }
+   ],
+   "list_columns": [
+    {
+     "header": "SKU",
+     "field": "sku"
+    },
+    {
+     "header": "Description",
+     "field": "name"
+    },
+    {
+     "header": "Unit Price",
+     "field": "price"
+    },
+    {
+     "header": "Qty On Hand",
+     "field": "stock"
+    }
+   ],
+   "records": [
+    {
+     "id": "5000",
+     "sku": "PD-1000",
+     "name": "Hex bolt 3/8\"",
+     "category": "Fasteners",
+     "price": 38.81,
+     "stock": 522,
+     "supplier_id": "S01",
+     "last_ordered": "2018-08-25"
+    },
+    {
+     "id": "5007",
+     "sku": "PD-1001",
+     "name": "Wire nut",
+     "category": "Electrical",
+     "price": 46.59,
+     "stock": 4,
+     "supplier_id": "S02",
+     "last_ordered": "2020-03-05"
+    },
+    {
+     "id": "5014",
+     "sku": "PD-1002",
+     "name": "PVC elbow",
+     "category": "Plumbing",
+     "price": 118.9,
+     "stock": 742,
+     "supplier_id": "S03",
+     "last_ordered": "2019-09-02"
+    },
+    {
+     "id": "5021",
+     "sku": "PD-1003",
+     "name": "Hose clamp",
+     "category": "Hydraulics",
+     "price": 82.17,
+     "stock": 530,
+     "supplier_id": "S04",
+     "last_ordered": "2025-02-18"
+    },
+    {
+     "id": "5028",
+     "sku": "PD-1004",
+     "name": "Socket set",
+     "category": "Tools",
+     "price": 15.15,
+     "stock": 195,
+     "supplier_id": "S05",
+     "last_ordered": "2022-01-25"
+    },
+    {
+     "id": "5035",
+     "sku": "PD-1005",
+     "name": "Ball bearing",
+     "category": "Bearings",
+     "price": 25.34,
+     "stock": 463,
+     "supplier_id": "S06",
+     "last_ordered": "2018-02-15"
+    },
+    {
+     "id": "5042",
+     "sku": "PD-1006",
+     "name": "Wing nut",
+     "category": "Fasteners",
+     "price": 82.08,
+     "stock": 517,
+     "supplier_id": "S01",
+     "last_ordered": "2021-12-09"
+    },
+    {
+     "id": "5049",
+     "sku": "PD-1007",
+     "name": "Breaker 20A",
+     "category": "Electrical",
+     "price": 113.63,
+     "stock": 546,
+     "supplier_id": "S02",
+     "last_ordered": "2025-09-08"
+    },
+    {
+     "id": "5056",
+     "sku": "PD-1008",
+     "name": "Gate valve",
+     "category": "Plumbing",
+     "price": 175.11,
+     "stock": 897,
+     "supplier_id": "S03",
+     "last_ordered": "2022-09-07"
+    },
+    {
+     "id": "5063",
+     "sku": "PD-1009",
+     "name": "Pump seal",
+     "category": "Hydraulics",
+     "price": 210.16,
+     "stock": 140,
+     "supplier_id": "S04",
+     "last_ordered": "2024-02-13"
+    },
+    {
+     "id": "5070",
+     "sku": "PD-1010",
+     "name": "Torque wrench",
+     "category": "Tools",
+     "price": 111.09,
+     "stock": 74,
+     "supplier_id": "S05",
+     "last_ordered": "2021-07-03"
+    },
+    {
+     "id": "5077",
+     "sku": "PD-1011",
+     "name": "Roller bearing",
+     "category": "Bearings",
+     "price": 53.96,
+     "stock": 310,
+     "supplier_id": "S06",
+     "last_ordered": "2019-03-23"
+    },
+    {
+     "id": "5084",
+     "sku": "PD-1012",
+     "name": "Lag screw",
+     "category": "Fasteners",
+     "price": 161.22,
+     "stock": 374,
+     "supplier_id": "S01",
+     "last_ordered": "2020-05-05"
+    },
+    {
+     "id": "5091",
+     "sku": "PD-1013",
+     "name": "Junction box",
+     "category": "Electrical",
+     "price": 241.92,
+     "stock": 224,
+     "supplier_id": "S02",
+     "last_ordered": "2019-07-16"
+    },
+    {
+     "id": "5098",
+     "sku": "PD-1014",
+     "name": "Ball valve",
+     "category": "Plumbing",
+     "price": 41.54,
+     "stock": 683,
+     "supplier_id": "S03",
+     "last_ordered": "2021-03-23"
+    },
+    {
+     "id": "5105",
+     "sku": "PD-1015",
+     "name": "Cylinder",
+     "category": "Hydraulics",
+     "price": 108.45,
+     "stock": 527,
+     "supplier_id": "S04",
+     "last_ordered": "2024-06-14"
+    },
+    {
+     "id": "5112",
+     "sku": "PD-1016",
+     "name": "Drill bit set",
+     "category": "Tools",
+     "price": 49.74,
+     "stock": 326,
+     "supplier_id": "S05",
+     "last_ordered": "2019-12-12"
+    },
+    {
+     "id": "5119",
+     "sku": "PD-1017",
+     "name": "Thrust bearing",
+     "category": "Bearings",
+     "price": 5.85,
+     "stock": 567,
+     "supplier_id": "S06",
+     "last_ordered": "2025-08-23"
+    },
+    {
+     "id": "5126",
+     "sku": "PD-1018",
+     "name": "Anchor bolt",
+     "category": "Fasteners",
+     "price": 5.5,
+     "stock": 339,
+     "supplier_id": "S01",
+     "last_ordered": "2022-09-03"
+    },
+    {
+     "id": "5133",
+     "sku": "PD-1019",
+     "name": "Conduit 10ft",
+     "category": "Electrical",
+     "price": 29.1,
+     "stock": 807,
+     "supplier_id": "S02",
+     "last_ordered": "2021-02-03"
+    },
+    {
+     "id": "5140",
+     "sku": "PD-1020",
+     "name": "Pipe tape",
+     "category": "Plumbing",
+     "price": 67.13,
+     "stock": 40,
+     "supplier_id": "S03",
+     "last_ordered": "2020-05-25"
+    },
+    {
+     "id": "5147",
+     "sku": "PD-1021",
+     "name": "Pressure gauge",
+     "category": "Hydraulics",
+     "price": 33.26,
+     "stock": 432,
+     "supplier_id": "S04",
+     "last_ordered": "2022-07-05"
+    },
+    {
+     "id": "5154",
+     "sku": "PD-1022",
+     "name": "Hammer",
+     "category": "Tools",
+     "price": 134.61,
+     "stock": 527,
+     "supplier_id": "S05",
+     "last_ordered": "2025-12-11"
+    },
+    {
+     "id": "5161",
+     "sku": "PD-1023",
+     "name": "Needle bearing",
+     "category": "Bearings",
+     "price": 23.28,
+     "stock": 58,
+     "supplier_id": "S06",
+     "last_ordered": "2020-07-03"
+    },
+    {
+     "id": "5168",
+     "sku": "PD-1024",
+     "name": "Washer pack",
+     "category": "Fasteners",
+     "price": 67.96,
+     "stock": 17,
+     "supplier_id": "S01",
+     "last_ordered": "2019-05-03"
+    },
+    {
+     "id": "5175",
+     "sku": "PD-1025",
+     "name": "Extension cord",
+     "category": "Electrical",
+     "price": 152.44,
+     "stock": 227,
+     "supplier_id": "S02",
+     "last_ordered": "2019-05-28"
+    },
+    {
+     "id": "5182",
+     "sku": "PD-1026",
+     "name": "Ptrap kit",
+     "category": "Plumbing",
+     "price": 31.3,
+     "stock": 11,
+     "supplier_id": "S03",
+     "last_ordered": "2023-09-14"
+    },
+    {
+     "id": "5189",
+     "sku": "PD-1027",
+     "name": "Hydraulic hose",
+     "category": "Hydraulics",
+     "price": 231.74,
+     "stock": 274,
+     "supplier_id": "S04",
+     "last_ordered": "2020-01-17"
+    }
+   ]
+  },
+  {
+   "name": "Supplier",
+   "path": "suppliers",
+   "title": "Suppliers",
+   "display": "{name}",
+   "fields": [
+    {
+     "key": "name",
+     "label": "Company",
+     "required": true
+    },
+    {
+     "key": "city",
+     "label": "City"
+    },
+    {
+     "key": "phone",
+     "label": "Phone"
+    }
+   ],
+   "records": [
+    {
+     "id": "S01",
+     "name": "Acme Fasteners",
+     "city": "Dallas",
+     "phone": "(800) 555-2000"
+    },
+    {
+     "id": "S02",
+     "name": "Brightline Electric",
+     "city": "Houston",
+     "phone": "(800) 555-2011"
+    },
+    {
+     "id": "S03",
+     "name": "Copperfield Supply",
+     "city": "Austin",
+     "phone": "(800) 555-2022"
+    },
+    {
+     "id": "S04",
+     "name": "Delta Hydraulics",
+     "city": "Tulsa",
+     "phone": "(800) 555-2033"
+    },
+    {
+     "id": "S05",
+     "name": "Eastgate Tools",
+     "city": "Plano",
+     "phone": "(800) 555-2044"
+    },
+    {
+     "id": "S06",
+     "name": "Frontier Bearings",
+     "city": "Waco",
+     "phone": "(800) 555-2055"
+    }
+   ]
+  }
+ ]
+}

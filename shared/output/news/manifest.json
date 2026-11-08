@@ -1,0 +1,30 @@
+{
+  "name": "news",
+  "site": "http://127.0.0.1:49524",
+  "published_at": "2026-11-08T00:51:49",
+  "source_run": "core/cache/mock/news_20261108-001314",
+  "records": {
+    "Post": 26,
+    "User": 12
+  },
+  "operations": {
+    "count": 5,
+    "designed_by": "nemotron",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b"
+  },
+  "files": [
+    "data_model.json",
+    "site_map.json",
+    "operations.json",
+    "api_docs.md",
+    "recipes.json",
+    "schema.json",
+    "records/Post.jsonl",
+    "records/User.jsonl",
+    "spacetime/entity_schema.json",
+    "spacetime/event.json",
+    "spacetime/job.json",
+    "spacetime/record.json",
+    "spacetime/site.json"
+  ]
+}

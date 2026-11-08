@@ -1,0 +1,207 @@
+{
+  "site": "http://127.0.0.1:49524",
+  "start_url": "http://127.0.0.1:49524/",
+  "pages": [
+    {
+      "id": "menu",
+      "url_pattern": "/",
+      "purpose": "Provides navigation links to different sections of the site",
+      "entity": null,
+      "kind": "menu",
+      "example_url": "http://127.0.0.1:49524/",
+      "title": "Hacker Digest - Main Menu",
+      "capture": "pages/menu.json",
+      "confidence": 0.9,
+      "read_by": "nemotron"
+    },
+    {
+      "id": "user_list",
+      "url_pattern": "/users",
+      "purpose": "View and search a list of users",
+      "entity": "User",
+      "kind": "list",
+      "example_url": "http://127.0.0.1:49524/users",
+      "title": "Hacker Digest - Users",
+      "capture": "pages/user_list.json",
+      "confidence": 0.99,
+      "read_by": "nemotron",
+      "pagination": {
+        "next": {
+          "role": "link",
+          "name": "Next >>"
+        },
+        "page_size": 10
+      },
+      "row_link": {
+        "column": "Username",
+        "goes_to": "user_detail"
+      }
+    },
+    {
+      "id": "post_list",
+      "url_pattern": "/posts",
+      "purpose": "View a list of posts with their titles, points, and comment counts.",
+      "entity": "Post",
+      "kind": "list",
+      "example_url": "http://127.0.0.1:49524/posts",
+      "title": "Hacker Digest - Front page",
+      "capture": "pages/post_list.json",
+      "confidence": 0.95,
+      "read_by": "nemotron",
+      "pagination": {
+        "next": {
+          "role": "link",
+          "name": "Next >>"
+        },
+        "page_size": 10
+      },
+      "row_link": {
+        "column": "Title",
+        "goes_to": "post_detail"
+      }
+    },
+    {
+      "id": "post_detail",
+      "url_pattern": "/posts/{id}",
+      "purpose": "View the details of a specific blog post",
+      "entity": "Post",
+      "kind": "detail",
+      "example_url": "http://127.0.0.1:49524/posts/40100",
+      "title": "Hacker Digest - Post",
+      "capture": "pages/post_detail.json",
+      "confidence": 0.9,
+      "read_by": "nemotron"
+    },
+    {
+      "id": "menu_2",
+      "url_pattern": "/home",
+      "purpose": "Provide navigation links to different sections of the site",
+      "entity": null,
+      "kind": "menu",
+      "example_url": "http://127.0.0.1:49524/home",
+      "title": "Hacker Digest - Main Menu",
+      "capture": "pages/menu_2.json",
+      "confidence": 0.99,
+      "read_by": "nemotron"
+    },
+    {
+      "id": "user_detail",
+      "url_pattern": "/users/{id}",
+      "purpose": "View the details of a specific user record",
+      "entity": "User",
+      "kind": "detail",
+      "example_url": "http://127.0.0.1:49524/users/u101",
+      "title": "Hacker Digest - User",
+      "capture": "pages/user_detail.json",
+      "confidence": 0.9,
+      "read_by": "nemotron"
+    }
+  ],
+  "edges": [
+    {
+      "from": "menu",
+      "to": "menu_2",
+      "via": "link 'Home'"
+    },
+    {
+      "from": "menu",
+      "to": "post_list",
+      "via": "link 'Front page'"
+    },
+    {
+      "from": "menu",
+      "to": "user_list",
+      "via": "link 'Users'"
+    },
+    {
+      "from": "user_list",
+      "to": "menu_2",
+      "via": "link 'Home'"
+    },
+    {
+      "from": "user_list",
+      "to": "post_list",
+      "via": "link 'Front page'"
+    },
+    {
+      "from": "user_list",
+      "to": "user_detail",
+      "via": "row link"
+    },
+    {
+      "from": "post_list",
+      "to": "menu_2",
+      "via": "link 'Home'"
+    },
+    {
+      "from": "post_list",
+      "to": "user_list",
+      "via": "link 'Users'"
+    },
+    {
+      "from": "post_list",
+      "to": "post_detail",
+      "via": "row link"
+    },
+    {
+      "from": "post_detail",
+      "to": "menu_2",
+      "via": "link 'Home'"
+    },
+    {
+      "from": "post_detail",
+      "to": "post_list",
+      "via": "link 'Front page'"
+    },
+    {
+      "from": "post_detail",
+      "to": "user_list",
+      "via": "link 'Users'"
+    },
+    {
+      "from": "post_detail",
+      "to": "user_detail",
+      "via": "link 'ines'"
+    },
+    {
+      "from": "menu_2",
+      "to": "post_list",
+      "via": "link 'Front page'"
+    },
+    {
+      "from": "menu_2",
+      "to": "user_list",
+      "via": "link 'Users'"
+    },
+    {
+      "from": "user_detail",
+      "to": "menu_2",
+      "via": "link 'Home'"
+    },
+    {
+      "from": "user_detail",
+      "to": "post_list",
+      "via": "link 'Front page'"
+    },
+    {
+      "from": "user_detail",
+      "to": "user_list",
+      "via": "link 'Users'"
+    }
+  ],
+  "unexplored": [],
+  "notes": [],
+  "stats": {
+    "page_types": 6,
+    "steps": 5,
+    "stop_reason": "nothing_left",
+    "seconds": 50.6,
+    "nemotron_calls": 11,
+    "nemotron_ms": 47799,
+    "nemotron_fallbacks": 0,
+    "blocked_writes": 0,
+    "reader": "nemotron",
+    "planner": "nemotron"
+  },
+  "generated_at": "2026-11-08T00:14:05"
+}

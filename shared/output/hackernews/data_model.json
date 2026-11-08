@@ -1,0 +1,70 @@
+{
+  "site": "https://news.ycombinator.com",
+  "entities": [
+    {
+      "name": "Post",
+      "record_count": 2582,
+      "fields": [
+        {
+          "name": "title",
+          "label": "col3",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "points",
+          "label": "col5",
+          "type": "integer",
+          "required": true,
+          "source_type": "int"
+        },
+        {
+          "name": "author",
+          "label": "col5",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "time",
+          "label": "col5",
+          "type": "string",
+          "required": true,
+          "note": "values are not ISO dates (for example relative times)",
+          "source_type": "date"
+        },
+        {
+          "name": "rank",
+          "label": "col1",
+          "type": "integer",
+          "required": true,
+          "source_type": "int"
+        },
+        {
+          "name": "hide",
+          "label": "col5",
+          "type": "boolean",
+          "required": false,
+          "source_type": "bool"
+        },
+        {
+          "name": "comments",
+          "label": "col5",
+          "type": "integer",
+          "required": false,
+          "source_type": "int"
+        },
+        {
+          "name": "text",
+          "label": "Text",
+          "type": "string",
+          "required": true,
+          "source_type": "textarea"
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": []
+    }
+  ]
+}

@@ -1,0 +1,448 @@
+{
+  "site": "http://127.0.0.1:65355",
+  "generated_at": "2026-11-08T00:09:29",
+  "entities": [
+    {
+      "name": "Patient",
+      "key": "legacy_id",
+      "fields": [
+        {
+          "name": "last_name",
+          "label": "Last Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "first_name",
+          "label": "First Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "dob",
+          "label": "DOB",
+          "type": "date",
+          "format": "YYYY-MM-DD",
+          "legacy_format": "MM/DD/YYYY",
+          "required": false
+        },
+        {
+          "name": "phone",
+          "label": "Phone",
+          "type": "string",
+          "format": "phone",
+          "required": false
+        },
+        {
+          "name": "insurance_id",
+          "label": "Insurance ID",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "relations": [],
+      "record_count": 35,
+      "pages": {
+        "list": "patient_list",
+        "detail": "patient_detail"
+      },
+      "forms": [
+        {
+          "page_id": "patient_new",
+          "purpose": "create",
+          "url_pattern": "/patients/new",
+          "id_params": [],
+          "fields": [
+            {
+              "name": "last_name",
+              "label": "Last Name",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "first_name",
+              "label": "First Name",
+              "required": false,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "dob",
+              "label": "DOB (MM/DD/YYYY)",
+              "required": false,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "phone",
+              "label": "Phone",
+              "required": false,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "insurance_id",
+              "label": "Insurance ID",
+              "required": false,
+              "in_data_model": true,
+              "input": "text"
+            }
+          ],
+          "submit": [
+            "Save"
+          ]
+        },
+        {
+          "page_id": "patient_edit",
+          "purpose": "edit",
+          "url_pattern": "/patients/{id}/edit",
+          "id_params": [
+            "id"
+          ],
+          "fields": [
+            {
+              "name": "last_name",
+              "label": "Last Name",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "first_name",
+              "label": "First Name",
+              "required": false,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "dob",
+              "label": "DOB (MM/DD/YYYY)",
+              "required": false,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "phone",
+              "label": "Phone",
+              "required": false,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "insurance_id",
+              "label": "Insurance ID",
+              "required": false,
+              "in_data_model": true,
+              "input": "text"
+            }
+          ],
+          "submit": [
+            "Save"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Appointment",
+      "key": "legacy_id",
+      "fields": [
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "format": "YYYY-MM-DD",
+          "legacy_format": "MM/DD/YYYY",
+          "required": true
+        },
+        {
+          "name": "time",
+          "label": "Time",
+          "type": "string",
+          "format": "time",
+          "required": true
+        },
+        {
+          "name": "patient",
+          "label": "Patient",
+          "type": "string",
+          "display_of": "patient_id"
+        },
+        {
+          "name": "patient_id",
+          "label": "Patient",
+          "type": "ref",
+          "to": "Patient",
+          "required": true
+        },
+        {
+          "name": "provider",
+          "label": "Provider",
+          "type": "enum",
+          "values": [
+            "Dr. Lee",
+            "Dr. Patel",
+            "Hyg. Kim"
+          ],
+          "required": false
+        },
+        {
+          "name": "status",
+          "label": "Status",
+          "type": "enum",
+          "values": [
+            "Booked",
+            "Completed",
+            "No-show",
+            "Cancelled"
+          ],
+          "required": false
+        },
+        {
+          "name": "reason",
+          "label": "Reason",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "relations": [
+        {
+          "field": "patient_id",
+          "to": "Patient"
+        }
+      ],
+      "record_count": 27,
+      "pages": {
+        "list": "appointment_list",
+        "detail": "appointment_detail"
+      },
+      "forms": [
+        {
+          "page_id": "appointment_new",
+          "purpose": "create",
+          "url_pattern": "/appointments/new?patient_id={patient_id}",
+          "id_params": [
+            "patient_id"
+          ],
+          "fields": [
+            {
+              "name": "date",
+              "label": "Date (MM/DD/YYYY)",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "time",
+              "label": "Time",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "patient_id",
+              "label": "Patient",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "provider",
+              "label": "Provider",
+              "required": false,
+              "in_data_model": true,
+              "input": "select",
+              "options": [
+                "Dr. Lee",
+                "Dr. Patel",
+                "Hyg. Kim"
+              ]
+            },
+            {
+              "name": "status",
+              "label": "Status",
+              "required": false,
+              "in_data_model": true,
+              "input": "select",
+              "options": [
+                "Booked",
+                "Completed",
+                "No-show",
+                "Cancelled"
+              ]
+            },
+            {
+              "name": "reason",
+              "label": "Reason",
+              "required": false,
+              "in_data_model": true,
+              "input": "textarea"
+            }
+          ],
+          "submit": [
+            "Save"
+          ]
+        },
+        {
+          "page_id": "appointment_new_2",
+          "purpose": "create",
+          "url_pattern": "/appointments/new",
+          "id_params": [],
+          "fields": [
+            {
+              "name": "date",
+              "label": "Date (MM/DD/YYYY)",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "time",
+              "label": "Time",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "patient_id",
+              "label": "Patient",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "provider",
+              "label": "Provider",
+              "required": false,
+              "in_data_model": true,
+              "input": "select",
+              "options": [
+                "Dr. Lee",
+                "Dr. Patel",
+                "Hyg. Kim"
+              ]
+            },
+            {
+              "name": "status",
+              "label": "Status",
+              "required": false,
+              "in_data_model": true,
+              "input": "select",
+              "options": [
+                "Booked",
+                "Completed",
+                "No-show",
+                "Cancelled"
+              ]
+            },
+            {
+              "name": "reason",
+              "label": "Reason",
+              "required": false,
+              "in_data_model": true,
+              "input": "textarea"
+            }
+          ],
+          "submit": [
+            "Save"
+          ]
+        },
+        {
+          "page_id": "appointment_edit",
+          "purpose": "edit",
+          "url_pattern": "/appointments/{id}/edit",
+          "id_params": [
+            "id"
+          ],
+          "fields": [
+            {
+              "name": "date",
+              "label": "Date (MM/DD/YYYY)",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "time",
+              "label": "Time",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "patient_id",
+              "label": "Patient",
+              "required": true,
+              "in_data_model": true,
+              "input": "text"
+            },
+            {
+              "name": "provider",
+              "label": "Provider",
+              "required": false,
+              "in_data_model": true,
+              "input": "select",
+              "options": [
+                "Dr. Lee",
+                "Dr. Patel",
+                "Hyg. Kim"
+              ]
+            },
+            {
+              "name": "status",
+              "label": "Status",
+              "required": false,
+              "in_data_model": true,
+              "input": "select",
+              "options": [
+                "Booked",
+                "Completed",
+                "No-show",
+                "Cancelled"
+              ]
+            },
+            {
+              "name": "reason",
+              "label": "Reason",
+              "required": false,
+              "in_data_model": true,
+              "input": "textarea"
+            }
+          ],
+          "submit": [
+            "Save"
+          ]
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "r1",
+      "entity": "Patient",
+      "text": "Last Name is required",
+      "source": "required marker on the form"
+    },
+    {
+      "id": "r2",
+      "entity": "Appointment",
+      "text": "Date is required",
+      "source": "required marker on the form"
+    },
+    {
+      "id": "r3",
+      "entity": "Appointment",
+      "text": "Time is required",
+      "source": "required marker on the form"
+    },
+    {
+      "id": "r4",
+      "entity": "Appointment",
+      "text": "Patient is required",
+      "source": "required marker on the form"
+    }
+  ],
+  "not_visible": [
+    "Anything the screens do not show (server-side logic, permissions, nightly jobs)"
+  ]
+}
