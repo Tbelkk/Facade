@@ -1,0 +1,178 @@
+{
+  "snapshot_id": "snap_fixture_001",
+  "fingerprint": "OpenDental.exe|WindowsForms10|fixture001",
+  "screen_type": "patient_family",
+  "purpose": "View and edit a patient's details and see everyone in their family.",
+  "mode": "structure",
+  "groups": [
+    {
+      "name": "Patient",
+      "ids": [
+        16,
+        18,
+        20,
+        34
+      ]
+    },
+    {
+      "name": "Contact",
+      "ids": [
+        22,
+        24,
+        26
+      ]
+    },
+    {
+      "name": "Actions",
+      "ids": [
+        28,
+        29
+      ]
+    },
+    {
+      "name": "Family tools",
+      "ids": [
+        10,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "name": "Modules",
+      "ids": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ]
+    }
+  ],
+  "controls": {
+    "16": {
+      "label": "Last name",
+      "kind": "text_input",
+      "importance": "high"
+    },
+    "18": {
+      "label": "First name",
+      "kind": "text_input",
+      "importance": "high"
+    },
+    "20": {
+      "label": "Date of birth",
+      "kind": "date_input",
+      "importance": "high"
+    },
+    "22": {
+      "label": "Home phone",
+      "kind": "text_input",
+      "importance": "medium"
+    },
+    "24": {
+      "label": "Mobile phone",
+      "kind": "text_input",
+      "importance": "high"
+    },
+    "26": {
+      "label": "Street address",
+      "kind": "text_input",
+      "importance": "medium"
+    },
+    "27": {
+      "label": "Debug mode",
+      "kind": "checkbox",
+      "importance": "hide"
+    },
+    "28": {
+      "label": "Save",
+      "kind": "button",
+      "importance": "high",
+      "risk": "write",
+      "is_default": true
+    },
+    "34": {
+      "label": "Primary provider",
+      "kind": "dropdown",
+      "importance": "medium"
+    },
+    "29": {
+      "label": "Cancel",
+      "kind": "button",
+      "importance": "medium"
+    },
+    "10": {
+      "label": "Find patient",
+      "kind": "button",
+      "importance": "high"
+    },
+    "11": {
+      "label": "Add family member",
+      "kind": "button",
+      "importance": "medium",
+      "risk": "write"
+    },
+    "12": {
+      "label": "Delete family",
+      "kind": "button",
+      "importance": "low",
+      "risk": "destructive"
+    },
+    "13": {
+      "label": "Print",
+      "kind": "button",
+      "importance": "low"
+    },
+    "3": {
+      "label": "Appointments",
+      "kind": "tab",
+      "importance": "medium"
+    },
+    "4": {
+      "label": "Family",
+      "kind": "tab",
+      "importance": "medium"
+    },
+    "5": {
+      "label": "Account",
+      "kind": "tab",
+      "importance": "medium"
+    },
+    "6": {
+      "label": "Treatment plan",
+      "kind": "tab",
+      "importance": "medium"
+    },
+    "7": {
+      "label": "Chart",
+      "kind": "tab",
+      "importance": "medium"
+    },
+    "8": {
+      "label": "Manage",
+      "kind": "tab",
+      "importance": "low"
+    }
+  },
+  "vision_regions": [
+    {
+      "region_id": "v1",
+      "label": "Family members",
+      "kind": "table",
+      "box": {
+        "x": 550,
+        "y": 80,
+        "w": 430,
+        "h": 300
+      }
+    }
+  ],
+  "help": "Search for a patient, then edit their details and save. The table lists their family.",
+  "warnings": [
+    "Home phone is empty"
+  ],
+  "confidence": 0.84,
+  "model_ms": 2700
+}

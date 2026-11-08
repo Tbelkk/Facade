@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Facade Inspector</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ui-bg: #0f1214; --ui-panel: #171b1e; --ui-panel2: #1e2327; --ui-line: #2a3035;
+    --ui-text: #e6eaed; --ui-muted: #8b969e; --ui-accent: #76b900; --ui-warn: #f0b429; --ui-err: #ff6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--ui-bg); color: var(--ui-text);
+    font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border-bottom: 1px solid var(--ui-line);
+    background: var(--ui-panel); position: sticky; top: 0; z-index: 10; flex-wrap: wrap; }
+  header h1 { font-size: 15px; margin: 0; letter-spacing: .02em; }
+  header h1 b { color: var(--ui-accent); }
+  select, button.ui { background: var(--ui-panel2); color: var(--ui-text); border: 1px solid var(--ui-line);
+    border-radius: 6px; padding: 6px 10px; font: inherit; cursor: pointer; }
+  .modes { display: flex; border: 1px solid var(--ui-line); border-radius: 8px; overflow: hidden; }
+  .modes button { background: transparent; color: var(--ui-muted); border: 0; padding: 7px 14px; font: inherit; cursor: pointer; }
+  .modes button.on { background: var(--ui-accent); color: #0b0f0e; font-weight: 600; }
+  .opt { display: flex; align-items: center; gap: 6px; color: var(--ui-muted); }
+  .meta { margin-left: auto; color: var(--ui-muted); font-size: 12px; }
+  main { display: grid; grid-template-columns: 1fr 400px; height: calc(100% - 52px); }
+  #stageWrap { overflow: auto; padding: 18px; }
+  #banner { margin-bottom: 12px; padding: 10px 12px; border-radius: 8px; background: var(--ui-panel); border: 1px solid var(--ui-line); }
+  #banner .purpose { font-size: 14px; }
+  #banner .warn { color: var(--ui-warn); margin-top: 4px; }
+  #banner .err { color: var(--ui-err); margin-top: 4px; }
+  aside { border-left: 1px solid var(--ui-line); background: var(--ui-panel); display: flex; flex-direction: column; min-height: 0; }
+  .tabs { display: flex; border-bottom: 1px solid var(--ui-line); }
+  .tabs button { flex: 1; background: none; border: 0; color: var(--ui-muted); padding: 10px 6px; cursor: pointer; font: inherit; }
+  .tabs button.on { color: var(--ui-text); box-shadow: inset 0 -2px 0 var(--ui-accent); }
+  .pane { overflow: auto; padding: 10px 12px; flex: 1; min-height: 0; }
+  .tree ul { list-style: none; margin: 0; padding-left: 14px; border-left: 1px dashed var(--ui-line); }
+  .tree > ul { padding-left: 0; border: 0; }
+  .tree li > div { padding: 2px 4px; border-radius: 4px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tree li > div:hover, .tree li > div.sel { background: var(--ui-panel2); }
+  .role { color: #7fb3ff; } .nid { color: var(--ui-muted); } .ailab { color: var(--ui-accent); }
+  .chip { display: inline-block; font-size: 10px; padding: 0 5px; border-radius: 8px; margin-left: 4px; border: 1px solid var(--ui-line); color: var(--ui-muted); }
+  .chip.high { color: var(--ui-accent); border-color: var(--ui-accent); } .chip.hide { opacity: .5; text-decoration: line-through; }
+  .chip.write { color: var(--ui-warn); border-color: var(--ui-warn); } .chip.destructive { color: var(--ui-err); border-color: var(--ui-err); }
+  pre { background: var(--ui-panel2); padding: 10px; border-radius: 6px; overflow: auto; font-size: 11.5px; margin: 6px 0; }
+  .sw { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+  .sw i { width: 22px; height: 22px; border-radius: 4px; border: 1px solid #0006; display: inline-block; }
+  h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--ui-muted); margin: 14px 0 6px; }
+  #log { border-top: 1px solid var(--ui-line); max-height: 140px; overflow: auto; padding: 8px 12px; font-size: 11.5px; color: var(--ui-muted); }
+  #log div::before { content: "› "; color: var(--ui-accent); }
+
+  /* ---------- the rendered app (themed by the screen's modern tokens) ---------- */
+  #stage { position: relative; transform-origin: top left; }
+  .app { font-family: var(--font-family); font-size: var(--font-size-base); color: var(--color-text);
+    background: var(--color-surface); border-radius: var(--radius-md); overflow: hidden;
+    box-shadow: 0 10px 30px #0008; }
+  .orig { position: relative; }
+  .orig img { display: block; }
+  .box { position: absolute; border: 1px solid #76b90088; background: #76b90010; pointer-events: auto; cursor: pointer; }
+  .box.sel { border: 2px solid #ff3cac; background: #ff3cac22; z-index: 3; }
+  .faith { position: relative; background: var(--color-surface); }
+  .faith .n { position: absolute; display: flex; align-items: center; }
+  .faith .ctl-btn { font-size: 12px; padding: 0 4px; }
+  .faith .ctl-tab { font-size: 12px; line-height: 1.15; white-space: normal; padding: 2px; }
+  .faith .grp { border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-alt); }
+  .faith .grp > .gtitle { position: absolute; top: -9px; left: 10px; background: var(--color-surface); padding: 0 6px;
+    font-size: 11px; color: var(--color-text-muted); }
+  .faith .tb { background: var(--color-surface-alt); border-bottom: 1px solid var(--color-border); }
+  .faith .st { background: var(--color-surface-alt); border-top: 1px solid var(--color-border); color: var(--color-text-muted);
+    font-size: 12px; padding: 0 8px; }
+  .faith .lbl { color: var(--color-text-muted); font-size: 12px; white-space: nowrap; }
+  .ctl-input, .ctl-select { width: 100%; height: 100%; border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+    background: #fff; color: var(--color-text); font: inherit; padding: 0 8px; outline: none; }
+  .ctl-input:focus, .ctl-select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 25%, transparent); }
+  .req::after { content: " *"; color: var(--color-danger); }
+  .ctl-btn { width: 100%; height: 100%; border-radius: var(--radius-sm); border: 1px solid var(--color-border);
+    background: var(--color-surface); color: var(--color-text); font: inherit; font-weight: 600; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 8px; }
+  .ctl-btn:hover { border-color: var(--color-primary); }
+  .ctl-btn.primary { background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); }
+  .ctl-btn.primary:hover { background: var(--color-primary-hover); }
+  .ctl-btn.danger { color: var(--color-danger); border-color: color-mix(in srgb, var(--color-danger) 40%, transparent); }
+  .ctl-tab { width: 100%; height: 100%; border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-on-primary) 12%, transparent);
+    color: var(--color-on-primary); border: 0; font: inherit; font-weight: 600; cursor: pointer; }
+  .rail { background: var(--color-primary); }
+  .ctl-chk { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .ctl-chk input { accent-color: var(--color-primary); }
+  .crop { width: 100%; height: 100%; object-fit: fill; border-radius: var(--radius-sm); border: 1px solid var(--color-border); }
+  .hk { font-size: 10px; opacity: .7; margin-left: 6px; border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; }
+  .ctable { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ctable th { text-align: left; background: var(--color-surface-alt); color: var(--color-text-muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--color-border); }
+  .ctable td { padding: 6px 8px; border-bottom: 1px solid var(--color-border); }
+
+  /* enhanced + reimagined: real flowing layouts */
+  .flow { padding: calc(var(--space-unit) * 5); display: grid; gap: calc(var(--space-unit) * 4); }
+  .flow .hdr { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--color-border); }
+  .flow .hdr .dot { width: 12px; height: 12px; border-radius: 3px; background: var(--color-primary); }
+  .flow .hdr h2 { margin: 0; font-size: calc(var(--font-size-base) + 5px); }
+  .flow .hdr p { margin: 0; color: var(--color-text-muted); }
+  .flow .nav { display: flex; gap: 6px; flex-wrap: wrap; }
+  .flow .nav button { border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text);
+    border-radius: 999px; padding: 6px 12px; font: inherit; cursor: pointer; }
+  .flow .nav button:hover { border-color: var(--color-primary); color: var(--color-primary); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: calc(var(--space-unit) * 4); }
+  .card { border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-alt);
+    padding: calc(var(--space-unit) * 4); box-shadow: var(--shadow-card); }
+  .card h4 { margin: 0 0 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); }
+  .field { display: grid; gap: 4px; margin-bottom: 10px; }
+  .field label { font-size: 12px; color: var(--color-text-muted); }
+  .field .ctl-input, .field .ctl-select { height: 34px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .row .ctl-btn { width: auto; height: 34px; }
+  .alert { border-left: 3px solid var(--color-danger); background: color-mix(in srgb, var(--color-danger) 8%, var(--color-surface)); padding: 8px 12px; border-radius: var(--radius-sm); }
+  .help { color: var(--color-text-muted); font-size: 12px; }
+  details.more summary { cursor: pointer; color: var(--color-text-muted); margin: 6px 0; }
+  .sticky { position: sticky; bottom: 0; padding: 12px 0 0; background: linear-gradient(transparent, var(--color-surface) 30%); }
+  .danger-zone { border: 1px dashed color-mix(in srgb, var(--color-danger) 50%, transparent); }
+  .preview-note { font-size: 11px; color: var(--color-text-muted); text-align: right; }
+  .empty { color: var(--ui-muted); padding: 40px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1><b>Facade</b> Inspector</h1>
+  <select id="pick"></select>
+  <button class="ui" id="reload" title="Rescan for new screens">↻</button>
+  <div class="modes" id="modes">
+    <button data-m="original" class="on">Original</button>
+    <button data-m="faithful">Faithful</button>
+    <button data-m="enhanced">Enhanced</button>
+    <button data-m="reimagined">Reimagined (preview)</button>
+  </div>
+  <label class="opt"><input type="checkbox" id="optBoxes" checked> boxes</label>
+  <label class="opt"><input type="checkbox" id="optAi" checked> AI labels</label>
+  <label class="opt"><input type="checkbox" id="optHide" checked> hide clutter</label>
+  <span class="meta" id="meta"></span>
+</header>
+<main>
+  <section id="stageWrap">
+    <div id="banner"></div>
+    <div id="stage"></div>
+  </section>
+  <aside>
+    <div class="tabs" id="tabs">
+      <button data-t="tree" class="on">ARIA tree</button>
+      <button data-t="node">Selected</button>
+      <button data-t="theme">Theme</button>
+      <button data-t="raw">JSON</button>
+    </div>
+    <div class="pane" id="pane"></div>
+    <div id="log"><div>Actions in the rendered UI are logged here with the real control they'd drive.</div></div>
+  </aside>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+const state = { screens: [], model: null, base: "", mode: "original", tab: "tree", sel: null, flat: [] };
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function log(msg) { const d = document.createElement("div"); d.textContent = msg; $("#log").prepend(d); }
+
+async function loadList(keep) {
+  state.screens = await (await fetch("/api/screens")).json();
+  const pick = $("#pick");
+  const prev = pick.value;
+  pick.innerHTML = state.screens.map((s, i) => `<option value="${i}">${esc(s.label)}</option>`).join("")
+    || `<option>No screens found</option>`;
+  if (keep && prev) pick.value = prev;
+  if (state.screens.length) await loadScreen(state.screens[+pick.value || 0].url);
+  else { $("#stage").innerHTML = `<div class="empty">No screen.json yet. Run <code>python -m ingest.selftest</code> or the pipeline.</div>`; }
+}
+
+async function loadScreen(url) {
+  state.model = await (await fetch(url)).json();
+  state.base = url.slice(0, url.lastIndexOf("/") + 1);
+  state.flat = [];
+  (function walk(list, depth, parent) {
+    for (const n of list || []) { state.flat.push({ n, depth, parent }); walk(n.children, depth + 1, n); }
+  })(state.model.tree, 0, null);
+  state.sel = null;
+  applyTheme(); render(); renderPane();
+}
+
+function applyTheme() {
+  const t = state.model.theme?.modern || {};
+  const st = $("#stage");
+  for (const [k, v] of Object.entries(t)) st.style.setProperty("--" + k.replace(/\./g, "-"), v);
+}
+
+const src = p => p ? state.base + p : "";
+const ai = n => n.ai || {};
+const labelOf = n => ($("#optAi").checked && ai(n).label) || n.text || n.name || n.id;
+const hidden = n => $("#optHide").checked && ai(n).importance === "hide";
+const isAction = n => n.role === "button";
+
+function act(n, what, value) {
+  const loc = JSON.stringify(n.locator || { id: n.id });
+  log(`${what} → ${labelOf(n)}  ${value !== undefined ? JSON.stringify(value) + " " : ""}via ${loc}${ai(n).risk ? "  [needs approval: " + ai(n).risk + "]" : ""}`);
+}
+
+/* ---------- renderers ---------- */
+function render() {
+  const m = state.model, w = m.screen.window.w, h = m.screen.window.h;
+  const ai0 = m.screen.ai || {};
+  $("#meta").textContent = `${m.screen.app || ""} · ${m.screen.source} · mode=${ai0.mode} · conf=${ai0.confidence} · ${ai0.cached ? "cached" : (ai0.model_ms || 0) + " ms"}`;
+  $("#banner").innerHTML = `<div class="purpose"><b>${esc(m.screen.id)}</b> — ${esc(ai0.purpose || "(no purpose: Nemotron not run yet?)")}</div>`
+    + (ai0.help ? `<div class="help" style="color:var(--ui-muted)">${esc(ai0.help)}</div>` : "")
+    + (ai0.warnings || []).map(x => `<div class="warn">⚠ ${esc(x)}</div>`).join("")
+    + (ai0.error ? `<div class="err">Nemotron error: ${esc(ai0.error)}</div>` : "");
+  const stage = $("#stage");
+  const fit = Math.min(1, ($("#stageWrap").clientWidth - 36) / w);
+  stage.style.width = w + "px";
+  stage.style.transform = state.mode === "original" || state.mode === "faithful" ? `scale(${fit})` : "none";
+  stage.style.height = "";
+  if (state.mode === "original") stage.innerHTML = original(m, w, h);
+  else if (state.mode === "faithful") stage.innerHTML = faithful(m, w, h);
+  else if (state.mode === "enhanced") { stage.style.width = "min(1100px, 100%)"; stage.innerHTML = enhanced(m); }
+  else { stage.style.width = "min(560px, 100%)"; stage.innerHTML = reimagined(m); }
+  wire();
+}
+
+function original(m, w, h) {
+  const boxes = $("#optBoxes").checked ? state.flat.filter(f => !f.n.children).map(({ n }) =>
+    `<div class="box ${state.sel === n.id ? "sel" : ""}" data-id="${esc(n.id)}" title="${esc(n.role + " · " + labelOf(n))}"
+      style="left:${n.rect[0]}px;top:${n.rect[1]}px;width:${n.rect[2]}px;height:${n.rect[3]}px"></div>`).join("") : "";
+  return `<div class="app orig" style="width:${w}px;height:${h}px"><img src="${src(m.screen.screenshot)}" width="${w}" height="${h}">${boxes}</div>`;
+}
+
+function control(n, mode) {
+  const lab = labelOf(n), req = n.state?.required ? " req" : "";
+  const dis = n.state && n.state.enabled === false ? "disabled" : "";
+  const hk = n.hotkey && mode !== "faithful" ? `<span class="hk">${esc(n.hotkey)}</span>` : "";
+  const tip = esc(lab + (n.hotkey ? "  (" + n.hotkey + ")" : ""));
+  switch (n.role) {
+    case "textbox": case "spinbutton":
+      return `<input class="ctl-input" data-id="${esc(n.id)}" value="${esc(n.value)}" placeholder="${esc(lab)}" title="${esc(n.tooltip || lab)}" ${n.state?.readonly ? "readonly" : ""} ${dis}>`;
+    case "combobox":
+      return `<select class="ctl-select" data-id="${esc(n.id)}" ${dis}>${(n.options?.length ? n.options : [n.value || ""]).map(o =>
+        `<option ${o === n.value ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>`;
+    case "button": {
+      const cls = ai(n).risk === "destructive" ? "danger" : (n.is_default || (ai(n).importance === "high" && ai(n).risk === "write")) ? "primary" : "";
+      return `<button class="ctl-btn ${cls}" data-id="${esc(n.id)}" title="${tip}" ${dis}>${esc(lab)}${hk}</button>`;
+    }
+    case "checkbox": case "radio":
+      return `<label class="ctl-chk"><input type="${n.role === "radio" ? "radio" : "checkbox"}" data-id="${esc(n.id)}" ${n.value ? "checked" : ""} ${dis}> ${esc(lab)}</label>`;
+    case "tab": case "listitem": case "option": case "menuitem":
+      return `<button class="ctl-tab" data-id="${esc(n.id)}" title="${tip}">${esc(lab)}</button>`;
+    case "custom": case "img":
+      return n.crop ? `<img class="crop" data-id="${esc(n.id)}" src="${src(n.crop)}" title="${esc(lab)} (custom-drawn: clicks pass through)">` : "";
+    case "table": return table(n);
+    case "label": return `<span class="lbl${req}">${esc(lab)}</span>`;
+    case "status": return `<span>${esc(n.text || "")}</span>`;
+    default: return n.text || n.name ? `<span>${esc(lab)}</span>` : "";
+  }
+}
+
+function table(n) {
+  const cols = n.columns || [];
+  return `<table class="ctable"><tr>${cols.map(c => `<th>${esc(c.key)}</th>`).join("")}</tr>${(n.sample_rows || []).map(r =>
+    `<tr>${r.map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("")}</table>`;
+}
+
+function faithful(m, w, h) {
+  let html = `<div class="app faith" style="width:${w}px;height:${h}px">`;
+  for (const { n } of state.flat) {
+    if (hidden(n)) continue;
+    const [x, y, ww, hh] = n.rect;
+    const style = `left:${x}px;top:${y}px;width:${ww}px;height:${hh}px`;
+    if (n.children) {
+      let cls = "grp";
+      if (n.role === "toolbar") cls = "tb";
+      else if (n.role === "status") cls = "st";
+      else if (n.children.every(c => ["tab", "listitem", "option"].includes(c.role))) cls = "rail";
+      const title = n.role === "group" && (n.name || n.text) ? `<span class="gtitle">${esc(labelOf(n))}</span>` : "";
+      html += `<div class="n ${cls}" style="${style}">${title}</div>`;
+      continue;
+    }
+    if (n.role === "label" && n.label_for && $("#optAi").checked) {
+      const target = state.flat.find(f => f.n.id === n.label_for)?.n;
+      if (target && ai(target).label) {
+        html += `<div class="n" style="${style}"><span class="lbl${target.state?.required ? " req" : ""}">${esc(ai(target).label)}</span></div>`;
+        continue;
+      }
+    }
+    const inner = control(n, "faithful");
+    if (inner) html += `<div class="n ${state.sel === n.id ? "selbox" : ""}" style="${style}">${inner}</div>`;
+  }
+  return html + `</div>`;
+}
+
+function fieldBlock(n) {
+  if (["textbox", "combobox", "spinbutton"].includes(n.role))
+    return `<div class="field"><label class="${n.state?.required ? "req" : ""}">${esc(labelOf(n))}</label>${control(n)}${n.tooltip ? `<div class="help">${esc(n.tooltip)}</div>` : ""}</div>`;
+  if (n.role === "custom" || n.role === "table") return `<div class="field">${n.role === "custom" ? `<label>${esc(labelOf(n))}</label>` : ""}${control(n)}</div>`;
+  return `<div class="field">${control(n)}</div>`;
+}
+
+function enhanced(m) {
+  const ai0 = m.screen.ai || {}, byId = Object.fromEntries(state.flat.map(f => [f.n.id, f.n]));
+  const used = new Set();
+  const sections = (ai0.sections || []).map(s => {
+    const nodes = s.ids.map(i => byId[i]).filter(n => n && !hidden(n));
+    nodes.forEach(n => used.add(n.id));
+    return { name: s.name, nodes };
+  }).filter(s => s.nodes.length);
+  const nav = sections.find(s => s.nodes.every(n => ["tab", "listitem", "option"].includes(n.role)));
+  const leftovers = state.flat.map(f => f.n).filter(n => !n.children && !used.has(n.id) && !hidden(n)
+    && ["textbox", "combobox", "checkbox", "custom", "table"].includes(n.role));
+  let html = `<div class="app flow">`;
+  html += `<div class="hdr"><span class="dot"></span><div><h2>${esc(m.screen.window.title || m.screen.id)}</h2><p>${esc(ai0.purpose || "")}</p></div></div>`;
+  if (nav) html += `<div class="nav">${nav.nodes.map(n => `<button data-id="${esc(n.id)}">${esc(labelOf(n))}</button>`).join("")}</div>`;
+  for (const w of ai0.warnings || []) html += `<div class="alert">${esc(w)}</div>`;
+  html += `<div class="cards">`;
+  for (const s of sections) {
+    if (s === nav) continue;
+    const fields = s.nodes.filter(n => !isAction(n)), actions = s.nodes.filter(isAction);
+    html += `<div class="card"><h4>${esc(s.name)}</h4>${fields.map(fieldBlock).join("")}${actions.length ? `<div class="row">${actions.map(n => control(n)).join("")}</div>` : ""}</div>`;
+  }
+  for (const n of leftovers) html += `<div class="card"><h4>${esc(labelOf(n))}</h4>${fieldBlock(n)}</div>`;
+  return html + `</div></div>`;
+}
+
+function reimagined(m) {
+  const ai0 = m.screen.ai || {};
+  const leaves = state.flat.map(f => f.n).filter(n => !n.children && !hidden(n));
+  const fields = leaves.filter(n => ["textbox", "combobox", "spinbutton", "checkbox"].includes(n.role));
+  const high = fields.filter(n => ai(n).importance === "high"), rest = fields.filter(n => ai(n).importance !== "high");
+  const btns = leaves.filter(isAction);
+  const primary = btns.filter(n => n.is_default || (ai(n).risk === "write" && ai(n).importance === "high"));
+  const danger = btns.filter(n => ai(n).risk === "destructive");
+  const other = btns.filter(n => !primary.includes(n) && !danger.includes(n));
+  const visual = leaves.filter(n => n.role === "custom" || n.role === "table");
+  let html = `<div class="app flow">
+    <div class="hdr"><span class="dot"></span><div><h2>${esc(ai0.purpose || m.screen.id)}</h2><p>${esc(ai0.help || "")}</p></div></div>`;
+  for (const w of ai0.warnings || []) html += `<div class="alert">${esc(w)}</div>`;
+  if (other.length) html += `<div class="row">${other.map(n => control(n)).join("")}</div>`;
+  html += `<div class="card">${high.map(fieldBlock).join("")}${rest.length ? `<details class="more"><summary>More fields (${rest.length})</summary>${rest.map(fieldBlock).join("")}</details>` : ""}</div>`;
+  for (const n of visual) html += `<div class="card"><h4>${esc(labelOf(n))}</h4>${control(n)}</div>`;
+  if (danger.length) html += `<div class="card danger-zone"><h4>Careful</h4><div class="row">${danger.map(n => control(n)).join("")}</div></div>`;
+  html += `<div class="sticky row">${primary.map(n => control(n)).join("")}</div>`;
+  html += `<div class="preview-note">Rule-based preview. The real Reimagined layout will come from Nemotron.</div>`;
+  return html + `</div>`;
+}
+
+/* ---------- wiring ---------- */
+function wire() {
+  const byId = Object.fromEntries(state.flat.map(f => [f.n.id, f.n]));
+  $("#stage").querySelectorAll("[data-id]").forEach(el => {
+    const n = byId[el.dataset.id]; if (!n) return;
+    el.addEventListener("click", e => {
+      select(n.id);
+      if (state.mode === "original") return;
+      if (el.tagName === "BUTTON") act(n, "invoke");
+      if (el.tagName === "IMG") {
+        const r = el.getBoundingClientRect(), sx = n.rect[2] / r.width, sy = n.rect[3] / r.height;
+        act(n, `click at (${Math.round((e.clientX - r.left) * sx)}, ${Math.round((e.clientY - r.top) * sy)}) inside`);
+      }
+    });
+    if (el.tagName === "INPUT" && el.type !== "checkbox" && el.type !== "radio") el.addEventListener("change", () => act(n, "set_value", el.value));
+    if (el.tagName === "INPUT" && (el.type === "checkbox" || el.type === "radio")) el.addEventListener("change", () => act(n, "toggle", el.checked));
+    if (el.tagName === "SELECT") el.addEventListener("change", () => act(n, "select", el.value));
+  });
+}
+
+function select(id) {
+  state.sel = id;
+  if (state.mode === "original") render();
+  if (state.tab === "tree") document.querySelectorAll(".tree [data-tid]").forEach(d => d.classList.toggle("sel", d.dataset.tid === id));
+  else renderPane();
+}
+
+/* ---------- side panel ---------- */
+function renderPane() {
+  const p = $("#pane"), m = state.model;
+  if (!m) return;
+  if (state.tab === "tree") {
+    const li = n => {
+      const a = ai(n);
+      const chips = (a.importance ? `<span class="chip ${a.importance}">${a.importance}</span>` : "")
+        + (a.risk ? `<span class="chip ${a.risk}">${a.risk}</span>` : "")
+        + (n.state?.required ? `<span class="chip">required</span>` : "")
+        + (n.hotkey ? `<span class="chip">${esc(n.hotkey)}</span>` : "");
+      return `<li><div data-tid="${esc(n.id)}" class="${state.sel === n.id ? "sel" : ""}"><span class="role">${n.role}</span>
+        <span class="nid">#${esc(n.id)}</span> ${esc(n.text || n.name || "")}${a.label ? ` <span class="ailab">→ ${esc(a.label)}</span>` : ""}${chips}</div>
+        ${n.children ? `<ul>${n.children.map(li).join("")}</ul>` : ""}</li>`;
+    };
+    const menus = (m.menus || []).map(x => `${esc(x.name)}${x.hotkey ? ` <span class="chip">${esc(x.hotkey)}</span>` : ""}`).join(" · ");
+    p.innerHTML = `<div class="tree"><ul>${m.tree.map(li).join("")}</ul></div>` + (menus ? `<h3>Menus</h3><div>${menus}</div>` : "")
+      + `<h3>AI sections</h3>` + (m.screen.ai?.sections || []).map(s => `<div><b>${esc(s.name)}</b>: <span class="nid">${s.ids.map(esc).join(", ")}</span></div>`).join("");
+    p.querySelectorAll("[data-tid]").forEach(d => d.addEventListener("click", () => { select(d.dataset.tid); })) ;
+  } else if (state.tab === "node") {
+    const f = state.flat.find(f => f.n.id === state.sel);
+    if (!f) { p.innerHTML = `<div class="empty">Click a control in the screen or the tree.</div>`; return; }
+    const { children, ...rest } = f.n;
+    p.innerHTML = `<h3>${esc(f.n.role)} · ${esc(f.n.id)}</h3>`
+      + (f.n.crop ? `<img src="${src(f.n.crop)}" style="max-width:100%;border-radius:6px">` : "")
+      + `<pre>${esc(JSON.stringify(rest, null, 2))}</pre>` + (children ? `<div class="nid">${children.length} children</div>` : "");
+  } else if (state.tab === "theme") {
+    const t = m.theme, sw = (k, v) => v ? `<div class="sw"><i style="background:${v}"></i><span>${esc(k)}</span> <span class="nid">${esc(v)}</span></div>`
+      : `<div class="sw"><i style="background:repeating-linear-gradient(45deg,#333 0 4px,#222 4px 8px)"></i><span>${esc(k)}</span> <span class="nid">not seen</span></div>`;
+    p.innerHTML = `<h3>Original (measured)</h3>${Object.entries(t.palette || {}).map(([k, v]) => sw(k, v)).join("")}
+      <div>font: <b>${esc(t.font?.family || "?")}</b> ${esc(t.font?.size || "")}pt · density: <b>${esc(t.density)}</b></div>
+      <h3>Modern tokens (built from the app's own colors)</h3>${Object.entries(t.modern || {}).filter(([k]) => k.startsWith("color.")).map(([k, v]) => sw(k, v)).join("")}
+      <pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(t.modern || {}).filter(([k]) => !k.startsWith("color."))), null, 2))}</pre>
+      ${(t.assets || []).length ? `<h3>Assets</h3>` + t.assets.map(a => `<img src="${src(a.path)}" style="max-width:100%">`).join("") : ""}`;
+  } else {
+    p.innerHTML = `<pre>${esc(JSON.stringify(m, null, 2))}</pre>`;
+  }
+}
+
+/* ---------- controls ---------- */
+$("#modes").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  state.mode = b.dataset.m;
+  document.querySelectorAll("#modes button").forEach(x => x.classList.toggle("on", x === b));
+  render();
+});
+$("#tabs").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  state.tab = b.dataset.t;
+  document.querySelectorAll("#tabs button").forEach(x => x.classList.toggle("on", x === b));
+  renderPane();
+});
+$("#pick").addEventListener("change", e => loadScreen(state.screens[+e.target.value].url));
+$("#reload").addEventListener("click", () => loadList(true));
+["#optBoxes", "#optAi", "#optHide"].forEach(s => $(s).addEventListener("change", () => { render(); renderPane(); }));
+window.addEventListener("resize", () => state.model && render());
+loadList();
+</script>
+</body>
+</html>

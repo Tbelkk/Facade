@@ -1,0 +1,936 @@
+{
+  "schema_version": 1,
+  "screen": {
+    "id": "patient_family",
+    "source": "uia",
+    "window": {
+      "title": "Open Dental - Family",
+      "kind": "main",
+      "parent": null,
+      "w": 1000,
+      "h": 640,
+      "x": 0,
+      "y": 0,
+      "dpi_scale": 1.0
+    },
+    "screenshot": "shots/patient_family.png",
+    "app": "OpenDental.exe",
+    "fingerprint": "OpenDental.exe|WindowsForms10|fixture001",
+    "ai": {
+      "mode": "structure",
+      "purpose": "View and edit a patient's details and see everyone in their family.",
+      "help": "Search for a patient, then edit their details and save. The table lists their family.",
+      "warnings": [
+        "Home phone is empty"
+      ],
+      "confidence": 0.84,
+      "sections": [
+        {
+          "name": "Patient",
+          "ids": [
+            "textLName",
+            "textFName",
+            "textBirthdate",
+            "comboPriProv"
+          ]
+        },
+        {
+          "name": "Contact",
+          "ids": [
+            "textHmPhone",
+            "textWirelessPhone",
+            "textAddress"
+          ]
+        },
+        {
+          "name": "Actions",
+          "ids": [
+            "butOK",
+            "butCancel"
+          ]
+        },
+        {
+          "name": "Family tools",
+          "ids": [
+            "butSelectPat",
+            "butAddFam",
+            "butDeleteFam",
+            "butPrint"
+          ]
+        },
+        {
+          "name": "Modules",
+          "ids": [
+            "option_Appts",
+            "option_Family",
+            "option_Account",
+            "option_TreatPlan",
+            "option_Chart",
+            "option_Manage"
+          ]
+        }
+      ],
+      "model_ms": 2700,
+      "cached": false
+    }
+  },
+  "theme": {
+    "palette": {
+      "background": "#D4D0C8",
+      "text": "#070706",
+      "accent": "#2E7D7A",
+      "error": null,
+      "disabled": null
+    },
+    "font": {
+      "family": "MS Sans Serif",
+      "size": 8
+    },
+    "density": "cramped",
+    "assets": [],
+    "modern": {
+      "color.primary": "#2E7D7A",
+      "color.primary.hover": "#266764",
+      "color.on.primary": "#FFFFFF",
+      "color.surface": "#FAFCFC",
+      "color.surface.alt": "#F2F5F5",
+      "color.border": "#D7E0DF",
+      "color.text": "#1C2626",
+      "color.text.muted": "#637473",
+      "color.accent": "#101093",
+      "color.danger": "#B3261E",
+      "radius.sm": "3px",
+      "radius.md": "6px",
+      "font.family": "Segoe UI Variable, Inter, system-ui, sans-serif",
+      "font.size.base": "13px",
+      "space.unit": "4px",
+      "shadow.card": "0 1px 2px rgba(0,0,0,0.08)"
+    }
+  },
+  "tree": [
+    {
+      "id": "myOutlookBar",
+      "role": "group",
+      "rect": [
+        0,
+        22,
+        90,
+        618
+      ],
+      "locator": {
+        "automation_id": "myOutlookBar"
+      },
+      "raw": {
+        "class": "WindowsForms10.Window.8.app",
+        "uia_role": "Pane"
+      },
+      "children": [
+        {
+          "id": "option_Appts",
+          "role": "tab",
+          "text": "Appts",
+          "rect": [
+            12,
+            40,
+            66,
+            50
+          ],
+          "state": {
+            "enabled": true
+          },
+          "locator": {
+            "name": "Appts",
+            "control_type": "ListItem"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "ListItem"
+          },
+          "ai": {
+            "label": "Appointments",
+            "kind": "tab",
+            "importance": "medium"
+          }
+        },
+        {
+          "id": "option_Family",
+          "role": "tab",
+          "text": "Family",
+          "rect": [
+            12,
+            110,
+            66,
+            50
+          ],
+          "state": {
+            "enabled": true
+          },
+          "locator": {
+            "name": "Family",
+            "control_type": "ListItem"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "ListItem"
+          },
+          "ai": {
+            "label": "Family",
+            "kind": "tab",
+            "importance": "medium"
+          }
+        },
+        {
+          "id": "option_Account",
+          "role": "tab",
+          "text": "Account",
+          "rect": [
+            12,
+            180,
+            66,
+            50
+          ],
+          "state": {
+            "enabled": true
+          },
+          "locator": {
+            "name": "Account",
+            "control_type": "ListItem"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "ListItem"
+          },
+          "ai": {
+            "label": "Account",
+            "kind": "tab",
+            "importance": "medium"
+          }
+        },
+        {
+          "id": "option_TreatPlan",
+          "role": "tab",
+          "text": "TreatPlan",
+          "rect": [
+            12,
+            250,
+            66,
+            50
+          ],
+          "state": {
+            "enabled": true
+          },
+          "locator": {
+            "name": "TreatPlan",
+            "control_type": "ListItem"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "ListItem"
+          },
+          "ai": {
+            "label": "Treatment plan",
+            "kind": "tab",
+            "importance": "medium"
+          }
+        },
+        {
+          "id": "option_Chart",
+          "role": "tab",
+          "text": "Chart",
+          "rect": [
+            12,
+            320,
+            66,
+            50
+          ],
+          "state": {
+            "enabled": true
+          },
+          "locator": {
+            "name": "Chart",
+            "control_type": "ListItem"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "ListItem"
+          },
+          "ai": {
+            "label": "Chart",
+            "kind": "tab",
+            "importance": "medium"
+          }
+        },
+        {
+          "id": "option_Manage",
+          "role": "tab",
+          "text": "Manage",
+          "rect": [
+            12,
+            390,
+            66,
+            50
+          ],
+          "state": {
+            "enabled": true
+          },
+          "locator": {
+            "name": "Manage",
+            "control_type": "ListItem"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "ListItem"
+          },
+          "ai": {
+            "label": "Manage",
+            "kind": "tab",
+            "importance": "low"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ToolBarMain",
+      "role": "toolbar",
+      "rect": [
+        90,
+        22,
+        910,
+        40
+      ],
+      "locator": {
+        "automation_id": "ToolBarMain"
+      },
+      "raw": {
+        "class": "WindowsForms10.Window.8.app",
+        "uia_role": "ToolBar"
+      },
+      "children": [
+        {
+          "id": "butSelectPat",
+          "role": "button",
+          "text": "Select Pat (F2)",
+          "rect": [
+            100,
+            30,
+            95,
+            24
+          ],
+          "state": {
+            "enabled": true
+          },
+          "tab_index": 1,
+          "hotkey": "F2",
+          "locator": {
+            "automation_id": "butSelectPat"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Button"
+          },
+          "ai": {
+            "label": "Find patient",
+            "kind": "button",
+            "importance": "high"
+          }
+        },
+        {
+          "id": "butAddFam",
+          "role": "button",
+          "text": "Add Fam",
+          "rect": [
+            200,
+            30,
+            95,
+            24
+          ],
+          "state": {
+            "enabled": true
+          },
+          "tab_index": 2,
+          "locator": {
+            "automation_id": "butAddFam"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Button"
+          },
+          "ai": {
+            "label": "Add family member",
+            "kind": "button",
+            "importance": "medium",
+            "risk": "write"
+          }
+        },
+        {
+          "id": "butDeleteFam",
+          "role": "button",
+          "text": "Delete Fam",
+          "rect": [
+            300,
+            30,
+            95,
+            24
+          ],
+          "state": {
+            "enabled": true
+          },
+          "tab_index": 3,
+          "locator": {
+            "automation_id": "butDeleteFam"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Button"
+          },
+          "ai": {
+            "label": "Delete family",
+            "kind": "button",
+            "importance": "low",
+            "risk": "destructive"
+          }
+        },
+        {
+          "id": "butPrint",
+          "role": "button",
+          "text": "Print",
+          "rect": [
+            400,
+            30,
+            95,
+            24
+          ],
+          "state": {
+            "enabled": true
+          },
+          "tab_index": 4,
+          "locator": {
+            "automation_id": "butPrint"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Button"
+          },
+          "ai": {
+            "label": "Print",
+            "kind": "button",
+            "importance": "low"
+          }
+        }
+      ]
+    },
+    {
+      "id": "groupPatInfo",
+      "role": "group",
+      "name": "Patient Information",
+      "rect": [
+        110,
+        80,
+        420,
+        300
+      ],
+      "locator": {
+        "automation_id": "groupPatInfo"
+      },
+      "raw": {
+        "class": "WindowsForms10.Window.8.app",
+        "uia_role": "Group"
+      },
+      "children": [
+        {
+          "id": "label_LName",
+          "role": "label",
+          "text": "LName",
+          "rect": [
+            130,
+            101,
+            120,
+            12
+          ],
+          "label_for": "textLName",
+          "style": {
+            "color": "#0C0C0C"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Text"
+          }
+        },
+        {
+          "id": "textLName",
+          "role": "textbox",
+          "rect": [
+            130,
+            115,
+            180,
+            20
+          ],
+          "value": "Smith",
+          "state": {
+            "enabled": true,
+            "readonly": false,
+            "required": true
+          },
+          "tooltip": "Patient last name",
+          "tab_index": 5,
+          "locator": {
+            "automation_id": "textLName"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Edit"
+          },
+          "ai": {
+            "label": "Last name",
+            "kind": "text_input",
+            "importance": "high"
+          }
+        },
+        {
+          "id": "label_FName",
+          "role": "label",
+          "text": "FName",
+          "rect": [
+            330,
+            101,
+            120,
+            12
+          ],
+          "label_for": "textFName",
+          "style": {
+            "color": "#0C0C0C"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Text"
+          }
+        },
+        {
+          "id": "textFName",
+          "role": "textbox",
+          "rect": [
+            330,
+            115,
+            180,
+            20
+          ],
+          "value": "Jordan",
+          "state": {
+            "enabled": true,
+            "readonly": false
+          },
+          "tab_index": 6,
+          "locator": {
+            "automation_id": "textFName"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Edit"
+          },
+          "ai": {
+            "label": "First name",
+            "kind": "text_input",
+            "importance": "high"
+          }
+        },
+        {
+          "id": "label_Birthdate",
+          "role": "label",
+          "text": "Birthdate",
+          "rect": [
+            130,
+            161,
+            120,
+            12
+          ],
+          "label_for": "textBirthdate",
+          "style": {
+            "color": "#0C0C0C"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Text"
+          }
+        },
+        {
+          "id": "textBirthdate",
+          "role": "textbox",
+          "rect": [
+            130,
+            175,
+            180,
+            20
+          ],
+          "value": "03/14/1987",
+          "state": {
+            "enabled": true,
+            "readonly": false
+          },
+          "tooltip": "MM/DD/YYYY",
+          "tab_index": 7,
+          "locator": {
+            "automation_id": "textBirthdate"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Edit"
+          },
+          "ai": {
+            "label": "Date of birth",
+            "kind": "date_input",
+            "importance": "high"
+          }
+        },
+        {
+          "id": "label_HmPhone",
+          "role": "label",
+          "text": "HmPhone",
+          "rect": [
+            330,
+            161,
+            120,
+            12
+          ],
+          "label_for": "textHmPhone",
+          "style": {
+            "color": "#0C0C0C"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Text"
+          }
+        },
+        {
+          "id": "textHmPhone",
+          "role": "textbox",
+          "rect": [
+            330,
+            175,
+            180,
+            20
+          ],
+          "value": "",
+          "state": {
+            "enabled": true,
+            "readonly": false
+          },
+          "tab_index": 8,
+          "locator": {
+            "automation_id": "textHmPhone"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Edit"
+          },
+          "ai": {
+            "label": "Home phone",
+            "kind": "text_input",
+            "importance": "medium"
+          }
+        },
+        {
+          "id": "label_WirelessPhone",
+          "role": "label",
+          "text": "WirelessPhone",
+          "rect": [
+            130,
+            221,
+            120,
+            12
+          ],
+          "label_for": "textWirelessPhone",
+          "style": {
+            "color": "#0C0C0C"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Text"
+          }
+        },
+        {
+          "id": "textWirelessPhone",
+          "role": "textbox",
+          "rect": [
+            130,
+            235,
+            180,
+            20
+          ],
+          "value": "(214) 555-0142",
+          "state": {
+            "enabled": true,
+            "readonly": false
+          },
+          "tab_index": 9,
+          "locator": {
+            "automation_id": "textWirelessPhone"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Edit"
+          },
+          "ai": {
+            "label": "Mobile phone",
+            "kind": "text_input",
+            "importance": "high"
+          }
+        },
+        {
+          "id": "label_Address",
+          "role": "label",
+          "text": "Address",
+          "rect": [
+            330,
+            221,
+            120,
+            12
+          ],
+          "label_for": "textAddress",
+          "style": {
+            "color": "#070706"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Text"
+          }
+        },
+        {
+          "id": "textAddress",
+          "role": "textbox",
+          "rect": [
+            330,
+            235,
+            180,
+            20
+          ],
+          "value": "800 W Campbell Rd",
+          "state": {
+            "enabled": true,
+            "readonly": false
+          },
+          "tab_index": 10,
+          "locator": {
+            "automation_id": "textAddress"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Edit"
+          },
+          "ai": {
+            "label": "Street address",
+            "kind": "text_input",
+            "importance": "medium"
+          }
+        },
+        {
+          "id": "checkDebug",
+          "role": "checkbox",
+          "name": "chkDebugMode",
+          "rect": [
+            130,
+            300,
+            140,
+            16
+          ],
+          "value": false,
+          "state": {
+            "enabled": true
+          },
+          "tab_index": 12,
+          "locator": {
+            "automation_id": "checkDebug"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "CheckBox"
+          },
+          "ai": {
+            "label": "Debug mode",
+            "kind": "checkbox",
+            "importance": "hide"
+          }
+        },
+        {
+          "id": "butOK",
+          "role": "button",
+          "text": "OK",
+          "rect": [
+            330,
+            340,
+            90,
+            24
+          ],
+          "state": {
+            "enabled": true
+          },
+          "tab_index": 13,
+          "is_default": true,
+          "locator": {
+            "automation_id": "butOK"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Button"
+          },
+          "ai": {
+            "label": "Save",
+            "kind": "button",
+            "importance": "high",
+            "risk": "write"
+          }
+        },
+        {
+          "id": "butCancel",
+          "role": "button",
+          "text": "Cancel",
+          "rect": [
+            430,
+            340,
+            90,
+            24
+          ],
+          "state": {
+            "enabled": true
+          },
+          "tab_index": 14,
+          "locator": {
+            "automation_id": "butCancel"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Button"
+          },
+          "ai": {
+            "label": "Cancel",
+            "kind": "button",
+            "importance": "medium"
+          }
+        },
+        {
+          "id": "label_Prov",
+          "role": "label",
+          "text": "Prov",
+          "rect": [
+            330,
+            280,
+            60,
+            12
+          ],
+          "label_for": "comboPriProv",
+          "style": {
+            "color": "#070707"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Text"
+          }
+        },
+        {
+          "id": "comboPriProv",
+          "role": "combobox",
+          "rect": [
+            330,
+            294,
+            180,
+            20
+          ],
+          "value": "DOC1 - Lee",
+          "state": {
+            "enabled": true,
+            "readonly": false
+          },
+          "tab_index": 11,
+          "options": [
+            "DOC1 - Lee",
+            "DOC2 - Patel",
+            "HYG1 - Nguyen"
+          ],
+          "locator": {
+            "automation_id": "comboPriProv"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "ComboBox"
+          },
+          "ai": {
+            "label": "Primary provider",
+            "kind": "dropdown",
+            "importance": "medium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "gridFamily",
+      "role": "custom",
+      "rect": [
+        550,
+        80,
+        430,
+        300
+      ],
+      "crop": "shots/patient_family_gridFamily.png",
+      "locator": {
+        "automation_id": "gridFamily"
+      },
+      "raw": {
+        "class": "WindowsForms10.Window.8.app",
+        "uia_role": "Pane"
+      },
+      "ai": {
+        "label": "Family members",
+        "kind": "table",
+        "vision_region": "v1"
+      }
+    },
+    {
+      "id": "statusBar",
+      "role": "status",
+      "rect": [
+        90,
+        616,
+        910,
+        24
+      ],
+      "locator": {
+        "automation_id": "statusBar"
+      },
+      "raw": {
+        "class": "WindowsForms10.Window.8.app",
+        "uia_role": "StatusBar"
+      },
+      "children": [
+        {
+          "id": "label_Ready_Server_localhost_DB_demo",
+          "role": "status",
+          "text": "Ready  |  Server: localhost  |  DB: demo",
+          "rect": [
+            96,
+            620,
+            300,
+            14
+          ],
+          "style": {
+            "color": "#0C0C0C"
+          },
+          "raw": {
+            "class": "WindowsForms10.Window.8.app",
+            "uia_role": "Text"
+          }
+        }
+      ]
+    }
+  ],
+  "menus": [
+    {
+      "name": "File",
+      "hotkey": "Alt+F",
+      "items": []
+    },
+    {
+      "name": "Setup",
+      "hotkey": "Alt+S",
+      "items": []
+    }
+  ]
+}
