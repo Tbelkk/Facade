@@ -1,0 +1,61 @@
+/* Start panel: fit note, consent box, URL check result. Built on the tokens in styles.css. */
+:root {
+  --ok: #6fdc9a;      /* good_fit */
+  --warn: #f2c46d;    /* probably_not */
+  --stop: #ff6b6b;    /* blocked, errors */
+}
+
+.fit-note { margin: -6px 0 14px; max-width: 72ch; font: 400 12.5px/1.6 var(--mono); color: var(--dim); }
+
+.source .btn.ghost { min-width: 132px; background: transparent; color: #fff; box-shadow: inset 0 0 0 1px var(--line-2); }
+.source .btn.ghost:hover:not(:disabled) { box-shadow: inset 0 0 0 1px #fff; }
+.btn.primary:disabled { background: #2a2a2a; color: #777; cursor: not-allowed; opacity: 1; }
+.btn.ghost.small { height: 34px; padding: 0 16px; border-radius: 9px; font-size: 10.5px; min-width: 0; background: transparent; color: #fff; box-shadow: inset 0 0 0 1px var(--line-2); flex: none; }
+.btn.ghost.small:hover { box-shadow: inset 0 0 0 1px #fff; }
+.url.bad::before { border-color: var(--stop); }
+.url.bad { color: var(--stop); }
+
+.spin { width: 12px; height: 12px; margin-right: 10px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.25); border-top-color: #fff; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* "I own this system…" */
+.consent { position: relative; display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; font: 400 12px var(--mono); color: var(--dim); cursor: pointer; user-select: none; }
+.consent input { position: absolute; opacity: 0; width: 16px; height: 16px; margin: 0; cursor: pointer; }
+.consent .box { width: 16px; height: 16px; flex: none; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--line-2); display: grid; place-items: center; transition: background .15s, box-shadow .15s; }
+.consent input:checked + .box { background: #fff; box-shadow: none; }
+.consent input:checked + .box::after { content: ""; width: 8px; height: 4px; border: solid #000; border-width: 0 0 1.6px 1.6px; transform: translateY(-1px) rotate(-45deg); }
+.consent input:focus-visible + .box { outline: 1px solid #fff; outline-offset: 3px; }
+.consent input:checked ~ span:last-child { color: #fff; }
+.consent input:disabled ~ * { opacity: .5; cursor: default; }
+
+/* result */
+#checkResult { display: grid; gap: 10px; margin-top: 14px; }
+#checkResult:empty { display: none; }
+.check-msg { margin: 0; font: 400 11.5px var(--mono); color: var(--mute); }
+.check-msg.bad { color: var(--stop); }
+.check-mode { margin: 0; font: 400 10.5px var(--mono); color: var(--mute); opacity: .8; }
+
+.verdict { display: flex; align-items: flex-start; gap: 16px; padding: 14px 16px; border-radius: 12px; background: rgba(255,255,255,.02);
+  box-shadow: inset 0 0 0 1px var(--line); border-left: 2px solid var(--v, var(--line-2)); }
+.verdict > div { flex: 1; min-width: 0; }
+.verdict b { display: block; font: 500 11px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--v, #fff); }
+.verdict p { margin: 4px 0 0; font: 400 12px/1.55 var(--mono); color: var(--dim); }
+.verdict ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+.verdict li { position: relative; padding-left: 16px; font: 400 12px/1.5 var(--mono); color: #d6d6d6; }
+.verdict li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 5px; height: 5px; border-radius: 50%; background: var(--v, var(--mute)); }
+.verdict .mock-tag { color: var(--mute); letter-spacing: .14em; }
+.verdict .continued { flex: none; align-self: center; font: 400 10.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--warn); }
+.verdict.good_fit { --v: var(--ok); background: rgba(111, 220, 154, .05); }
+.verdict.probably_not { --v: var(--warn); background: rgba(242, 196, 109, .05); }
+.verdict.blocked { --v: var(--stop); background: rgba(255, 107, 107, .06); }
+.verdict.error { --v: var(--stop); align-items: center; }
+.verdict.loading { align-items: center; }
+.verdict.loading .dots { flex: none; margin: 0 4px; }
+
+@media (max-width: 760px) {
+  .source { flex-wrap: wrap; }
+  .source .url { flex: 1 1 100%; }
+  .source .btn { flex: 1 1 0; min-width: 0; }
+  .verdict { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }

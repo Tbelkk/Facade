@@ -13,12 +13,6 @@ import { createMock } from './lib/mockRun.js';
 import { facadeSettings } from './lib/settings.js';
 import { useSettings } from './lib/hooks.js';
 
-function normalize(input) {
-  let s = input.trim();
-  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) s = 'https://' + s;
-  try { const u = new URL(s); return /^https?:$/.test(u.protocol) ? u : null; } catch { return null; }
-}
-
 export default function App() {
   // One dashboard + mock for the app's lifetime. Swap the mock for real back-end events later.
   const dashboard = useMemo(() => createDashboard(), []);
@@ -42,21 +36,19 @@ export default function App() {
   useEffect(() => { document.body.classList.toggle('running', running); }, [running]);
   useEffect(() => { if (window.facade && window.facade.platform === 'darwin') document.body.classList.add('mac'); }, []);
 
-  // Returns true when the link is bad, so the form can refocus the input.
-  const onSubmit = () => {
-    if (running) {
-      mock.stop();
-      setRunning(false);
-      setPhase('Stopped');
-      return false;
-    }
-    const u = normalize(url);
-    if (!u) { setPhase('That doesn’t look like a website link'); return true; }
-    setUrl(u.href);
+  // Start exploring: stub until the Explorer back end can be called from here.
+  // The URL has already passed the fit-check and the authorization box (see Intake.jsx).
+  const startExploring = (checkedUrl) => {
+    const u = new URL(checkedUrl);
     setHost(u.host);
-    mock.start(u.href);   // ← swap for the real back end later
+    console.info('[facade] start exploring (stub):', checkedUrl);
+    mock.start(checkedUrl);   // ← swap for the real Explorer start call later
     setRunning(true);
-    return false;
+  };
+  const stopRun = () => {
+    mock.stop();
+    setRunning(false);
+    setPhase('Stopped');
   };
 
   // status line + clock
@@ -95,7 +87,7 @@ export default function App() {
 
       <main className={'app view' + (view === 'dashboard' ? ' on' : '')} id="view-dashboard">
         <Intake ref={settingsBtnRef} phase={phase} running={running} url={url} setUrl={setUrl}
-          onSubmit={onSubmit} safety={safety} onOpenSettings={openSettings} />
+          onStart={startExploring} onStop={stopRun} safety={safety} onOpenSettings={openSettings} />
         <Board dashboard={dashboard} working={summary.working} total={summary.total} clock={clock} />
       </main>
 

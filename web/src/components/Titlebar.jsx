@@ -3,7 +3,7 @@ const VIEWS = [['dashboard', 'Dashboard'], ['explorer', 'Explorer'], ['api', 'AP
 export default function Titlebar({ view, onView }) {
   return (
     <header className="titlebar">
-      <div className="brand">Facade</div>
+      <a className="brand" href="../" style={{ textDecoration: 'none' }} title="Home">Facade</a>
       <div className="crumb">Website <span>→</span> data + API</div>
       <nav className="tabs-nav" role="tablist" aria-label="Pages">
         {VIEWS.map(([id, label]) => (

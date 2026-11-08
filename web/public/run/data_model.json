@@ -1,1 +1,60 @@
-{"site":"https://news.ycombinator.com","entities":[{"name":"Post","record_count":2582,"fields":[{"name":"title","label":"col3","type":"string","required":true},{"name":"points","label":"col5","type":"int","required":true},{"name":"author","label":"col5","type":"string","required":true},{"name":"time","label":"col5","type":"date","required":true},{"name":"rank","label":"col1","type":"int","required":true},{"name":"hide","label":"col5","type":"bool","required":false},{"name":"comments","label":"col5","type":"int","required":false},{"name":"text","label":"Text","type":"textarea","required":true}],"rules":[]}]}
+{
+  "site": "https://news.ycombinator.com",
+  "entities": [
+    {
+      "name": "Post",
+      "record_count": 2582,
+      "fields": [
+        {
+          "name": "title",
+          "label": "col3",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "points",
+          "label": "col5",
+          "type": "int",
+          "required": true
+        },
+        {
+          "name": "author",
+          "label": "col5",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "time",
+          "label": "col5",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "rank",
+          "label": "col1",
+          "type": "int",
+          "required": true
+        },
+        {
+          "name": "hide",
+          "label": "col5",
+          "type": "bool",
+          "required": false
+        },
+        {
+          "name": "comments",
+          "label": "col5",
+          "type": "int",
+          "required": false
+        },
+        {
+          "name": "text",
+          "label": "Text",
+          "type": "textarea",
+          "required": true
+        }
+      ],
+      "rules": []
+    }
+  ]
+}
