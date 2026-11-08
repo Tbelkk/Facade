@@ -8,125 +8,118 @@
       "entity": "Announcement",
       "entities": [
         "Announcement",
-        "TeachingPhilosophy",
-        "UsefulLink",
+        "Philosophy",
         "Course"
       ],
       "next_page_link": null,
-      "purpose": "Provide an overview of John Cole's faculty information, including announcements, teaching philosophy, useful links, and courses taught.",
+      "purpose": "Provides navigation and information about courses, announcements, teaching philosophy, and links.",
       "reached_by": "start",
-      "nemotron_ms": 18240,
-      "records_new": 93
-    },
-    {
-      "url": "https://personal.utdallas.edu/~John.cole/2026Fall/CS3162Fall2026.htm",
-      "url_pattern": "/~John.cole/2026Fall/CS3162Fall2026.htm",
-      "page_type": "list",
-      "entity": "Course",
-      "entities": [
-        "Course"
-      ],
-      "next_page_link": null,
-      "purpose": "Display the course schedule and related information for CS3162.",
-      "reached_by": "detail",
-      "nemotron_ms": 30747,
-      "records_new": 10
+      "nemotron_ms": 16881,
+      "records_new": 92
     },
     {
       "url": "https://personal.utdallas.edu/~John.cole/NotesForStudents.html",
       "url_pattern": "/~John.cole/NotesForStudents.html",
       "page_type": "list",
-      "entity": "Announcement",
+      "entity": "Philosophy",
       "entities": [
-        "Announcement"
+        "Philosophy"
       ],
       "next_page_link": null,
-      "purpose": "Display a list of student notes and teaching philosophy items.",
-      "reached_by": "Visit Notes for Students for more detailed information",
-      "nemotron_ms": 21277,
+      "purpose": "Display a list of notes or philosophical statements for students.",
+      "reached_by": "Access student notes for detailed course materials",
+      "nemotron_ms": 19539,
       "records_new": 2
     },
     {
       "url": "https://personal.utdallas.edu/~John.cole/Projects/Projects.html",
       "url_pattern": "/~John.cole/Projects/Projects.html",
       "page_type": "list",
-      "entity": "Announcement",
+      "entity": "Philosophy",
       "entities": [
-        "Announcement"
+        "Philosophy"
       ],
       "next_page_link": null,
-      "purpose": "Display a list of student notes and teaching philosophy items.",
-      "reached_by": "Explore Projects for course-specific resources",
+      "purpose": "Display a list of notes or philosophical statements for students.",
+      "reached_by": "View project listings for possible course assignments",
       "nemotron_ms": 0,
       "records_new": 4
     },
     {
-      "url": "https://personal.utdallas.edu/~John.cole/GraderGuidelines.html",
-      "url_pattern": "/~John.cole/GraderGuidelines.html",
+      "url": "https://personal.utdallas.edu/~John.cole/2026Fall/CS3162Fall2026.htm",
+      "url_pattern": "/~John.cole/2026Fall/CS3162Fall2026.htm",
       "page_type": "list",
-      "entity": "Guideline",
+      "entity": "Philosophy",
       "entities": [
-        "Guideline"
+        "Philosophy"
       ],
       "next_page_link": null,
-      "purpose": "Reads the grader and TA guidelines for grading assignments.",
-      "reached_by": "Review grader guidelines for assignment expectations",
-      "nemotron_ms": 13704,
-      "records_new": 12
-    },
-    {
-      "url": "https://personal.utdallas.edu/~John.cole/2026Fall/CS3162Fall2026ScheduleA.htm",
-      "url_pattern": "/~John.cole/2026Fall/CS3162Fall2026ScheduleA.htm",
-      "page_type": "list",
-      "entity": "Schedule",
-      "entities": [
-        "Schedule"
-      ],
-      "next_page_link": null,
-      "purpose": "View the CS3162 course schedule showing weekly topics and assignments.",
-      "reached_by": "View detailed schedule for sections 051 and 052",
-      "nemotron_ms": 28884,
-      "records_new": 0
-    },
-    {
-      "url": "https://personal.utdallas.edu/~John.cole/2026Fall/CS3162Fall2026ScheduleB.htm",
-      "url_pattern": "/~John.cole/2026Fall/CS3162Fall2026ScheduleB.htm",
-      "page_type": "list",
-      "entity": "Schedule",
-      "entities": [
-        "Schedule"
-      ],
-      "next_page_link": null,
-      "purpose": "View the tentative class schedule for the CS3162 Professional Responsibility course.",
-      "reached_by": "View detailed schedule for sections 091 and 092",
-      "nemotron_ms": 9011,
-      "records_new": 17
+      "purpose": "Display a list of notes or philosophical statements for students.",
+      "reached_by": "Open a specific course detail page to see schedule and content",
+      "nemotron_ms": 0,
+      "records_new": 10
     },
     {
       "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/",
       "url_pattern": "/~John.cole/ProgrammingTips/",
       "page_type": "list",
-      "entity": "Guideline",
+      "entity": "Announcement",
       "entities": [
-        "Guideline"
+        "Announcement"
       ],
       "next_page_link": null,
-      "purpose": "Reads the grader and TA guidelines for grading assignments.",
-      "reached_by": "Potential detail page of another entity",
-      "nemotron_ms": 0,
+      "purpose": "Display a list of programming tip announcements with links to detailed pages.",
+      "reached_by": "Explore another section for additional content types.",
+      "nemotron_ms": 9657,
       "records_new": 3
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/CSScreenSize.html",
+      "url_pattern": "/~John.cole/ProgrammingTips/CSScreenSize.html",
+      "page_type": "other",
+      "entity": null,
+      "entities": [],
+      "next_page_link": null,
+      "purpose": "Show a technique for expanding the screen size to fill the working area.",
+      "reached_by": "detail",
+      "nemotron_ms": 12946,
+      "records_new": 0
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/BinaryIO-CPP.html",
+      "url_pattern": "/~John.cole/ProgrammingTips/BinaryIO-CPP.html",
+      "page_type": "other",
+      "entity": null,
+      "entities": [],
+      "next_page_link": null,
+      "purpose": "Provides a C++ example program demonstrating binary file I/O.",
+      "reached_by": "detail",
+      "nemotron_ms": 7850,
+      "records_new": 0
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/AndroidFileIO.html",
+      "url_pattern": "/~John.cole/ProgrammingTips/AndroidFileIO.html",
+      "page_type": "detail",
+      "entity": "Document",
+      "entities": [],
+      "next_page_link": null,
+      "purpose": "Read Android File I/O programming tips",
+      "reached_by": "detail",
+      "nemotron_ms": 14944,
+      "records_new": 0
     },
     {
       "url": "https://personal.utdallas.edu/~John.cole/ExamRules.htm",
       "url_pattern": "/~John.cole/ExamRules.htm",
       "page_type": "list",
-      "entity": "Guideline",
+      "entity": "Announcement",
       "entities": [
-        "Guideline"
+        "Announcement"
       ],
       "next_page_link": null,
-      "purpose": "Reads the grader and TA guidelines for grading assignments.",
-      "reached_by": "Potential detail page of another entity",
+      "purpose": "Display a list of programming tip announcements with links to detailed pages.",
+      "reached_by": "Check exam rules for further details.",
       "nemotron_ms": 0,
       "records_new": 2
     },
@@ -134,15 +127,27 @@
       "url": "https://personal.utdallas.edu/~John.cole/Documentation.htm",
       "url_pattern": "/~John.cole/Documentation.htm",
       "page_type": "list",
-      "entity": "Guideline",
+      "entity": "Announcement",
       "entities": [
-        "Guideline"
+        "Announcement"
       ],
       "next_page_link": null,
-      "purpose": "Reads the grader and TA guidelines for grading assignments.",
-      "reached_by": "Potential detail page of another entity",
+      "purpose": "Display a list of programming tip announcements with links to detailed pages.",
+      "reached_by": "Review documentation for more information.",
       "nemotron_ms": 0,
       "records_new": 3
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/LowPassFilter.html",
+      "url_pattern": "/~John.cole/ProgrammingTips/LowPassFilter.html",
+      "page_type": "detail",
+      "entity": "Function",
+      "entities": [],
+      "next_page_link": null,
+      "purpose": "A user reads code and description to implement an Android low-pass filter.",
+      "reached_by": "Opens detail page for Low-Pass Filter announcement",
+      "nemotron_ms": 12172,
+      "records_new": 0
     }
   ]
 }

@@ -307,6 +307,7 @@ def design(dm, records, use_nemotron=True, model=None, budget=None, log=print):
         log(f"Nemotron ({model}) is designing the API for {len(prof)} entities...")
         ops, res = _ask(messages, model, budget)
         meta["attempts"], meta["nemotron_ms"] = 1, res["ms"]
+        meta["model"] = res.get("model") or model   # the model that actually answered (after any fallback)
         problems = check(ops, dm)
         meta["problems_found"] = problems
         log(f"  proposed {len(ops) if isinstance(ops, list) else 0} endpoints in {res['ms'] / 1000:.1f}s; "
@@ -317,6 +318,7 @@ def design(dm, records, use_nemotron=True, model=None, budget=None, log=print):
                                                      "the FULL corrected JSON:\n- " + "\n- ".join(problems)}]
             ops, res = _ask(messages, model, budget)
             meta["attempts"], meta["nemotron_ms"] = 2, meta["nemotron_ms"] + res["ms"]
+            meta["model"] = res.get("model") or meta["model"]
             meta["problems_after_fix"] = check(ops, dm)
             log(f"  after one fix: {len(meta['problems_after_fix'])} problem(s) left")
         meta["by"] = "nemotron"
@@ -335,7 +337,7 @@ def design(dm, records, use_nemotron=True, model=None, budget=None, log=print):
                                     "problems": check([op], dm) or check(kept + [op], dm)})
     # every entity keeps at least list + get (safety net from the code-only design)
     for b in base:
-        if b["kind"] in ("list", "get") and not any(k["entity"] == b["entity"] and k["kind"] == b["kind"]
+        if b["kind"] in ("list", "get", "search") and not any(k["entity"] == b["entity"] and k["kind"] == b["kind"]
                                                     for k in kept):
             if not check(kept + [b], dm):
                 kept.append(b)

@@ -161,7 +161,7 @@ export function createRunDriver(D) {
 
     handle(evt) {
       if (!s) this.begin({});
-      if (evt.stage === 'run' && evt.kind === 'start') { this.begin(evt); return; }
+      if (evt.stage === 'run' && evt.kind === 'start') { this.begin(evt); if (evt.models) store.set({ models: { ...(store.get().models || {}), ...Object.fromEntries(Object.entries(evt.models).map(([k, m]) => [k, { model: m }])) } }); return; }
       if (evt.stage === 'run' && evt.kind === 'done') { if (store.get().phase !== 'live') store.set({ phase: 'done' }); return; }
       if (evt.stage === 'model') {
         s.model = evt.entities || [];
@@ -204,6 +204,9 @@ export function createRunDriver(D) {
             ? `Cleaned up the names before designing, so endpoints say what they return: ${parts.join('; ') || 'entity names kept'}${nf ? `; ${nf} fields renamed to say what they hold` : ''}.`
             : 'Checked the names: they already describe the data, nothing to clean up.', 'Cleaned up names');
           return;
+        }
+        if (evt.designed_by && evt.designed_by.model) {   // the model that actually answered (Super, or Nano after a fallback)
+          store.set({ models: { ...(store.get().models || {}), operator: { model: evt.designed_by.model } } });
         }
         if (evt.kind === 'start') {
           D.feed('operator', { phase: 'drafting', model: modelCard() });
@@ -256,14 +259,33 @@ export function createRunDriver(D) {
         }
         return;
       }
-      if (evt.stage === 'database') {
-        D.feed('database', { target: evt.target, tables: evt.tables });
-        const all = (evt.tables || []).every((t) => !t.total || t.done >= t.total);
-        D.set('database', { status: all ? 'live' : 'working', progress: all ? 1 : 0.5, stat: null });
-        if (evt.target) store.set({ dbTarget: evt.target });
+      if (evt.stage === 'database') {   // the SpacetimeDB load is shown on the Server tile (it is code, not an agent)
         const rec = (evt.tables || []).find((t) => t.name === 'record');
-        if (all) { store.set({ phase: 'serving' }); note('database', `Saved: ${n0(rec ? rec.total : 0)} records, the data description and the API design are in SpacetimeDB. The API and this dashboard can read from it.`, 'All saved'); }
-        else if (rec) note('database', `Saving to SpacetimeDB: ${n0(rec.done)} of ${n0(rec.total)} records so far.`, rec.done === 0 ? 'Connected to SpacetimeDB' : null);
+        const all = (evt.tables || []).every((t) => !t.total || t.done >= t.total);
+        D.feed('server', { phase: 'loading', source: evt.target || 'SpacetimeDB', records: rec ? rec.done : 0 });
+        D.set('server', { status: 'working', progress: all ? 0.4 : 0.2, stat: null });
+        if (evt.target) store.set({ dbTarget: evt.target });
+        if (all) { store.set({ phase: 'serving' }); note('server', `Saved ${n0(rec ? rec.total : 0)} records, the data description and the API design to SpacetimeDB. Starting the API from it.`, 'Saved to SpacetimeDB'); }
+        else if (rec) note('server', `Saving to SpacetimeDB: ${n0(rec.done)} of ${n0(rec.total)} records so far.`, rec.done === 0 ? 'Connected to SpacetimeDB' : null);
+        return;
+      }
+      if (evt.stage === 'parser') {
+        D.feed('parser', evt);
+        if (evt.kind === 'start') {
+          D.set('parser', { status: 'working', progress: 0.05, stat: null });
+          note('parser', 'Watching every page the Explorer reads for PDFs and document images. Each one is read by NVIDIA Nemotron Parse.', 'Started');
+        } else if (evt.kind === 'found') {
+          note('parser', `Found ${evt.doc_kind === 'pdf' ? 'a PDF' : 'an image'}: \u201c${evt.title}\u201d. Queued for Nemotron Parse.`, `Found ${evt.title}`);
+        } else if (evt.kind === 'parsed') {
+          D.set('parser', { status: 'working', progress: 0.5, stat: null });
+          note('parser', `Nemotron Parse read page ${evt.page} of ${evt.of} of \u201c${evt.title}\u201d in ${(evt.ms / 1000).toFixed(1)}s (${n0(evt.chars)} characters)${evt.preview ? `, starting \u201c${evt.preview}\u201d` : ''}.`, `Read ${evt.title} p${evt.page}`);
+        } else if (evt.kind === 'failed') {
+          note('parser', `Could not read \u201c${evt.title}\u201d: ${evt.error}`, `Skipped ${evt.title}`);
+        } else if (evt.kind === 'done') {
+          D.set('parser', { status: evt.docs ? 'live' : 'done', progress: 1, stat: null });
+          note('parser', evt.docs ? `Done: read ${evt.pages} pages from ${evt.docs} documents. They become Document records with a searchable /documents endpoint.` : 'Done: the site had no PDFs or document images on the pages the Explorer read.', 'Done');
+        }
+        return;
       }
     },
 

@@ -104,6 +104,8 @@ h2 { margin: 0; font: 400 10.5px var(--mono); letter-spacing: .26em; text-transf
 .tile[data-status=live] .chip i { background: #fff; box-shadow: 0 0 8px #fff; }
 .tile[data-status=done] .chip { color: var(--dim); }
 .tile[data-status=done] .chip i { background: var(--dim); box-shadow: none; }
+.tile-head .model-tag { font: 400 9.5px var(--mono); letter-spacing: .06em; color: var(--mute); border: 1px solid rgba(255,255,255,.14); border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.tile[data-status=working] .model-tag, .tile[data-status=live] .model-tag, .tile[data-status=done] .model-tag { color: #cfd3d6; border-color: rgba(255,255,255,.3); }
 .tile-desc { padding: 3px 16px 0; font: 400 11px var(--mono); color: var(--mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tile canvas { flex: none; height: 222px; width: 100%; display: block; }
 .tile-foot { display: flex; align-items: center; gap: 12px; padding: 0 16px 12px; }

@@ -24,7 +24,22 @@ function Why({ agent, note, status }) {
   );
 }
 
-function AgentTile({ dashboard, agent, index, note }) {
+// "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning" -> "Nemotron 3 Nano Omni 30B" (what we tell the judges)
+export function modelName(id) {
+  const m = String(id || '').replace(/^nvidia\/(nvidia-)?/i, '');
+  if (!m) return '';
+  const words = m.replace(/-(a\d+b|reasoning|instruct|v\d[\w.]*)\b/gi, '').split('-').filter(Boolean);
+  return words.map((w) => (/^\d+b$/i.test(w) ? w.toUpperCase() : /^\d/.test(w) ? w : w[0].toUpperCase() + w.slice(1))).join(' ');
+}
+
+function modelTag(models, id) {
+  const m = (models || {})[id];
+  if (!m) return '';
+  if (!m.model) return m.note ? `(${m.note})` : '';
+  return `(${modelName(m.model)})`;
+}
+
+function AgentTile({ dashboard, agent, index, note, models }) {
   const canvasRef = useRef(null);
   const statRef = useRef(null);
   const { status, progress } = useTile(dashboard, agent.id);
@@ -37,6 +52,7 @@ function AgentTile({ dashboard, agent, index, note }) {
       <div className="tile-head">
         <span className="n">{String(index + 1).padStart(2, '0')}</span>
         <b>{agent.name}</b>
+        {modelTag(models, agent.id) ? <span className="model-tag" title="The model behind this agent">{modelTag(models, agent.id)}</span> : null}
         <span className="chip"><i></i><span>{LABEL[status] || status}</span></span>
       </div>
       <div className="tile-desc">{agent.desc}</div>
@@ -62,7 +78,7 @@ export default function Board({ dashboard, store, working, total, clock }) {
         <span className="clock" id="clock">{clock}</span>
       </div>
       <div className="grid" id="grid">
-        {dashboard.agents.map((a, i) => <AgentTile key={a.id} dashboard={dashboard} agent={a} index={i} note={(st.notes || {})[a.id]} />)}
+        {dashboard.agents.map((a, i) => <AgentTile key={a.id} dashboard={dashboard} agent={a} index={i} note={(st.notes || {})[a.id]} models={st.models} />)}
       </div>
     </section>
   );

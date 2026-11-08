@@ -293,7 +293,19 @@ EXTRACT_JS = r"""
   const alertSel = '[role=alert], .error, .errors, .alert, .warning, .notice, .message, font[color=red], font[color="#FF0000"], .msg';
   const alerts = Array.from(document.querySelectorAll(alertSel)).filter(vis).map(e => txt(e.innerText)).filter(t => t.length > 2).slice(0, 10);
 
+  // Documents for the Parser agent: linked PDFs / images, and big images shown on the page (scans, schedules).
+  const DOC = /\.(pdf|png|jpe?g|webp)(\?|#|$)/i;
+  const documents = [];
+  for (const a of document.querySelectorAll('a[href]')) {
+    if (DOC.test(a.href) && !ACTION.test(a.href)) documents.push({ url: a.href, text: txt(a.innerText || a.title).slice(0, 120) });
+  }
+  for (const im of document.querySelectorAll('img[src]')) {
+    if (vis(im) && !im.closest('nav, header, footer') && im.naturalWidth >= 600 && im.naturalHeight >= 400)
+      documents.push({ url: im.currentSrc || im.src, text: txt(im.alt || im.title).slice(0, 120) });
+  }
+
   return { nodes, forms, tables, links, pagination, alerts, label_values: label_values.slice(0, 150),
+           documents: documents.slice(0, 20),
            title: document.title, page_w: document.documentElement.scrollWidth, page_h: document.documentElement.scrollHeight };
 }
 """
@@ -355,6 +367,7 @@ def capture_page(page, out_dir=WEB_DIR, full_page=False):
             "pagination": data["pagination"],
             "alerts": data["alerts"],
             "label_values": data["label_values"],
+            "documents": data.get("documents", []),
             "aria_yaml": aria[:20000],
         },
     }

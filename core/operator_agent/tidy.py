@@ -14,6 +14,7 @@ import json
 import re
 from pathlib import Path
 
+PROTECTED = {"Document"}   # the Parser agent's output: its own /documents endpoint, never reshaped here
 ENTITY_RE = re.compile(r"^[A-Z][A-Za-z0-9]{1,40}$")
 FIELD_RE = re.compile(r"^[a-z][a-z0-9_]{0,40}$")
 
@@ -41,7 +42,8 @@ Rules:
 - "by_source" shows an entity's rows grouped by the page they came from. If one group is a different kind of
   record (e.g. Course rows from a course's own page that are really "Office and Hours", "Textbook", "Graders"),
   "move" that group to its own entity (e.g. CourseInfo). Never move the main group.
-- Keep every entity that holds real information; drop only layout or duplicates. Never invent fields."""
+- Keep every entity that holds real information; drop only layout or duplicates. Never invent fields.
+- "Document" holds PDFs/images read by another agent: leave it exactly as it is."""
 
 
 def _sample(rows, field, n=3):
@@ -115,7 +117,8 @@ def validate_moves(plan, dm, records, sources):
     names = {e["name"] for e in dm["entities"]}
     ok, problems = [], []
     for mv in (plan.get("move") or []) if isinstance(plan, dict) else []:
-        if not isinstance(mv, dict) or mv.get("from") not in names:
+        if not isinstance(mv, dict) or mv.get("from") not in names or mv.get("from") in PROTECTED \
+                or mv.get("to") in PROTECTED:
             continue
         groups = by_source(records.get(mv["from"], []), sources.get(mv["from"], {}))
         biggest = max(groups, key=lambda k: len(groups[k])) if groups else None
@@ -160,7 +163,9 @@ def validate(plan, dm):
     if not isinstance(plan, dict):
         return {}, [], ["answer is not a JSON object"]
     for d in plan.get("drop") or []:
-        if d in names:
+        if d in PROTECTED:
+            problems.append(f"drop {d}: kept (documents read by the Parser)")
+        elif d in names:
             drops.append(d)
         else:
             problems.append(f"drop: no entity {d!r}")
@@ -168,7 +173,7 @@ def validate(plan, dm):
         problems.append("would drop every entity; ignoring drops")
         drops = []
     for p in plan.get("entities") or []:
-        if not isinstance(p, dict) or p.get("from") not in names or p["from"] in drops:
+        if not isinstance(p, dict) or p.get("from") not in names or p["from"] in drops or p["from"] in PROTECTED:
             continue
         e = names[p["from"]]
         new = p.get("name") if isinstance(p.get("name"), str) and ENTITY_RE.match(p.get("name", "")) else e["name"]

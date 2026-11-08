@@ -479,16 +479,81 @@ const server = {
   },
 };
 
+/* =========================================================
+   PARSER: explore.parser reads the PDFs and big images the Explorer finds, with NVIDIA Nemotron Parse.
+   feed(evt) with the parser events: start · found {url,title,doc_kind} · parsing {url,pages} ·
+   parsed {url,page,of,chars,preview} · failed {url,error} · done
+   ========================================================= */
+const parser = {
+  init(tile) { tile.s = { docs: [], phase: '', preview: '', scan: 0 }; },
+  layout() {},
+  reset(tile) { this.init(tile); },
+  feed(tile, d) {
+    const s = tile.s;
+    const doc = (url) => s.docs.find((x) => x.url === url);
+    if (d.kind === 'start') s.phase = 'watching';
+    if (d.kind === 'found' && !doc(d.url)) s.docs.push({ url: d.url, title: d.title, type: d.doc_kind, state: 'found', page: 0, of: 0, chars: 0, t: 0 });
+    if (d.kind === 'parsing') { const x = doc(d.url); if (x) { x.state = 'parsing'; x.of = d.pages; } }
+    if (d.kind === 'parsed') {
+      const x = doc(d.url);
+      if (x) { x.page = d.page; x.of = d.of; x.chars += d.chars || 0; if (d.page >= d.of) x.state = 'parsed'; }
+      if (d.preview) s.preview = d.preview;
+    }
+    if (d.kind === 'failed') { const x = doc(d.url); if (x) { x.state = 'failed'; x.error = d.error; } }
+    if (d.kind === 'done') s.phase = 'done';
+  },
+  step(tile, dt) {
+    const s = tile.s;
+    s.scan = (s.scan + dt * 0.8) % 1;
+    for (const x of s.docs) x.t = Math.min(1, x.t + dt * 3);
+  },
+  draw(tile, c) {
+    if (!active(tile)) return;
+    const s = tile.s, top = 16, bot = tile.h - 34;
+    if (!s.docs.length) {
+      const msg = s.phase === 'done' ? 'No PDFs or document images on the pages the Explorer read.'
+        : 'Watching the Explorer\u2019s pages for PDFs and document images\u2026';
+      for (let i = 0; i < 3; i++) dot(c, 18 + i * 9, tile.h / 2 - 4, 2.4, 0.25 + 0.6 * ((Math.sin(tile.t * 3 - i) + 1) / 2));
+      text(c, msg, 50, tile.h / 2 - 4, 0.55, 'left', 8.5, tile.w - 60);
+      return;
+    }
+    const shown = fitRows(s.docs.length, top, bot, 24), rows = s.docs.length > shown ? shown + 1 : shown;
+    const rowY = (i) => top + 10 + i * Math.min(32, (bot - top - 10) / Math.max(rows - 1, 1));   // stay close together when there are few
+    s.docs.slice(0, shown).forEach((x, i) => {
+      const y = rowY(i), ix = 14;
+      // the document icon: a page (PDF) or a picture frame (image)
+      box(c, ix, y - 9, 13, 17, x.state === 'found' ? 0.35 : 0.85);
+      if (x.type === 'pdf') { line(c, ix + 3, y - 4, ix + 10, y - 4, 0.6); line(c, ix + 3, y, ix + 10, y, 0.6); line(c, ix + 3, y + 4, ix + 8, y + 4, 0.6); }
+      else { line(c, ix + 2, y + 5, ix + 6, y, 0.6); line(c, ix + 6, y, ix + 11, y + 5, 0.6); }
+      if (x.state === 'parsing') fillBox(c, ix, y - 9 + 17 * s.scan, 13, 1.5, 0.9);   // the scan line
+      text(c, x.title || x.url, ix + 24, y - 3, x.state === 'found' ? 0.5 : 0.95, 'left', 9, tile.w - 190);
+      text(c, x.type === 'pdf' ? 'PDF' : 'image', ix + 24, y + 8, 0.4, 'left', 8);
+      const st = x.state === 'parsed' && x.chars < 40 ? 'no text (a photo)' : x.state === 'parsed' ? `\u2713 ${x.of} page${x.of === 1 ? '' : 's'} \u00b7 ${fmt(x.chars)} chars`
+        : x.state === 'parsing' ? `reading page ${Math.min(x.page + 1, x.of || 1)}/${x.of || '?'}\u2026`
+          : x.state === 'failed' ? '\u2715 could not read' : 'queued';
+      text(c, st, tile.w - 10, y - 3, x.state === 'found' ? 0.35 : 0.8, 'right', 8.5);
+    });
+    if (s.docs.length > shown) text(c, `+${s.docs.length - shown} more documents`, 38, rowY(shown), 0.5, 'left', 8.5);
+    if (s.preview) text(c, `\u201c${s.preview}\u201d`, 10, tile.h - 9, 0.7, 'left', 8.5, tile.w - 20);
+  },
+  stat(tile) {
+    if (!active(tile)) return 'Waiting for the Explorer';
+    const s = tile.s, done = s.docs.filter((x) => x.state === 'parsed');
+    const pages = done.reduce((n, x) => n + (x.of || 0), 0);
+    return s.docs.length ? `${s.docs.length} documents found \u00b7 ${done.length} read \u00b7 ${pages} pages` : (s.phase === 'done' ? 'No documents found' : 'Watching for documents\u2026');
+  },
+};
+
 /* ---------------- tiles ---------------- */
 const AGENTS = [
   { id: 'explorer', name: 'Explorer', desc: 'Reads the site page by page and pulls out the records', kind: explorer,
     about: 'The Explorer turns the website into a table. It visits the pages one by one, and whenever it meets a new kind of page, Nemotron looks at it and decides what the page is, what the records on it are called and which column holds what. After that, plain code does the repetitive work: it copies every row, follows the next-page links, reuses what Nemotron learned on pages with the same layout, and never submits a form or clicks delete or logout.' },
+  { id: 'parser', name: 'Parser', desc: 'Reads the PDFs and document images the Explorer finds', kind: parser,
+    about: 'Old sites keep a lot of their data in PDFs and scanned images (syllabi, schedules, forms) that a page reader can\u2019t see. While the Explorer walks the site, the Parser picks up every PDF link and large document image it passes, renders the pages, and sends each page to NVIDIA Nemotron Parse, a vision model built to transcribe documents into text in reading order. Each page becomes a Document record, so the final API has a searchable /documents endpoint too. It only downloads files (read-only), at most a few documents per run.' },
   { id: 'operator', name: 'Operator', desc: 'Designs the API and MCP tools from the extracted data', kind: operator,
     about: 'The Operator turns that table into an API: a fixed set of questions other apps and AI assistants can ask about the data. Nemotron proposes the endpoints, what to call them and which filters make sense for each column (and, if the site had forms, which writes are possible). The code then checks every endpoint against the real data, sends mistakes back to Nemotron once, and tries each endpoint on the real records before it is accepted.' },
-  { id: 'database', name: 'Database', desc: 'Loads the data, model and API design into SpacetimeDB', kind: database,
-    about: 'The Database step saves everything to SpacetimeDB: the records, the description of the data and the API design, so the API and this dashboard read from one place. No AI is involved here; the loader sends every record (8 at a time) and then checks that the database really has them all.' },
-  { id: 'server', name: 'Server', desc: 'Starts the real REST API and MCP server and tests them', kind: server,
-    about: 'The Server turns the design into something you can actually use. It reads the API design and the records back from SpacetimeDB and starts two front doors to the same data: a REST API for apps (with /docs) and an MCP server for AI assistants like Claude. Before going live it tests itself: it calls every route with the Operator\u2019s own example request and checks the answer matches, then connects to the MCP server like an AI client would and calls every tool. No AI is involved in this step; it is plain code that proves the result works.' },
+  { id: 'server', name: 'Server', desc: 'Saves to SpacetimeDB, then starts the REST API + MCP server and tests them', kind: server,
+    about: 'The Server turns the design into something you can actually use. First the data, the data description and the API design are saved to SpacetimeDB (plain code, 8 records at a time, then checked). Then it reads the API design and the records back from SpacetimeDB and starts two front doors to the same data: a REST API for apps (with /docs) and an MCP server for AI assistants like Claude. Before going live it tests itself: it calls every route with the Operator\u2019s own example request and checks the answer matches, then connects to the MCP server like an AI client would and calls every tool. No AI is involved in this step; it is plain code that proves the result works.' },
 ];
 const LABEL = { idle: 'Idle', working: 'Working', done: 'Done', live: 'Live' };
 

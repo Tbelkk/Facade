@@ -5,6 +5,13 @@ Settings come from core/.env:
     NVIDIA_BASE_URL     https://integrate.api.nvidia.com/v1  (or a self-hosted NIM, e.g. Brev)
     MODEL_VISION        nvidia/nemotron-3-nano-omni-30b-a3b-reasoning
     REASONING_BUDGET    tokens the model may spend thinking (lower = faster)
+
+One model per agent (optional; unset = MODEL_AGENT):
+    MODEL_EXPLORER      reads each new kind of page (many calls: pick a fast model)
+    MODEL_SPLIT         writes regexes that split packed cells (small focused task)
+    MODEL_OPERATOR      tidies names + designs the API (few calls: pick the strongest model)
+    NVIDIA_BASE_URL_EXPLORER / _SPLIT / _OPERATOR   send that agent to another endpoint (e.g. a NIM on Brev)
+Check what your key can use:  python -m ingest.models
 """
 import base64
 import io
@@ -23,6 +30,7 @@ load_dotenv()  # also allow a .env in the current folder
 BASE_URL = os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")
 MODEL_VISION = os.getenv("MODEL_VISION", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
 MODEL_AGENT = os.getenv("MODEL_AGENT", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
+MODEL_PARSER = os.getenv("MODEL_PARSER", "nvidia/nemotron-parse")   # document page images -> markdown
 REASONING_BUDGET = int(os.getenv("REASONING_BUDGET", "1024"))
 MAX_IMAGE_WIDTH = int(os.getenv("MAX_IMAGE_WIDTH", "1600"))
 TIMEOUT_S = float(os.getenv("NEMOTRON_TIMEOUT", "90"))
@@ -30,21 +38,43 @@ TIMEOUT_S = float(os.getenv("NEMOTRON_TIMEOUT", "90"))
 # Every call is recorded here so the overlay's "Nemotron log" panel can show it.
 CALL_LOG = []
 
-_client = None
+_clients = {}
+ROLES = ("explorer", "split", "operator")
+ROLE_MODEL = {r: os.getenv(f"MODEL_{r.upper()}") or None for r in ROLES}
+ROLE_URL = {r: os.getenv(f"NVIDIA_BASE_URL_{r.upper()}") or None for r in ROLES}
+
+
+def role_of(purpose):
+    p = purpose or ""
+    if p.startswith(("extract_page", "explore")):
+        return "explorer"
+    if p.startswith("split"):
+        return "split"
+    if p.startswith("operator"):
+        return "operator"
+    return None
+
+
+def route(purpose, model):
+    """(model, base_url) for a call: the agent's own model/endpoint if set, else what the caller asked for."""
+    r = role_of(purpose)
+    if r and ROLE_MODEL[r] and model in (None, MODEL_AGENT):
+        model = ROLE_MODEL[r]
+    return model or MODEL_VISION, (ROLE_URL[r] if r else None) or BASE_URL
 _NO_BUDGET = set()  # models that rejected the reasoning_budget parameter
 _UNAVAILABLE = set()  # models that returned 404 for this account (we fall back to MODEL_VISION)
 
 
-def client():
-    global _client
-    if _client is None:
+def client(base_url=None):
+    base_url = base_url or BASE_URL
+    if base_url not in _clients:
         from openai import OpenAI
 
         key = os.getenv("NVIDIA_API_KEY", "")
         if not key or "paste" in key:
             raise RuntimeError("NVIDIA_API_KEY is missing. Paste your key into core/.env")
-        _client = OpenAI(base_url=BASE_URL, api_key=key, timeout=TIMEOUT_S)
-    return _client
+        _clients[base_url] = OpenAI(base_url=base_url, api_key=key, timeout=TIMEOUT_S)
+    return _clients[base_url]
 
 
 def image_part(path, max_width=MAX_IMAGE_WIDTH):
@@ -80,13 +110,20 @@ def strip_reasoning(text):
 
 
 def chat(messages, purpose="call", model=None, budget=None, answer_tokens=2000,
-         temperature=0.6, top_p=0.95, retries=2):
+         temperature=0.6, top_p=0.95, retries=2, _routed=False):
     """One Nemotron call with retries. Returns {"text", "ms", "usage", "model"}."""
-    model = model or MODEL_VISION
+    if _routed:
+        base = BASE_URL
+        model = model or MODEL_VISION
+    else:
+        model, base = route(purpose, model)
     if model in _UNAVAILABLE:
-        model = MODEL_VISION
+        model, base = MODEL_VISION, BASE_URL
     budget = REASONING_BUDGET if budget is None else budget
-    api = client()  # fails fast (no retries) if the key is missing
+    api = client(base)  # fails fast (no retries) if the key is missing
+    if role_of(purpose) == "operator":   # few, long answers from a big model: allow more time, retry less
+        api = api.with_options(timeout=max(TIMEOUT_S, 240))
+        retries = min(retries, 1)
     last_err = None
     for attempt in range(retries + 1):
         t0 = time.time()
@@ -128,7 +165,7 @@ def chat(messages, purpose="call", model=None, budget=None, answer_tokens=2000,
                 _UNAVAILABLE.add(model)
                 print(f"  ! {model} is not available for this NVIDIA account; falling back to {MODEL_VISION}")
                 return chat(messages, purpose=purpose, model=MODEL_VISION, budget=budget, answer_tokens=answer_tokens,
-                            temperature=temperature, top_p=top_p, retries=retries)
+                            temperature=temperature, top_p=top_p, retries=retries, _routed=True)
             if not retryable or attempt == retries:
                 break
             time.sleep(2 ** attempt)

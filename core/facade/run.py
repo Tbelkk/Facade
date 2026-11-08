@@ -28,7 +28,11 @@ def run(url, login=False, headed=False, offline_design=False, full=False, live=T
 
     from facade.events import emit
     t0 = time.time()
-    emit({"stage": "run", "kind": "start", "site": url})
+    from ingest import nemotron as N
+    models = {a: N.route(p, N.MODEL_AGENT)[0] for a, p in (("explorer", "extract_page"), ("split", "split_column"),
+                                                          ("operator", "operator_design"))}
+    models["parser"] = N.MODEL_PARSER
+    emit({"stage": "run", "kind": "start", "site": url, "models": models})
     print("== 1/5  Explore + extract ==")
     r = agent.run(url, max_pages=pages, login=login, headed=headed, full=full, live=live, pause=pause, minutes=minutes)
     if not r.records:
