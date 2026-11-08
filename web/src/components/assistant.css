@@ -1,0 +1,41 @@
+/* "Ask RESTore" prompt box under the agent tiles. Built on styles.css tokens. */
+.assistant { margin-top: 12px; padding: 16px 18px 18px; border-radius: 16px; background: var(--card); box-shadow: 0 0 0 1px var(--line); }
+.ask-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.ask-head .mini { margin-left: 4px; }
+.ask-state { margin-left: auto; font: 400 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+.assistant:not(.locked) .ask-state { color: var(--dim); }
+.ask-eg { display: block; margin: 4px 0 8px; font: 500 10px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
+.ask-chip:disabled { cursor: default; color: var(--mute); box-shadow: inset 0 0 0 1px var(--line); }
+.ask-chip:disabled:hover { color: var(--mute); box-shadow: inset 0 0 0 1px var(--line); }
+.ask-input:has(input:disabled) { opacity: .5; }
+.ask-input input:disabled { cursor: not-allowed; }
+
+.ask-log { max-height: 340px; overflow-y: auto; display: grid; gap: 10px; align-content: start; }
+.ask-empty p { margin: 0 0 12px; font: 400 13px/1.6 var(--sans); color: var(--dim); max-width: 760px; }
+.ask-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ask-chip { border: 0; padding: 7px 12px; border-radius: 999px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px var(--line-2);
+  color: var(--dim); font: 400 11.5px var(--mono); transition: color .2s, box-shadow .2s; }
+.ask-chip:hover { color: #fff; box-shadow: inset 0 0 0 1px #fff; }
+
+.ask-msg { max-width: 82%; padding: 10px 13px; border-radius: 12px; }
+.ask-msg p { margin: 0; white-space: pre-wrap; font: 400 13px/1.6 var(--sans); }
+.ask-msg.user { justify-self: end; background: #fff; color: #000; }
+.ask-msg.ai { justify-self: start; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px var(--line); color: #e6e6e6; }
+.ask-msg.thinking { padding: 14px 16px; }
+.ask-calls { list-style: none; margin: 10px 0 0; padding: 8px 0 0; border-top: 1px solid var(--line); display: grid; gap: 4px; }
+.ask-calls li { display: flex; gap: 8px; font: 400 11px var(--mono); color: var(--dim); min-width: 0; }
+.ask-calls b { font-weight: 500; color: #fff; }
+.ask-calls span { margin-left: auto; padding-left: 12px; color: var(--mute); white-space: nowrap; }
+
+.ask-form { display: flex; gap: 10px; margin-top: 14px; }
+.ask-input { position: relative; flex: 1; display: flex; align-items: center; height: 48px; padding: 0 14px; border-radius: 12px; background: rgba(255,255,255,.02);
+  box-shadow: inset 0 0 0 1px var(--line-2); transition: box-shadow .2s; }
+.ask-input:focus-within { box-shadow: inset 0 0 0 1px rgba(255,255,255,.55); }
+.ask-input input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none; color: #fff; font: 400 14px var(--sans); }
+.ask-input input::placeholder { color: var(--mute); }
+.ask-form .btn.primary { min-width: 110px; }
+
+@media (max-width: 640px) {
+  .ask-msg { max-width: 100%; }
+  .ask-form .btn.primary { min-width: 0; }
+}

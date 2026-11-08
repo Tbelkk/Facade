@@ -8,6 +8,7 @@ import ApiView from './components/ApiView.jsx';
 import { createDashboard } from './lib/dashboard.js';
 import { createRunDriver, loadRecordedRun, replayRun } from './lib/runDriver.js';
 import DevPanel from './components/DevPanel.jsx';
+import Assistant from './components/Assistant.jsx';
 
 export default function App() {
   // One dashboard + run driver for the app's lifetime. The driver turns real agent events into tile states.
@@ -91,6 +92,7 @@ export default function App() {
         <Intake phase={phase} running={running} url={url} setUrl={setUrl}
           onStart={startExploring} onStop={stopRun} />
         <Board dashboard={dashboard} store={driver.store} working={summary.working} total={summary.total} clock={clock} />
+        <Assistant store={driver.store} />
       </main>
 
       <ApiView store={driver.store} host={host} on={view === 'api'} />
