@@ -15,6 +15,7 @@
     },
     "screenshot": "shots/patient_family.png",
     "app": "OpenDental.exe",
+    "url": null,
     "fingerprint": "OpenDental.exe|WindowsForms10|fixture001",
     "ai": {
       "mode": "structure",

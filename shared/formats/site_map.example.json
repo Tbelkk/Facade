@@ -1,0 +1,55 @@
+{
+  "site": "http://localhost:5005",
+  "pages": [
+    {
+      "id": "patient_list",
+      "url_pattern": "/patients?page={n}&q={q}",
+      "purpose": "Search and browse patients",
+      "entity": "Patient",
+      "kind": "list",
+      "pagination": {
+        "next": {
+          "role": "link",
+          "name": "Next >>"
+        },
+        "page_size": 25
+      },
+      "row_link": {
+        "column": "Name",
+        "goes_to": "patient_detail"
+      }
+    },
+    {
+      "id": "patient_detail",
+      "url_pattern": "/patients/{id}",
+      "entity": "Patient",
+      "kind": "detail"
+    },
+    {
+      "id": "patient_edit",
+      "url_pattern": "/patients/{id}/edit",
+      "entity": "Patient",
+      "kind": "form"
+    },
+    {
+      "id": "appt_new",
+      "url_pattern": "/appointments/new?patient_id={id}",
+      "entity": "Appointment",
+      "kind": "form"
+    }
+  ],
+  "edges": [
+    {
+      "from": "patient_list",
+      "to": "patient_detail",
+      "via": "row link"
+    }
+  ],
+  "unexplored": [
+    "Billing",
+    "Reports"
+  ],
+  "notes": [
+    "Session expires after ~10 minutes"
+  ]
+}
