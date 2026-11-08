@@ -14,3 +14,7 @@ playwright>=1.49
 pyyaml
 pytest
 # NVIDIA NeMo Agent Toolkit (needs Python 3.11+): pip install "nvidia-nat[langchain]>=1.9"
+# API + MCP server (core/serve)
+fastapi>=0.100
+uvicorn>=0.23
+httpx

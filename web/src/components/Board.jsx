@@ -1,8 +1,30 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { LABEL } from '../lib/agentKinds.js';
 import { useTile } from '../lib/hooks.js';
 
-function AgentTile({ dashboard, agent, index }) {
+// "What's happening": one live sentence about what the agent is doing right now; open it for
+// a short paragraph on what the agent is for and who decides what, plus its recent steps.
+function Why({ agent, note, status }) {
+  const now = note && note.now ? note.now
+    : agent.id === 'writer' ? 'Not connected yet. The team is building it now.'
+      : status === 'idle' ? 'Waiting for its turn.' : 'Starting…';
+  return (
+    <details className="why">
+      <summary><span className="why-tag">What’s happening</span><span className="why-now">{now}</span></summary>
+      <div className="why-body">
+        <p>{agent.about}</p>
+        {note && note.log && note.log.length ? (
+          <>
+            <b>Recent steps</b>
+            <ol>{note.log.map((l, i) => <li key={i}>{l}</li>)}</ol>
+          </>
+        ) : null}
+      </div>
+    </details>
+  );
+}
+
+function AgentTile({ dashboard, agent, index, note }) {
   const canvasRef = useRef(null);
   const statRef = useRef(null);
   const { status, progress } = useTile(dashboard, agent.id);
@@ -23,12 +45,14 @@ function AgentTile({ dashboard, agent, index }) {
         <span className="stat" ref={statRef}></span>
         <span className="bar"><i style={{ width: `${Math.round(progress * 100)}%` }}></i></span>
       </div>
+      <Why agent={agent} note={note} status={status} />
     </article>
   );
 }
 
-export default function Board({ dashboard, working, total, clock }) {
+export default function Board({ dashboard, store, working, total, clock }) {
   useEffect(() => { dashboard.start(); return () => dashboard.stop(); }, [dashboard]);
+  const st = useSyncExternalStore(store.subscribe, store.get);
 
   return (
     <section className="board" aria-label="Agents">
@@ -38,7 +62,7 @@ export default function Board({ dashboard, working, total, clock }) {
         <span className="clock" id="clock">{clock}</span>
       </div>
       <div className="grid" id="grid">
-        {dashboard.agents.map((a, i) => <AgentTile key={a.id} dashboard={dashboard} agent={a} index={i} />)}
+        {dashboard.agents.map((a, i) => <AgentTile key={a.id} dashboard={dashboard} agent={a} index={i} note={(st.notes || {})[a.id]} />)}
       </div>
     </section>
   );

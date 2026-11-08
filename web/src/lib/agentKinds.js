@@ -1,40 +1,47 @@
-// Agent tile animations, carried over unchanged from app/renderer/dashboard.js.
-// Each agent "kind" has init / layout / reset / step / draw / stat, drawn with white dots on a canvas.
+// Agent tiles: one per real stage of the Facade pipeline. Every word drawn here comes from the run itself
+// (page paths, Nemotron's summaries, extracted rows, endpoint paths, checker messages, database counts).
+//   dashboard.feed(agentId, payload)              real content for that tile
+//   dashboard.set(agentId, { status, progress, stat })
+// Idle tiles draw nothing. Each kind has init / layout / reset / step / draw / stat and an optional feed.
 
 export const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MONO = '"Geist Mono", ui-monospace, Menlo, monospace';
 
 /* ---------------- helpers ---------------- */
-function rng(seed) {
-  return function () {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 const lerp = (a, b, t) => a + (b - a) * t;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-const fmt = (n) => Math.round(n).toLocaleString();
+const fmt = (n) => Math.round(n).toLocaleString('en-US');
 const live = (tile) => tile.status === 'working' || tile.status === 'live';
+const active = (tile) => tile.status !== 'idle';
 
 function dot(c, x, y, s, a) { c.fillStyle = `rgba(255,255,255,${a})`; c.fillRect(x - s / 2, y - s / 2, s, s); }
 function ring(c, x, y, r, a, w = 1) { c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.strokeStyle = `rgba(255,255,255,${a})`; c.lineWidth = w; c.setLineDash([]); c.stroke(); }
 function line(c, x1, y1, x2, y2, a, dash = []) { c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.strokeStyle = `rgba(255,255,255,${a})`; c.lineWidth = 1; c.setLineDash(dash); c.stroke(); c.setLineDash([]); }
-function text(c, s, x, y, a, align = 'left', size = 9) {
-  c.font = `400 ${size}px ${MONO}`;
-  if ('letterSpacing' in c) c.letterSpacing = '1px';
+function font(c, size) { c.font = `400 ${size}px ${MONO}`; if ('letterSpacing' in c) c.letterSpacing = '0.3px'; }
+function text(c, s, x, y, a, align = 'left', size = 9, maxW = 0) {
+  font(c, size);
   c.textAlign = align; c.textBaseline = 'middle';
   c.fillStyle = `rgba(255,255,255,${a})`;
-  c.fillText(s, x, y);
+  let str = s == null ? '' : String(s);
+  if (maxW > 0 && c.measureText(str).width > maxW) {
+    while (str.length > 1 && c.measureText(str + '…').width > maxW) str = str.slice(0, -1);
+    str += '…';
+  }
+  c.fillText(str, x, y);
 }
+function box(c, x, y, w, h, a, dash = []) { c.strokeStyle = `rgba(255,255,255,${a})`; c.lineWidth = 1; c.setLineDash(dash); c.strokeRect(x + 0.5, y + 0.5, w, h); c.setLineDash([]); }
+function fillBox(c, x, y, w, h, a) { c.fillStyle = `rgba(255,255,255,${a})`; c.fillRect(x, y, w, h); }
 function bez(p0, p1, p2, p3, t) {
   const u = 1 - t;
   return { x: u * u * u * p0.x + 3 * u * u * t * p1.x + 3 * u * t * t * p2.x + t * t * t * p3.x,
            y: u * u * u * p0.y + 3 * u * u * t * p1.y + 3 * u * t * t * p2.y + t * t * t * p3.y };
 }
-// a bright square with a fading tail; pathAt(t) returns {x,y}
+function curve(a, b) { const mx = lerp(a.x, b.x, 0.5); return (t) => bez(a, { x: mx, y: a.y }, { x: mx, y: b.y }, b, t); }
+function strokePath(c, path, upTo, a, dash = [1, 3]) {
+  c.beginPath(); for (let k = 0; k <= 24; k++) { const q = path((k / 24) * upTo); k ? c.lineTo(q.x, q.y) : c.moveTo(q.x, q.y); }
+  c.strokeStyle = `rgba(255,255,255,${a})`; c.lineWidth = 1; c.setLineDash(dash); c.stroke(); c.setLineDash([]);
+}
 function comet(c, pathAt, t, size = 3.2, alpha = 1, tail = 5, step = 0.035) {
   for (let k = tail; k >= 0; k--) {
     const tt = t - k * step;
@@ -44,424 +51,392 @@ function comet(c, pathAt, t, size = 3.2, alpha = 1, tail = 5, step = 0.035) {
   }
 }
 function pulse(tile, x, y, size = 1) { tile.pulses.push({ x, y, r: 3, life: 1, s: size }); if (tile.pulses.length > 30) tile.pulses.shift(); }
+const hurry = (n) => (n > 20 ? 0.06 : n > 8 ? 0.18 : n > 3 ? 0.45 : 1);
+const cell = (v) => (v == null || v === '' ? '—' : typeof v === 'number' ? fmt(v) : v);
+const plural = (w) => (/s$/.test(w) ? w : /y$/.test(w) ? w.slice(0, -1) + 'ies' : w + 's');
+// plain-language name for a page type: "List of posts", "One post", "Post form"
+function human(v) {
+  const e = (v.entity || 'item').toLowerCase();
+  if (v.pageType === 'list') return `List of ${plural(e)}`;
+  if (v.pageType === 'detail') return `One ${e}`;
+  if (v.pageType === 'form') return `${e[0].toUpperCase() + e.slice(1)} form`;
+  return 'Other page';
+}
 
 /* =========================================================
-   01 EXPLORER: draws a map of the site as it clicks around
+   01 EXPLORER: explore.agent reads the site page by page.
+   left:  the page it is on now: its path, Nemotron's one-line summary, and the real rows it pulled from it
+   right: the site map of page types found so far, with visit counts
+   feed({ key, path, purpose, pageType, ai, seconds, records, rows: [[...]], columns })
    ========================================================= */
 const explorer = {
-  N: 26,
-  init(tile) {
-    const r = rng(7), nodes = [{ p: -1, d: 0, kids: [] }], frontier = [0];
-    while (nodes.length < this.N && frontier.length) {
-      const i = frontier.shift(), d = nodes[i].d;
-      const n = d === 0 ? 5 : d === 1 ? 2 + Math.floor(r() * 2) : Math.floor(r() * 3);
-      for (let k = 0; k < n && nodes.length < this.N; k++) {
-        nodes.push({ p: i, d: d + 1, kids: [] });
-        nodes[i].kids.push(nodes.length - 1);
-        if (d + 1 < 3) frontier.push(nodes.length - 1);
-      }
-    }
-    // angular ranges: children split their parent's slice
-    nodes[0].a0 = -Math.PI / 2; nodes[0].a1 = Math.PI * 1.5;
-    nodes.forEach((n) => {
-      const span = (n.a1 - n.a0) / Math.max(1, n.kids.length);
-      n.kids.forEach((k, j) => { nodes[k].a0 = n.a0 + span * j; nodes[k].a1 = n.a0 + span * (j + 1); });
-      n.a = (n.a0 + n.a1) / 2;
-    });
-    tile.s = { nodes, claimed: 0, found: 0, scouts: [], wanderers: [] };
+  MAX: 7,
+  init(tile) { tile.s = { nodes: [], queue: [], cur: null, shown: null, trips: [], pages: 0, records: 0 }; },
+  layout() {},
+  reset(tile) { this.init(tile); },
+  feed(tile, v) { if (v.opening) tile.s.opening = v.opening; else tile.s.queue.push(v); },
+  geo(tile) {
+    const card = { x: 10, y: 6, w: Math.min(tile.w * 0.56, 330), h: tile.h - 12 };
+    const root = { x: card.x + card.w + 22, y: tile.h / 2 };
+    return { card, root, colX: Math.max(root.x + 96, card.x + card.w + (tile.w - card.w) * 0.5) };
   },
-  layout(tile) {
-    const { w, h } = tile, cx = w / 2, cy = h / 2;
-    for (const n of tile.s.nodes) {
-      const rad = n.d / 3;
-      n.x = cx + Math.cos(n.a) * rad * (w / 2 - 22);
-      n.y = cy + Math.sin(n.a) * rad * (h / 2 - 14);
-    }
+  nodePos(tile, i) {
+    const g = this.geo(tile), kids = Math.min(this.MAX, Math.max(1, tile.s.nodes.length - 1));
+    if (i === 0) return g.root;
+    const k = Math.min(i, this.MAX) - 1;
+    return { x: g.colX, y: kids === 1 ? tile.h / 2 : lerp(14, tile.h - 16, k / (kids - 1)) };
   },
-  reset(tile) {
-    const s = tile.s;
-    s.nodes.forEach((n) => { n.on = false; });
-    s.claimed = 0; s.found = 0; s.scouts = []; s.wanderers = [];
-  },
-  step(tile, dt) {
-    const s = tile.s, nodes = s.nodes;
-    const target = tile.status === 'idle' ? 0 : Math.max(1, Math.round(tile.progress * nodes.length));
-    while (s.claimed < target) {
-      const i = s.claimed++;
-      if (i === 0) { nodes[0].on = true; s.found = 1; pulse(tile, nodes[0].x, nodes[0].y, 1.4); }
-      else s.scouts.push({ from: nodes[i].p, to: i, t: 0, sp: 2 + Math.random() });
-    }
-    for (let k = s.scouts.length - 1; k >= 0; k--) {
-      const sc = s.scouts[k];
-      sc.t += dt * sc.sp;
-      if (sc.t >= 1) { nodes[sc.to].on = true; s.found++; pulse(tile, nodes[sc.to].x, nodes[sc.to].y); s.scouts.splice(k, 1); }
-    }
-    // a couple of explorers keep walking the known map
-    if (tile.status !== 'idle' && s.found > 2 && s.wanderers.length < 2) s.wanderers.push({ from: 0, to: nodes[0].kids.find((k) => nodes[k].on) ?? 0, t: Math.random() });
-    for (const w of s.wanderers) {
-      w.t += dt * (live(tile) ? 1.6 : 0.7);
-      if (w.t >= 1) {
-        const at = w.to, n = nodes[at];
-        const options = [...n.kids.filter((k) => nodes[k].on), ...(n.p >= 0 ? [n.p] : [])];
-        w.from = at; w.to = options.length ? options[Math.floor(Math.random() * options.length)] : at; w.t = 0;
-      }
-    }
-  },
-  draw(tile, c) {
-    const { nodes, scouts, wanderers } = tile.s;
-    for (const n of nodes) if (n.p >= 0 && n.on && nodes[n.p].on) line(c, nodes[n.p].x, nodes[n.p].y, n.x, n.y, 0.32, [1, 3]);
-    for (const sc of scouts) {
-      const a = nodes[sc.from], b = nodes[sc.to];
-      line(c, a.x, a.y, lerp(a.x, b.x, sc.t), lerp(a.y, b.y, sc.t), 0.55);
-    }
-    for (const [i, n] of nodes.entries()) {
-      if (!n.on) { dot(c, n.x, n.y, 2, 0.13); continue; }
-      if (i === 0) { ring(c, n.x, n.y, 6, 0.8); dot(c, n.x, n.y, 3, 1); }
-      else dot(c, n.x, n.y, 3.2, 0.9);
-    }
-    for (const w of wanderers) {
-      const a = nodes[w.from], b = nodes[w.to];
-      comet(c, (t) => ({ x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) }), w.t, 2.6, 0.55, 3, 0.06);
-    }
-    for (const sc of scouts) {
-      const a = nodes[sc.from], b = nodes[sc.to];
-      comet(c, (t) => ({ x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t) }), sc.t, 3.6, 1, 5, 0.05);
-    }
-    if (tile.status === 'idle') ring(c, nodes[0].x, nodes[0].y, 6 + (tile.t % 2) * 6, 0.25 * (1 - (tile.t % 2) / 2));
-  },
-  stat(tile) { return tile.status === 'idle' ? 'Waiting for a link' : `Pages mapped ${tile.s.found} / ${tile.s.nodes.length}`; },
-};
-
-/* =========================================================
-   02 ANALYST: scattered facts sort themselves into entities
-   ========================================================= */
-const analyst = {
-  ENTITIES: [{ name: 'PATIENT', fields: 6 }, { name: 'APPOINTMENT', fields: 5 }, { name: 'INVOICE', fields: 4 }],
-  RULES: ['no appointments on sundays', 'one patient → many appointments', 'invoice needs an appointment', 'phone number is required'],
-  init(tile) {
-    const r = rng(11), parts = [];
-    this.ENTITIES.forEach((e, ei) => {
-      for (let f = 0; f < e.fields; f++) for (let k = 0; k < 4; k++) parts.push({ e: ei, f, k, hx: r(), hy: r(), thr: r() * 0.82, ph: r() * 6.28, kv: 0 });
-    });
-    tile.s = { parts };
-  },
-  layout(tile) {
-    const { w, h } = tile;
-    this.cols = this.ENTITIES.map((_, i) => w * (0.18 + i * 0.32));
-    this.top = 22;
-    this.gap = Math.min(15, (h - 52) / 6);
-    for (const p of tile.s.parts) {
-      p.tx = this.cols[p.e] + (p.k - 1.5) * 8;
-      p.ty = this.top + 16 + p.f * this.gap;
-      p.x0 = 16 + p.hx * (w - 32);
-      p.y0 = 16 + p.hy * (h - 40);
-    }
-  },
-  reset(tile) { tile.s.parts.forEach((p) => { p.kv = 0; }); },
-  step(tile, dt) {
-    for (const p of tile.s.parts) {
-      const want = tile.status === 'idle' ? 0 : clamp((tile.progress - p.thr) / 0.12);
-      p.kv += (want - p.kv) * Math.min(1, dt * 3);
-    }
-  },
-  draw(tile, c) {
-    const { parts } = tile.s, t = tile.t;
-    const formed = this.ENTITIES.map((_, ei) => { const ps = parts.filter((p) => p.e === ei); return ps.reduce((n, p) => n + p.kv, 0) / ps.length; });
-
-    // relationships between entities, once understood
-    const relA = clamp((tile.progress - 0.6) / 0.25) * (tile.status === 'idle' ? 0 : 1);
-    if (relA > 0) {
-      const y = this.top + 16 + this.gap * 2;
-      for (let i = 0; i < 2; i++) {
-        const x1 = this.cols[i] + 22, x2 = this.cols[i + 1] - 22;
-        line(c, x1, y, x2, y, 0.35 * relA, [2, 4]);
-        if (live(tile)) { const f = (t * 0.7 + i * 0.5) % 1; dot(c, lerp(x1, x2, f), y, 2.6, 0.8 * relA); }
-      }
-    }
-
-    for (const p of parts) {
-      const e = ease(p.kv);
-      const x = lerp(p.x0 + Math.sin(t * 0.6 + p.ph) * 7, p.tx, e);
-      const y = lerp(p.y0 + Math.cos(t * 0.5 + p.ph) * 5, p.ty, e);
-      dot(c, x, y, p.kv > 0.95 ? 2.6 : 2, 0.22 + 0.68 * p.kv);
-    }
-    this.ENTITIES.forEach((en, i) => text(c, en.name, this.cols[i], this.top, 0.15 + 0.75 * formed[i], 'center'));
-
-    if (tile.progress > 0.75 && tile.status !== 'idle') {
-      const rule = this.RULES[Math.floor(t / 2.4) % this.RULES.length];
-      text(c, `rule · ${rule}`, tile.w / 2, tile.h - 9, 0.5 * clamp((tile.progress - 0.75) / 0.1), 'center');
-    }
-  },
-  stat(tile) {
-    if (tile.status === 'idle') return 'Waiting for the map';
-    const p = tile.progress;
-    const entities = this.ENTITIES.filter((_, ei) => { const ps = tile.s.parts.filter((x) => x.e === ei); return ps.every((x) => x.kv > 0.9); }).length;
-    const fields = Math.round(p * 15);
-    const rules = p > 0.6 ? Math.min(4, Math.floor((p - 0.6) / 0.1) + 1) : 0;
-    return `Entities ${entities} · Fields ${fields} · Rules ${rules}`;
-  },
-};
-
-/* =========================================================
-   03 EXTRACTOR: records stream from the old site into a DB grid
-   ========================================================= */
-const extractor = {
-  TOTAL: 3410,
-  init(tile) { const r = rng(5); tile.s = { lens: Array.from({ length: 9 }, () => 0.35 + r() * 0.65), packets: [], next: 0, acc: 0, cells: [], refill: 0 }; },
-  layout(tile) {
-    const { w, h } = tile, s = tile.s;
-    s.left = { x0: 16, x1: w * 0.27, y0: 30, y1: h - 14 };
-    const x0 = w * 0.5, x1 = w - 16, y0 = 30, y1 = h - 12;
-    const cols = Math.max(6, Math.floor((x1 - x0) / 9)), rows = Math.max(4, Math.min(9, Math.floor((y1 - y0) / 9)));
-    const old = s.cells;
-    s.cells = [];
-    for (let r = 0; r < rows; r++) for (let k = 0; k < cols; k++) s.cells.push({ x: x0 + k * 9 + 3, y: y0 + r * 9 + 3, on: 0, flash: 0 });
-    if (old.length) { const filled = old.filter((c) => c.on).length; s.cells.forEach((c, i) => { c.on = i < filled ? 1 : 0; }); s.next = Math.min(filled, s.cells.length); }
-    s.db = { x: x0, y: 14 };
-  },
-  reset(tile) { const s = tile.s; s.cells.forEach((c) => { c.on = 0; c.flash = 0; }); s.packets = []; s.next = 0; s.acc = 0; s.refill = 0; },
-  step(tile, dt) {
-    const s = tile.s, L = s.left;
-    if (tile.status === 'done') { s.cells.forEach((c) => { c.on = 1; }); s.packets = []; return; }
-    if (tile.status === 'working') {
-      s.acc += dt * 18;
-      while (s.acc >= 1) {
-        s.acc--;
-        if (s.next >= s.cells.length || s.packets.length > 40) break;
-        const row = Math.floor(Math.random() * s.lens.length);
-        const sy = lerp(L.y0, L.y1, row / (s.lens.length - 1));
-        s.packets.push({ sx: L.x0 + Math.random() * (L.x1 - L.x0) * s.lens[row], sy, cell: s.next++, t: 0, sp: 1.3 + Math.random() * 0.6 });
-      }
-    }
-    for (let i = s.packets.length - 1; i >= 0; i--) {
-      const p = s.packets[i];
-      p.t += dt * p.sp;
-      if (p.t >= 1) { const c = s.cells[p.cell]; c.on = 1; c.flash = 1; s.packets.splice(i, 1); }
-    }
-    for (const c of s.cells) c.flash = Math.max(0, c.flash - dt * 3);
-    // grid full → next batch
-    if (tile.status === 'working' && s.next >= s.cells.length && !s.packets.length) {
-      s.refill += dt;
-      if (s.refill > 0.5) { s.cells.forEach((c) => { c.on = 0; }); s.next = 0; s.refill = 0; }
-    }
-  },
-  path(p, c) {
-    const mid = { x: (p.sx + c.x) / 2, y: Math.min(p.sy, c.y) - 26 };
-    return (t) => bez({ x: p.sx, y: p.sy }, { x: lerp(p.sx, mid.x, 0.7), y: mid.y }, { x: lerp(c.x, mid.x, 0.7), y: mid.y }, { x: c.x, y: c.y }, t);
-  },
-  draw(tile, c) {
-    const s = tile.s, L = s.left, active = tile.status !== 'idle';
-    text(c, 'OLD SITE', L.x0, 14, 0.45);
-    text(c, 'DATABASE', s.db.x, s.db.y, 0.45);
-    s.lens.forEach((len, r) => {
-      const y = lerp(L.y0, L.y1, r / (s.lens.length - 1));
-      for (let x = L.x0; x < L.x0 + (L.x1 - L.x0) * len; x += 4) dot(c, x, y, 1.6, active ? 0.32 : 0.16);
-    });
-    for (const cell of s.cells) {
-      if (cell.on) { dot(c, cell.x, cell.y, 3.6 + cell.flash * 2, 0.55 + 0.4 * cell.on + 0.05 * cell.flash); }
-      else dot(c, cell.x, cell.y, 2, 0.1);
-    }
-    for (const p of s.packets) comet(c, this.path(p, s.cells[p.cell]), p.t, 3, 1, 4, 0.04);
-  },
-  stat(tile) { return tile.status === 'idle' ? 'Waiting for the schema' : `Records ${fmt(tile.progress * this.TOTAL)} / ${fmt(this.TOTAL)}`; },
-};
-
-/* =========================================================
-   04 BUILDER: wires the database to API endpoints and MCP tools
-   ========================================================= */
-const builder = {
-  EPS: [['GET', '/patients'], ['GET', '/patients/:id'], ['POST', '/appointments'], ['GET', '/appointments'], ['GET', '/invoices'],
-        ['MCP', 'find_patient'], ['MCP', 'book_appointment'], ['MCP', 'send_reminder']],
-  init(tile) { tile.s = { built: this.EPS.map(() => 0), traffic: [] }; },
-  layout(tile) {
-    const { w, h } = tile;
-    this.hub = { x: w * 0.16, y: h / 2 };
-    this.eps = this.EPS.map((e, i) => ({ x: w * 0.47, y: lerp(14, h - 12, i / (this.EPS.length - 1)) }));
-  },
-  reset(tile) { tile.s.built = this.EPS.map(() => 0); tile.s.traffic = []; },
-  curve(i) {
-    const a = this.hub, b = this.eps[i], mx = lerp(a.x, b.x, 0.5);
-    return (t) => bez(a, { x: mx, y: a.y }, { x: mx, y: b.y }, b, t);
-  },
-  step(tile, dt) {
-    const s = tile.s, target = tile.status === 'idle' ? 0 : tile.progress * this.EPS.length;
-    s.built = s.built.map((b, i) => { const want = clamp(target - i); return b < want ? Math.min(want, b + dt * 1.6) : want; });
-    if (tile.status !== 'idle') {
-      s.built.forEach((b, i) => {
-        if (b >= 1 && Math.random() < dt * (live(tile) ? 0.7 : 0.25)) s.traffic.push({ i, t: 0, dir: Math.random() < 0.5 ? 1 : -1, sp: 1 + Math.random() * 0.6 });
-      });
-    }
-    for (let k = s.traffic.length - 1; k >= 0; k--) { const p = s.traffic[k]; p.t += dt * p.sp; if (p.t >= 1) s.traffic.splice(k, 1); }
-  },
-  draw(tile, c) {
-    const s = tile.s, hub = this.hub;
-    // database hub
-    c.strokeStyle = 'rgba(255,255,255,.8)'; c.lineWidth = 1; c.setLineDash([]);
-    c.strokeRect(hub.x - 11, hub.y - 13, 22, 26);
-    for (let r = 0; r < 4; r++) for (let k = 0; k < 3; k++) dot(c, hub.x - 6 + k * 6, hub.y - 7 + r * 5, 1.8, tile.status === 'idle' ? 0.3 : 0.8);
-    text(c, 'DB', hub.x, hub.y + 22, 0.45, 'center');
-
-    this.EPS.forEach(([verb, p], i) => {
-      const f = s.built[i], ep = this.eps[i], path = this.curve(i);
-      if (f > 0) {
-        c.beginPath();
-        for (let k = 0; k <= 24; k++) { const q = path((k / 24) * f); k ? c.lineTo(q.x, q.y) : c.moveTo(q.x, q.y); }
-        c.strokeStyle = `rgba(255,255,255,${f >= 1 ? 0.3 : 0.55})`; c.setLineDash([2, 3]); c.stroke(); c.setLineDash([]);
-        if (f < 1) { const q = path(f); dot(c, q.x, q.y, 3.6, 1); }
-      }
-      const done = f >= 1;
-      if (verb === 'MCP') {
-        c.save(); c.translate(ep.x, ep.y); c.rotate(Math.PI / 4);
-        c.strokeStyle = `rgba(255,255,255,${done ? 0.9 : 0.15})`; c.strokeRect(-2.5, -2.5, 5, 5);
-        if (done) { c.fillStyle = '#fff'; c.fillRect(-1.2, -1.2, 2.4, 2.4); }
-        c.restore();
-      } else dot(c, ep.x, ep.y, done ? 3.4 : 2, done ? 0.9 : 0.15);
-      text(c, verb, ep.x + 10, ep.y, done ? 0.4 : 0.15);
-      text(c, p, ep.x + 42, ep.y, done ? 0.85 : 0.2);
-    });
-    for (const p of s.traffic) {
-      const path = this.curve(p.i);
-      comet(c, p.dir > 0 ? path : (t) => path(1 - t), p.t, 2.8, 0.9, 4, 0.05);
-    }
-  },
-  stat(tile) {
-    if (tile.status === 'idle') return 'Waiting for the data';
-    const b = tile.s.built;
-    return `API ${b.slice(0, 5).filter((x) => x >= 1).length} / 5 · MCP tools ${b.slice(5).filter((x) => x >= 1).length} / 3`;
-  },
-};
-
-/* =========================================================
-   05 WORKER: takes a request, fills the old site's form, reports back
-   ========================================================= */
-const worker = {
-  TASKS: ['book appointment · jane doe · tue 10:00', 'find patient · "smith"', 'send reminder · 4 patients', 'update phone · ann lee', 'cancel appointment · #2041'],
-  init(tile) { tile.s = { phase: 'wait', pt: 0, field: 0, fills: [0, 0, 0], cur: null, from: null, task: 0, done: 0 }; },
-  layout(tile) {
-    const { w, h } = tile;
-    this.q = { x: w * 0.1, y: h / 2 - 8 };
-    const x0 = w * 0.3, x1 = w - 16, y0 = 10, y1 = h - 26;
-    this.win = { x0, x1, y0, y1 };
-    this.fields = [0, 1, 2].map((i) => ({ x0: x0 + 56, x1: x1 - 14, y: y0 + 32 + i * ((y1 - y0 - 58) / 2.6) }));
-    this.btn = { x: x1 - 40, y: y1 - 14, w: 28, h: 10 };
-    if (!tile.s.cur) tile.s.cur = { x: (x0 + x1) / 2, y: (y0 + y1) / 2 };
-  },
-  reset(tile) { this.init(tile); this.layout(tile); },
   step(tile, dt) {
     const s = tile.s;
-    if (!live(tile)) { s.phase = 'wait'; s.pt = 0; return; }
-    s.pt += dt;
-    const go = (phase) => { s.phase = phase; s.pt = 0; s.from = { ...s.cur }; };
-    const at = (target, dur) => { const k = ease(clamp(s.pt / dur)); s.cur = { x: lerp(s.from.x, target.x, k), y: lerp(s.from.y, target.y, k) }; return s.pt >= dur; };
-    const F = this.fields[s.field];
-    switch (s.phase) {
-      case 'wait': if (s.pt > 0.5) go('in'); break;
-      case 'in': if (s.pt > 0.6) { s.field = 0; go('move'); } break;
-      case 'move': if (at({ x: F.x0 + 4, y: F.y }, 0.35)) go('type'); break;
-      case 'type':
-        s.fills[s.field] = clamp(s.pt / 0.55);
-        s.cur = { x: lerp(F.x0 + 4, F.x1 - 4, s.fills[s.field] * 0.85), y: F.y };
-        if (s.pt >= 0.55) { if (s.field < 2) { s.field++; go('move'); } else go('toBtn'); }
-        break;
-      case 'toBtn': if (at({ x: this.btn.x + this.btn.w / 2, y: this.btn.y + this.btn.h / 2 }, 0.35)) { pulse(tile, this.btn.x + this.btn.w / 2, this.btn.y + this.btn.h / 2, 1.2); go('click'); } break;
-      case 'click': if (s.pt > 0.3) go('out'); break;
-      case 'out':
-        if (s.pt > 0.6) { s.done++; pulse(tile, this.q.x, this.q.y, 1.3); s.fills = [0, 0, 0]; s.task = (s.task + 1) % this.TASKS.length; go('wait'); }
-        break;
+    if (!s.cur && s.queue.length) {
+      const v = s.queue.shift();
+      const base = v.ai ? 2.2 : 0.35;
+      s.cur = { ...v, t: 0, dur: base * hurry(s.queue.length) };
+      s.shown = s.cur;
     }
+    if (s.cur) {
+      s.cur.t += dt;
+      if (s.cur.t >= s.cur.dur) {
+        const v = s.cur;
+        let i = s.nodes.findIndex((n) => n.key === v.key);
+        if (i < 0) { s.nodes.push({ key: v.key, name: human(v), count: 0, ai: false, type: v.pageType }); i = s.nodes.length - 1; }
+        s.nodes[i].count++; s.nodes[i].ai = s.nodes[i].ai || v.ai;
+        s.pages++; s.records += v.records || 0;
+        const g = this.geo(tile);
+        s.trips.push({ from: { x: g.card.x + g.card.w, y: g.card.y + 20 }, to: this.nodePos(tile, i), t: 0 });
+        s.cur = null;
+      }
+    }
+    for (const tr of s.trips) tr.t += dt * 2.4;
+    for (const tr of s.trips.filter((x) => x.t >= 1)) pulse(tile, tr.to.x, tr.to.y, 0.9);
+    s.trips = s.trips.filter((x) => x.t < 1);
   },
   draw(tile, c) {
-    const s = tile.s, W = this.win, active = live(tile);
-    // request queue
-    text(c, 'REQUESTS', this.q.x, 14, 0.4, 'center');
-    for (let i = 0; i < 5; i++) dot(c, this.q.x, this.q.y - 18 + i * 9, 2.4, active ? (i < 3 ? 0.75 : 0.25) : 0.15);
-    // the old website window
-    c.strokeStyle = `rgba(255,255,255,${active ? 0.4 : 0.2})`; c.lineWidth = 1; c.setLineDash([2, 3]);
-    c.strokeRect(W.x0, W.y0, W.x1 - W.x0, W.y1 - W.y0); c.setLineDash([]);
-    line(c, W.x0, W.y0 + 12, W.x1, W.y0 + 12, active ? 0.3 : 0.15);
-    for (let i = 0; i < 3; i++) dot(c, W.x0 + 8 + i * 6, W.y0 + 6, 2, 0.4);
-    text(c, 'old-clinic-2005', W.x0 + 30, W.y0 + 6.5, 0.3, 'left', 8);
-    this.fields.forEach((f, i) => {
-      for (let x = W.x0 + 12; x < W.x0 + 44; x += 4) dot(c, x, f.y, 1.4, 0.3);
-      c.strokeStyle = 'rgba(255,255,255,.22)'; c.strokeRect(f.x0, f.y - 6, f.x1 - f.x0, 12);
-      const fill = s.fills[i];
-      for (let x = f.x0 + 5; x < f.x0 + 5 + (f.x1 - f.x0 - 10) * fill; x += 4) dot(c, x, f.y, 2, 0.85);
-    });
-    c.strokeStyle = `rgba(255,255,255,${s.phase === 'click' ? 0.9 : 0.35})`; c.strokeRect(this.btn.x, this.btn.y, this.btn.w, this.btn.h);
-    if (s.phase === 'click') { c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(this.btn.x, this.btn.y, this.btn.w, this.btn.h); }
-
-    // request in / result out
-    const qa = { x: this.q.x + 8, y: this.q.y }, wa = { x: W.x0, y: W.y0 + 20 };
-    if (s.phase === 'in') comet(c, (t) => ({ x: lerp(qa.x, wa.x, t), y: lerp(qa.y, wa.y, t) - Math.sin(t * Math.PI) * 14 }), clamp(s.pt / 0.6), 3.2, 1, 4, 0.06);
-    if (s.phase === 'out') comet(c, (t) => ({ x: lerp(wa.x, qa.x, t), y: lerp(wa.y + 30, qa.y, t) + Math.sin(t * Math.PI) * 14 }), clamp(s.pt / 0.6), 3.2, 1, 4, 0.06);
-
-    // cursor
-    if (active || Math.floor(tile.t * 2) % 2) { dot(c, s.cur.x, s.cur.y, 4, active ? 1 : 0.4); if (active) ring(c, s.cur.x, s.cur.y, 6, 0.3); }
-    if (active) text(c, this.TASKS[s.task], W.x0, tile.h - 10, 0.55, 'left', 8.5);
+    if (!active(tile)) return;
+    const s = tile.s, g = this.geo(tile), C = g.card, v = s.cur || s.shown;
+    box(c, C.x, C.y, C.w, C.h, 0.3);
+    if (!v && s.opening) {
+      text(c, s.opening, C.x + 7, C.y + 8.5, 0.95, 'left', 9, C.w - 120);
+      text(c, 'NEMOTRON READING…', C.x + C.w - 7, C.y + 8.5, 0.85, 'right', 8);
+      const y = C.y + 20 + ((tile.t * 0.6) % 1) * (C.h - 24);
+      line(c, C.x + 1, y, C.x + C.w, y, 0.5);
+      text(c, 'opening the first page and working out what it is', C.x + 7, C.y + 26, 0.5, 'left', 8.5, C.w - 14);
+    }
+    if (v) {
+      const k = s.cur ? clamp(s.cur.t / s.cur.dur) : 1;
+      // header: path + how it was read
+      fillBox(c, C.x + 1, C.y + 1, C.w - 1, 15, 0.05);
+      font(c, 9);
+      const nm = human(v), nmW = c.measureText(nm).width;
+      text(c, nm, C.x + 7, C.y + 8.5, 0.95, 'left', 9, C.w - 120);
+      text(c, v.path, C.x + 14 + nmW, C.y + 8.5, 0.4, 'left', 8, Math.max(0, C.w - 134 - nmW));
+      const how = v.ai ? `NEMOTRON READ${v.seconds ? ' · ' + v.seconds.toFixed(1) + 's' : ''}` : 'REUSED MAPPING ⚡';
+      text(c, how, C.x + C.w - 7, C.y + 8.5, v.ai ? 0.85 : 0.5, 'right', 8);
+      // Nemotron's summary of the page, typed out while it reads
+      const sum = v.purpose || (v.pageType ? `${v.pageType} page` : '');
+      const typed = v.ai && s.cur ? sum.slice(0, Math.ceil(sum.length * Math.min(1, k * 1.6))) : sum;
+      text(c, typed ? `“${typed}${typed.length < sum.length ? '' : '”'}` : '', C.x + 7, C.y + 26, 0.6, 'left', 8.5, C.w - 14);
+      line(c, C.x, C.y + 35, C.x + C.w, C.y + 35, 0.15);
+      // the real rows pulled from this page
+      const rows = v.rows || [], rowH = 13, max = Math.max(0, Math.floor((C.h - 58) / rowH));
+      const visible = Math.min(rows.length, max, Math.ceil(rows.length * Math.min(1, k * 1.4 + (s.cur ? 0 : 1))));
+      if (rows.length) {
+        const cols = (v.columns || []).length || rows[0].length, wFirst = C.w * 0.62, wRest = (C.w - wFirst - 14) / Math.max(1, cols - 1);
+        for (let r = 0; r < visible; r++) {
+          const y = C.y + 46 + r * rowH, fresh = s.cur && r === visible - 1;
+          if (fresh) fillBox(c, C.x + 1, y - 6, C.w - 1, 12, 0.07);
+          rows[r].forEach((val, ci) => {
+            const x = ci === 0 ? C.x + 7 : C.x + 7 + wFirst + (ci - 1) * wRest;
+            text(c, cell(val), x, y, ci === 0 ? 0.85 : 0.55, 'left', 8.5, (ci === 0 ? wFirst : wRest) - 8);
+          });
+        }
+        const more = (v.records || rows.length) - visible;
+        text(c, more > 0 ? `+${fmt(more)} more rows from this page` : `${fmt(v.records || rows.length)} rows from this page`, C.x + 7, C.y + C.h - 9, 0.45, 'left', 8);
+      } else {
+        text(c, v.pageType === 'detail' ? 'detail page: learned its layout (no new rows)' : v.pageType === 'form' ? 'form: read the fields, never submitted' : 'no new rows on this page', C.x + 7, C.y + 48, 0.45, 'left', 8.5, C.w - 14);
+      }
+      if (s.cur && v.ai) { const y = lerp(C.y + 38, C.y + C.h - 4, k); line(c, C.x + 1, y, C.x + C.w, y, 0.5); }
+    }
+    // site map of page types
+    const n = s.nodes;
+    // when several page types share a plain name ("List of posts"), add which section it is ("newest")
+    const dup = {}; for (const x of n) dup[x.name] = (dup[x.name] || 0) + 1;
+    const nameOf = (x) => (dup[x.name] > 1 && x.key !== '/' ? `${x.name} · ${x.key.replace(/^\//, '').split('/')[0]}` : x.name);
+    if (n.length) {
+      const root = this.nodePos(tile, 0);
+      for (let i = 1; i < Math.min(n.length, this.MAX + 1); i++) {
+        const p = this.nodePos(tile, i);
+        strokePath(c, curve(root, p), 1, 0.22);
+        if (n[i].ai) ring(c, p.x, p.y, 4.5, 0.7); else dot(c, p.x, p.y, 3, 0.85);
+        if (i === this.MAX && n.length > this.MAX + 1) { text(c, `+${n.length - this.MAX} more page types`, p.x + 9, p.y, 0.6, 'left', 8.5); continue; }
+        text(c, `${nameOf(n[i])} ×${n[i].count}`, p.x + 9, p.y - 5, 0.85, 'left', 8.5, tile.w - p.x - 12);
+        text(c, n[i].key, p.x + 9, p.y + 6, 0.38, 'left', 8, tile.w - p.x - 12);
+      }
+      ring(c, root.x, root.y, 6, 0.8); dot(c, root.x, root.y, 3, 1);
+      text(c, `${nameOf(n[0])} ×${n[0].count}`, root.x - 4, root.y + 16, 0.8, 'left', 8.5, g.colX - root.x - 10);
+      text(c, `start · ${n[0].key}`, root.x - 4, root.y + 27, 0.38, 'left', 8, g.colX - root.x - 10);
+    }
+    for (const tr of s.trips) comet(c, curve(tr.from, tr.to), tr.t, 3, 1, 5, 0.04);
   },
   stat(tile) {
-    if (tile.status === 'idle') return 'Waiting for the API';
-    return `Tasks done ${tile.s.done}${tile.status === 'live' ? ' · listening' : ''}`;
+    if (!active(tile)) return 'Waiting for a link';
+    const s = tile.s;
+    return `Pages ${s.pages} · page types ${s.nodes.length} · rows ${fmt(s.records)}`;
   },
 };
 
 /* =========================================================
-   06 VERIFIER: sweeps every record, re-checks anything that doesn't match
+   02 OPERATOR: operator_agent designs the API from the extracted data.
+   reads the data model → Nemotron drafts endpoints → checker → fix → live, with real example calls
+   feed({ phase: 'reading'|'drafting'|'proposed'|'fixed'|'done', model: { name, fields, rows },
+          endpoints: [{ method, path, name, summary, example, total, first }], problems: [...] })
    ========================================================= */
-const verifier = {
-  init(tile) { tile.s = { scan: 0, cells: [], checks: 0, retries: 0, hold: 0 }; },
-  layout(tile) {
-    const { w, h } = tile, s = tile.s;
-    const cols = Math.max(8, Math.floor((w - 32) / 10)), rows = Math.max(4, Math.min(9, Math.floor((h - 26) / 11)));
-    s.cells = [];
-    for (let r = 0; r < rows; r++) for (let k = 0; k < cols; k++) s.cells.push({ x: 16 + k * 10 + 4, y: 14 + r * 11 + 4, st: 0, timer: 0 });
-    s.x0 = 12; s.x1 = 16 + cols * 10;
+const operator = {
+  init(tile) { tile.s = { phase: '', model: null, eps: [], problems: [], traffic: [], think: 0, fixedAt: 0 }; },
+  layout() {},
+  reset(tile) { this.init(tile); },
+  feed(tile, d) {
+    const s = tile.s;
+    if (d.phase) s.phase = d.phase;
+    if (d.model) s.model = d.model;
+    if (d.endpoints) for (const e of d.endpoints) {
+      const have = s.eps.find((x) => x.method === e.method && x.path === e.path);
+      if (have) Object.assign(have, e); else s.eps.push({ ...e, t: 0 });
+    }
+    if (d.problems) s.problems = d.problems;
+    if (d.phase === 'fixed') { s.problems = []; s.fixedAt = 1; }
   },
-  reset(tile) { const s = tile.s; s.scan = 0; s.checks = 0; s.retries = 0; s.hold = 0; s.cells.forEach((c) => { c.st = 0; c.timer = 0; }); },
   step(tile, dt) {
     const s = tile.s;
-    for (const c of s.cells) if (c.st === 2) { c.timer -= dt; if (c.timer <= 0) { c.st = 1; s.retries++; s.checks++; pulse(tile, c.x, c.y, 0.8); } }
-    if (!live(tile)) return;
-    if (s.hold > 0) { s.hold -= dt; if (s.hold <= 0) { s.cells.forEach((c) => { if (c.st === 1) c.st = 0; }); s.scan = 0; } return; }
-    s.scan += dt * (tile.status === 'live' ? 0.22 : 0.32);
-    const x = lerp(s.x0, s.x1, s.scan);
-    for (const c of s.cells) {
-      if (c.st || c.x > x) continue;
-      if (Math.random() < 0.006) { c.st = 2; c.timer = 0.9; }
-      else { c.st = 1; s.checks++; }
-    }
-    if (s.scan >= 1) { s.scan = 1; s.hold = 0.6; }
+    s.think += dt;
+    s.fixedAt = Math.max(0, s.fixedAt - dt * 0.5);
+    let ready = true;
+    for (const e of s.eps) { if (ready) e.t = Math.min(1, e.t + dt * 1.6); ready = e.t >= 1; }
+    if (s.phase === 'done' && s.eps.length && Math.random() < dt * 1.2) s.traffic.push({ i: Math.floor(Math.random() * s.eps.length), t: 0, dir: 1 });
+    for (const p of s.traffic) { p.t += dt * 1.2; if (p.t >= 1 && p.dir === 1) { p.dir = -1; p.t = 0; } }
+    s.traffic = s.traffic.filter((x) => x.t < 1);
   },
   draw(tile, c) {
-    const s = tile.s, active = live(tile);
-    const x = lerp(s.x0, s.x1, s.scan);
-    if (active && s.hold <= 0) {
-      const g = c.createLinearGradient(x - 40, 0, x, 0);
-      g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(255,255,255,.07)');
-      c.fillStyle = g; c.fillRect(x - 40, 6, 40, tile.h - 12);
-      line(c, x, 6, x, tile.h - 6, 0.6);
+    if (!active(tile)) return;
+    const s = tile.s, m = s.model;
+    // input: the data model it designs from
+    const M = { x: 10, y: 6, w: Math.min(150, tile.w * 0.3), h: tile.h - 30 };
+    box(c, M.x, M.y, M.w, M.h, 0.3);
+    text(c, m ? m.name.toUpperCase() : 'DATA', M.x + 7, M.y + 9, 0.95, 'left', 9);
+    if (m) text(c, `${fmt(m.rows || 0)} rows`, M.x + M.w - 7, M.y + 9, 0.5, 'right', 8);
+    line(c, M.x, M.y + 17, M.x + M.w, M.y + 17, 0.15);
+    const fields = (m && m.fields) || [];
+    const maxF = Math.floor((M.h - 24) / 12);
+    fields.slice(0, maxF).forEach((f, i) => {
+      text(c, f.name, M.x + 7, M.y + 26 + i * 12, 0.75, 'left', 8.5, M.w * 0.6);
+      text(c, f.type, M.x + M.w - 7, M.y + 26 + i * 12, 0.4, 'right', 8);
+    });
+    if (fields.length > maxF) text(c, `+${fields.length - maxF}`, M.x + 7, M.y + M.h - 6, 0.4, 'left', 8);
+    const src = { x: M.x + M.w, y: M.y + M.h / 2 };
+    const colX = M.x + M.w + 40, bottom = tile.h - 10;
+
+    if (!s.eps.length) {
+      for (let i = 0; i < 12; i++) {
+        const a = s.think * (1.1 + (i % 3) * 0.35) + i * 0.52, r = 16 + (i % 4) * 8;
+        dot(c, colX + 70 + Math.cos(a) * r, src.y + Math.sin(a) * r * 0.6, 2.2, 0.3 + 0.55 * ((i % 3) / 2));
+      }
+      text(c, s.phase === 'drafting' ? 'Nemotron is drafting endpoints from this model…' : 'reading the data model…', colX, bottom, 0.6, 'left', 8.5, tile.w - colX - 10);
+      return;
     }
-    for (const cell of s.cells) {
-      if (cell.st === 2) {
-        const a = Math.floor(tile.t * 6) % 2 ? 1 : 0.35;
-        c.strokeStyle = `rgba(255,255,255,${a})`; c.lineWidth = 1; c.strokeRect(cell.x - 3.5, cell.y - 3.5, 7, 7);
-      } else dot(c, cell.x, cell.y, cell.st ? 2.8 : 2, cell.st ? (s.hold > 0 ? 1 : 0.8) : active ? 0.18 : 0.1);
+    const n = s.eps.length, top = 14, bot = tile.h - 34, rowGap = n === 1 ? 0 : (bot - top) / (n - 1);
+    const bad = new Set(s.problems.map((p) => String(p).split(':')[0].trim()));
+    s.eps.forEach((e, i) => {
+      const p = { x: colX, y: n === 1 ? (top + bot) / 2 : top + i * rowGap }, path = curve(src, p);
+      strokePath(c, path, e.t, 0.3, [2, 3]);
+      if (e.t < 1) { const q = path(e.t); dot(c, q.x, q.y, 3.4, 1); return; }
+      const isBad = bad.has(e.name);
+      if (isBad) { const b = Math.floor(tile.t * 4) % 2 ? 1 : 0.4; line(c, p.x - 3, p.y - 3, p.x + 3, p.y + 3, b); line(c, p.x - 3, p.y + 3, p.x + 3, p.y - 3, b); }
+      else dot(c, p.x, p.y, 3.2, 0.95);
+      text(c, e.method, p.x + 9, p.y - 5, 0.5, 'left', 8);
+      text(c, e.path, p.x + 42, p.y - 5, isBad ? 0.5 : 0.95, 'left', 9, tile.w - p.x - 50);
+      text(c, e.summary || e.name, p.x + 42, p.y + 6, 0.42, 'left', 8, tile.w - p.x - 50);
+    });
+    for (const t of s.traffic) {
+      const i = Math.min(t.i, n - 1), p = { x: colX, y: n === 1 ? (top + bot) / 2 : top + i * rowGap }, path = curve(src, p);
+      comet(c, t.dir === 1 ? (x) => path(1 - x) : path, t.t, 2.8, 0.9, 4, 0.05);
     }
+    let msg, a = 0.55;
+    if (s.problems.length) { msg = `✕ checker: ${s.problems[0]}`; a = 0.85; }
+    else if (s.fixedAt > 0) { msg = '↻ Nemotron fixed it · checker: 0 problems'; a = 0.85; }
+    else if (s.phase === 'done') {
+      const e = s.eps[Math.floor(tile.t / 2.6) % n];
+      msg = e.example ? `${e.method} ${e.example}${e.total != null ? ` → ${fmt(e.total)} rows` : ''}${e.first ? `  “${e.first}”` : ''}` : `${e.method} ${e.path}`;
+    } else msg = 'checking the design against the real data…';
+    text(c, msg, colX, bottom, a, 'left', 8.5, tile.w - colX - 10);
   },
   stat(tile) {
-    if (tile.status === 'idle') return 'Waiting for records';
-    return `Checks ${fmt(tile.s.checks)} · ${tile.s.retries} retried${tile.status === 'live' ? ' · watching' : ''}`;
+    if (!active(tile)) return 'Waiting for the extracted data';
+    const s = tile.s, n = s.eps.filter((e) => e.t >= 1).length;
+    return n ? `API ${n} · MCP tools ${n}${s.phase === 'done' ? ' · ready' : ''}` : 'Designing…';
+  },
+};
+
+/* =========================================================
+   03 DATABASE: store.load_run puts everything into SpacetimeDB.
+   one bar per table, filling with the real row counts
+   feed({ target, tables: [{ name, done, total, note }] })
+   ========================================================= */
+const database = {
+  init(tile) { tile.s = { target: '', tables: [], drops: [] }; },
+  layout() {},
+  reset(tile) { this.init(tile); },
+  feed(tile, d) {
+    const s = tile.s;
+    if (d.target) s.target = d.target;
+    for (const t of d.tables || []) {
+      const have = s.tables.find((x) => x.name === t.name);
+      if (have) { if (t.done > have.done) for (let k = 0; k < Math.min(6, t.done - have.done); k++) s.drops.push({ table: t.name, t: -k * 0.06 }); Object.assign(have, t); }
+      else s.tables.push({ ...t, shown: 0 });
+    }
+  },
+  step(tile, dt) {
+    const s = tile.s;
+    for (const t of s.tables) t.shown += (t.done - t.shown) * Math.min(1, dt * 4);
+    for (const d of s.drops) d.t += dt * 2;
+    s.drops = s.drops.filter((d) => d.t < 1);
+  },
+  draw(tile, c) {
+    if (!active(tile)) return;
+    const s = tile.s;
+    text(c, s.target || 'SpacetimeDB', 10, 10, 0.55, 'left', 8.5, tile.w - 20);
+    const top = 28, rowH = Math.min(30, (tile.h - top - 8) / Math.max(1, s.tables.length));
+    const barX = 120, barW = tile.w - barX - 110;
+    s.tables.forEach((t, i) => {
+      const y = top + i * rowH + 8;
+      text(c, t.name, 10, y, 0.9, 'left', 9);
+      if (t.note) text(c, t.note, 10, y + 11, 0.4, 'left', 8, barX - 16);
+      box(c, barX, y - 4, barW, 8, 0.25);
+      const f = t.total ? clamp(t.shown / t.total) : 0;
+      for (let x = barX + 3; x < barX + 3 + (barW - 6) * f; x += 4) dot(c, x, y, 2, 0.85);
+      text(c, `${fmt(t.shown)}${t.total ? ' / ' + fmt(t.total) : ''}`, tile.w - 10, y, 0.75, 'right', 8.5);
+      for (const d of s.drops.filter((x) => x.table === t.name && x.t > 0)) dot(c, barX + (barW - 6) * f, lerp(y - 18, y, d.t), 2.4, 1 - d.t * 0.5);
+    });
+  },
+  stat(tile) {
+    if (!active(tile)) return 'Waiting for the API design';
+    const rec = tile.s.tables.find((t) => t.name === 'record');
+    return rec ? `record rows ${fmt(rec.done)}${rec.total ? ' / ' + fmt(rec.total) : ''}` : 'Connecting…';
+  },
+};
+
+/* =========================================================
+   04 SERVER: serve.run turns the design into a running REST API + MCP server and self-tests both.
+   left: the data it serves · middle: the server · right: every route and MCP tool, each tested with a real request
+   feed({ phase: 'loading', source, records }) · feed({ phase: 'built', routes: [[m, p]], tools: [name] })
+   feed({ test: { kind: 'route' | 'tool', key, ok, total, label } }) · feed({ phase: 'live', api, mcp, passed, tested })
+   ========================================================= */
+const server = {
+  init(tile) { tile.s = { phase: '', source: '', records: 0, items: [], queue: [], cur: null, api: '', mcp: '', passed: 0, tested: 0, traffic: [] }; },
+  layout() {},
+  reset(tile) { this.init(tile); },
+  feed(tile, d) {
+    const s = tile.s;
+    if (d.phase) s.phase = d.phase;
+    if (d.source) s.source = d.source;
+    if (d.records != null) s.records = d.records;
+    if (d.routes) for (const [m, p] of d.routes) if (!s.items.find((x) => x.key === `${m} ${p}`)) s.items.push({ kind: 'route', key: `${m} ${p}`, m, label: p, t: 0, state: '' });
+    if (d.tools) for (const n of d.tools) if (!s.items.find((x) => x.key === n)) s.items.push({ kind: 'tool', key: n, m: 'MCP', label: n, t: 0, state: '' });
+    if (d.test) s.queue.push(d.test);
+    if (d.api) {
+      s.api = d.api; s.mcp = d.mcp; s.passed = d.passed; s.tested = d.tested;
+      // going live: finish any test the animation hasn't shown yet, so the tiles never disagree with the result
+      for (const q of [s.cur, ...s.queue].filter(Boolean)) {
+        const it = s.items.find((x) => x.key === q.key);
+        if (it) { it.t = 1; it.state = q.ok === false ? 'bad' : 'ok'; it.total = q.total; }
+      }
+      s.cur = null; s.queue = [];
+    }
+  },
+  geo(tile) {
+    const db = { x: 30, y: tile.h / 2 - 8 };
+    const srv = { x: Math.max(110, tile.w * 0.24), y: tile.h / 2 - 8, w: 74, h: 54 };
+    return { db, srv, colX: srv.x + srv.w + 50 };
+  },
+  pos(tile, i) {
+    const n = Math.max(1, tile.s.items.length), top = 12, bot = tile.h - 28;
+    return { x: this.geo(tile).colX, y: n === 1 ? (top + bot) / 2 : lerp(top, bot, i / (n - 1)) };
+  },
+  step(tile, dt) {
+    const s = tile.s;
+    let ready = true;
+    for (const it of s.items) { if (ready) it.t = Math.min(1, it.t + dt * 4); ready = it.t >= 1; }
+    const built = (key) => { const it = s.items.find((x) => x.key === key); return !it || it.t >= 1; };
+    if (!s.cur && s.queue.length && built(s.queue[0].key)) {
+      const q = s.queue.shift();
+      s.cur = { ...q, t: 0, dur: 1.1 * hurry(s.queue.length) };
+    }
+    if (s.cur) {
+      s.cur.t += dt / s.cur.dur;
+      if (s.cur.t >= 1) {
+        const it = s.items.find((x) => x.key === s.cur.key);
+        if (it) { it.state = s.cur.ok === false ? 'bad' : 'ok'; it.total = s.cur.total; const p = this.pos(tile, s.items.indexOf(it)); pulse(tile, p.x, p.y, 0.9); }
+        s.cur = null;
+      }
+    }
+    if (s.phase === 'live' && s.items.length && Math.random() < dt * 1.1) s.traffic.push({ i: Math.floor(Math.random() * s.items.length), t: 0 });
+    for (const p of s.traffic) p.t += dt * 0.9;
+    s.traffic = s.traffic.filter((p) => p.t < 1);
+  },
+  draw(tile, c) {
+    if (!active(tile)) return;
+    const s = tile.s, g = this.geo(tile), db = g.db, S = g.srv;
+    // data source
+    box(c, db.x - 12, db.y - 14, 24, 28, 0.8);
+    for (let r = 0; r < 4; r++) for (let k = 0; k < 3; k++) dot(c, db.x - 6 + k * 6, db.y - 8 + r * 5.5, 1.8, 0.8);
+    text(c, /spacetime/i.test(s.source) ? 'SPACETIMEDB' : 'DATA', db.x, db.y + 24, 0.5, 'center', 8);
+    text(c, s.records ? `${fmt(s.records)} rows` : '', db.x, db.y + 35, 0.4, 'center', 8);
+    line(c, db.x + 13, db.y, S.x, db.y, 0.3, [2, 3]);
+    // the server
+    box(c, S.x, S.y - S.h / 2, S.w, S.h, s.phase === 'live' ? 0.9 : 0.5);
+    text(c, 'SERVER', S.x + S.w / 2, S.y - S.h / 2 + 10, 0.85, 'center', 8.5);
+    text(c, 'REST API', S.x + S.w / 2, S.y - 2, 0.55, 'center', 8);
+    text(c, 'MCP', S.x + S.w / 2, S.y + 10, 0.55, 'center', 8);
+    if (!s.items.length) { text(c, s.phase === 'loading' ? 'loading the API design + records…' : 'starting…', g.colX, tile.h / 2, 0.55, 'left', 8.5); }
+    const from = { x: S.x + S.w, y: S.y };
+    s.items.forEach((it, i) => {
+      const p = this.pos(tile, i), path = curve(from, p);
+      strokePath(c, path, it.t, 0.3, [2, 3]);
+      if (it.t < 1) { const q = path(it.t); dot(c, q.x, q.y, 3.2, 1); return; }
+      if (it.kind === 'tool') { c.save(); c.translate(p.x, p.y); c.rotate(Math.PI / 4); box(c, -3, -3, 6, 6, it.state ? 0.95 : 0.35); if (it.state === 'ok') fillBox(c, -1.5, -1.5, 3, 3, 1); c.restore(); }
+      else dot(c, p.x, p.y, it.state ? 3.4 : 2.4, it.state ? 0.95 : 0.35);
+      text(c, it.m, p.x + 9, p.y, 0.45, 'left', 8);
+      text(c, it.label, p.x + 40, p.y, it.state ? 0.95 : 0.5, 'left', 8.5, tile.w - p.x - 130);
+      const res = it.state === 'bad' ? '✕ failed' : it.state === 'ok' ? (it.total != null ? `✓ ${fmt(it.total)} results` : '✓ ok') : 'not tested yet';
+      text(c, res, tile.w - 10, p.y, it.state ? 0.8 : 0.3, 'right', 8);
+    });
+    // the request being tested travels server → data → server → route
+    if (s.cur) {
+      const i = s.items.findIndex((x) => x.key === s.cur.key), p = this.pos(tile, Math.max(0, i)), k = s.cur.t;
+      if (k < 0.5) comet(c, (t) => ({ x: lerp(S.x, db.x + 13, t), y: S.y }), k * 2, 3, 1, 4, 0.06);
+      else comet(c, curve(from, p), (k - 0.5) * 2, 3, 1, 4, 0.06);
+      text(c, `testing ${s.cur.label}`, 10, tile.h - 9, 0.7, 'left', 8.5, tile.w - 20);
+    } else if (s.phase === 'live') {
+      text(c, `LIVE · ${s.api}  ·  MCP ${s.mcp}`, 10, tile.h - 9, 0.85, 'left', 8.5, tile.w - 20);
+    }
+    for (const t of s.traffic) { const p = this.pos(tile, Math.min(t.i, s.items.length - 1)); comet(c, curve(from, p), t.t, 2.6, 0.8, 4, 0.05); }
+  },
+  stat(tile) {
+    if (!active(tile)) return 'Waiting for the database';
+    const s = tile.s, r = s.items.filter((x) => x.kind === 'route').length, m = s.items.length - r;
+    return s.phase === 'live' ? `Live · ${r} routes · ${m} MCP tools · self-test ${s.passed}/${s.tested}` : `Routes ${r} · MCP tools ${m}`;
   },
 };
 
 /* ---------------- tiles ---------------- */
 const AGENTS = [
-  { id: 'explorer', name: 'Explorer', desc: 'Clicks through the site and maps every page', kind: explorer },
-  { id: 'analyst', name: 'Analyst', desc: 'Works out what’s stored and the rules', kind: analyst },
-  { id: 'extractor', name: 'Extractor', desc: 'Copies every record into the database', kind: extractor },
-  { id: 'builder', name: 'Builder', desc: 'Builds the API and MCP plug', kind: builder },
-  { id: 'worker', name: 'Worker', desc: 'Does real tasks on the old site', kind: worker },
-  { id: 'verifier', name: 'Verifier', desc: 'Double-checks every action worked', kind: verifier },
+  { id: 'explorer', name: 'Explorer', desc: 'Reads the site page by page and pulls out the records', kind: explorer,
+    about: 'The Explorer turns the website into a table. It visits the pages one by one, and whenever it meets a new kind of page, Nemotron looks at it and decides what the page is, what the records on it are called and which column holds what. After that, plain code does the repetitive work: it copies every row, follows the next-page links, reuses what Nemotron learned on pages with the same layout, and never submits a form or clicks delete or logout.' },
+  { id: 'operator', name: 'Operator', desc: 'Designs the API and MCP tools from the extracted data', kind: operator,
+    about: 'The Operator turns that table into an API: a fixed set of questions other apps and AI assistants can ask about the data. Nemotron proposes the endpoints, what to call them and which filters make sense for each column (and, if the site had forms, which writes are possible). The code then checks every endpoint against the real data, sends mistakes back to Nemotron once, and tries each endpoint on the real records before it is accepted.' },
+  { id: 'database', name: 'Database', desc: 'Loads the data, model and API design into SpacetimeDB', kind: database,
+    about: 'The Database step saves everything to SpacetimeDB: the records, the description of the data and the API design, so the API and this dashboard read from one place. No AI is involved here; the loader sends every record (8 at a time) and then checks that the database really has them all.' },
+  { id: 'server', name: 'Server', desc: 'Starts the real REST API and MCP server and tests them', kind: server,
+    about: 'The Server turns the design into something you can actually use. It reads the API design and the records back from SpacetimeDB and starts two front doors to the same data: a REST API for apps (with /docs) and an MCP server for AI assistants like Claude. Before going live it tests itself: it calls every route with the Operator\u2019s own example request and checks the answer matches, then connects to the MCP server like an AI client would and calls every tool. No AI is involved in this step; it is plain code that proves the result works.' },
 ];
 const LABEL = { idle: 'Idle', working: 'Working', done: 'Done', live: 'Live' };
 

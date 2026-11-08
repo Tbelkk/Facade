@@ -1,0 +1,80 @@
+{
+  "site": "https://news.ycombinator.com",
+  "api": "http://127.0.0.1:8000",
+  "docs": "http://127.0.0.1:8000/docs",
+  "mcp": "http://127.0.0.1:8000/mcp",
+  "source": "files: /tmp/web/web/public/run",
+  "records": 2582,
+  "passed": 6,
+  "tested": 6,
+  "seconds": 0.1,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/posts",
+      "name": "list_posts",
+      "request": "/posts?points_min=3&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 281,
+      "expected": 281,
+      "ms": 24.7,
+      "first": "Goodbye Claude, Hello Pi (caleb.software)"
+    },
+    {
+      "method": "GET",
+      "path": "/posts/{id}",
+      "name": "get_post",
+      "request": "/posts/50410107",
+      "ok": true,
+      "status": 200,
+      "total": null,
+      "expected": null,
+      "ms": 2.4,
+      "first": "Goodbye Claude, Hello Pi (caleb.software)"
+    },
+    {
+      "method": "GET",
+      "path": "/posts/search",
+      "name": "search_posts",
+      "request": "/posts/search?q=%28github.com%2Fcrmne%29&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 1,
+      "expected": 1,
+      "ms": 5.2,
+      "first": "ZapFast: A fast, native WhatsApp client in Rust and egui (github.com/crmne)"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list_posts",
+      "args": {
+        "points_min": "3",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 281,
+      "description": "Retrieve a list of posts with optional filtering, sorting and pagination."
+    },
+    {
+      "name": "get_post",
+      "args": {
+        "id": "50410107"
+      },
+      "ok": true,
+      "total": null,
+      "description": "Retrieve a single post by its legacy ID."
+    },
+    {
+      "name": "search_posts",
+      "args": {
+        "q": "(github.com/crmne)",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 1,
+      "description": "Search posts by a free‑text query on the title."
+    }
+  ]
+}

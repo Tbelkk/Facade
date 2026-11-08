@@ -1,8 +1,9 @@
-// API page: lists the generated endpoints (Swagger-style) and shows mock responses.
-// Same markup and behavior as app/renderer/apiview.js.
+// API page: the endpoints the operator agent designed, appearing as it designs them (Swagger-style).
+// "Run" answers from the extracted records with the same rules as operator_agent/query.py, until the
+// SpacetimeDB-backed API server is connected.
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { mockApi as api } from '../lib/mockApi.js';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { runOperation } from '../lib/runDriver.js';
 import { ChevronIcon, LockIcon } from './Icons.jsx';
 
 // "/astra/{date}/{building}" → path text with dimmed {params}
@@ -35,6 +36,7 @@ function Json({ value }) {
 }
 
 const fill = (path, params) => path.replace(/\{(\w+)\}/g, (_, k) => encodeURIComponent(params[k] ?? `{${k}}`));
+const BASE = 'https://api.facade.local/v1';
 
 function CopyButton({ text, label, disabled }) {
   const [shown, setShown] = useState(label);
@@ -49,51 +51,74 @@ function CopyButton({ text, label, disabled }) {
   return <button type="button" className="mini" disabled={disabled} onClick={copy}>{shown}</button>;
 }
 
-function Endpoint({ ep }) {
+// default inputs: the values from the operator's own example request, so the first Run shows its real example
+function exampleValues(op) {
+  const vals = Object.fromEntries((op.inputs || []).map((i) => [i.name, '']));
+  const req = (op.example && op.example.request) || '';
+  try {
+    const u = new URL(req, BASE + '/');
+    for (const [k, v] of u.searchParams) if (k in vals) vals[k] = v;
+    const pathIn = (op.inputs || []).find((i) => i.in === 'path');
+    if (pathIn) {
+      const tpl = op.path.split('/'), got = u.pathname.split('/');
+      tpl.forEach((seg, i) => { if (seg === `{${pathIn.name}}` && got[i]) vals[pathIn.name] = decodeURIComponent(got[i]); });
+    }
+  } catch { /* no example */ }
+  return vals;
+}
+
+function Endpoint({ op, flagged, records, server }) {
   const [open, setOpen] = useState(false);
-  const [values, setValues] = useState(() => Object.fromEntries(ep.params.map((p) => [p.name, p.example()])));
-  const [res, setRes] = useState(null);     // { status, body, ms }
-  const [loading, setLoading] = useState(false);
+  const [values, setValues] = useState(() => exampleValues(op));
+  const [res, setRes] = useState(null);
   const ran = useRef(false);
+  const inputs = op.inputs || [];
 
-  const trimmed = () => Object.fromEntries(Object.entries(values).map(([k, v]) => [k, v.trim()]));
-  const url = `${ep.method} ${api.base}${fill(ep.path, trimmed())}`;
+  const trimmed = () => Object.fromEntries(Object.entries(values).map(([k, v]) => [k, String(v).trim()]));
+  const query = () => { const q = inputs.filter((i) => i.in !== 'path' && String(values[i.name] || '').trim()).map((i) => `${i.name}=${encodeURIComponent(String(values[i.name]).trim())}`); return q.length ? '?' + q.join('&') : ''; };
+  const url = `${op.method} ${(server && server.api) || BASE}${fill(op.path, trimmed())}${query()}`;
 
+  // The real server when it's running (serve.run); otherwise the same query rules over the extracted records.
   async function run() {
-    setLoading(true);
-    const r = await api.call(ep, trimmed());
-    setRes(r);
-    setLoading(false);
+    const t0 = performance.now();
+    if (server && server.api) {
+      const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 2000);
+      try {
+        const r = await fetch(`${server.api}${fill(op.path, trimmed())}${query()}`, { signal: ctl.signal });
+        const body = await r.json();
+        setRes({ status: r.status, body, ms: Math.round(performance.now() - t0), from: 'live server' });
+        return;
+      } catch { /* server not reachable from here: fall back */ } finally { clearTimeout(timer); }
+    }
+    const r = runOperation(op, trimmed(), records);
+    setRes({ ...r, ms: Math.max(1, Math.round(performance.now() - t0)), from: server ? 'extracted data (server not reachable)' : 'extracted data' });
   }
-
-  const toggle = () => {
-    const next = !open;
-    setOpen(next);
-    if (next && !ran.current) { ran.current = true; run(); }   // first open shows mock data right away
-  };
-
+  const toggle = () => { const next = !open; setOpen(next); if (next && !ran.current) { ran.current = true; run(); } };
   const ok = res && res.status < 400;
+  const write = op.source === 'legacy' || op.method !== 'GET';
+
   return (
     <div className={'ep' + (open ? ' open' : '')}>
       <button type="button" className="ep-row" aria-expanded={open} onClick={toggle}>
-        <span className="verb">{ep.method}</span>
-        <PathText path={ep.path} />
-        <span className="ep-sum">{ep.summary}</span>
+        <span className="verb">{op.method}</span>
+        <PathText path={op.path} />
+        <span className="ep-sum">{flagged ? '✕ checker flagged this · Nemotron is fixing it' : op.summary || op.name}</span>
         <ChevronIcon />
         <LockIcon />
       </button>
       <div className="ep-body" hidden={!open}>
         <div className="ep-sec">Parameters</div>
-        {ep.params.length ? (
+        {inputs.length ? (
           <div className="params">
-            {ep.params.map((p) => (
+            {inputs.map((p) => (
               <label className="param" key={p.name}>
-                <span className="p-name">{p.name}<em>*</em></span>
-                <span className="p-meta">path · string</span>
-                <input type="text" spellCheck="false" aria-label={p.name} value={values[p.name]}
+                <span className="p-name">{p.name}{p.required || p.in === 'path' ? <em>*</em> : null}</span>
+                <span className="p-meta">{p.in} · {p.type}{p.match && p.match !== p.name ? ` · ${p.match}` : ''}</span>
+                <input type="text" spellCheck="false" aria-label={p.name} value={values[p.name] ?? ''}
+                  placeholder={p.values ? p.values.join(' | ') : ''}
                   onChange={(e) => setValues({ ...values, [p.name]: e.target.value })}
                   onKeyDown={(e) => { if (e.key === 'Enter') run(); }} />
-                <span className="p-desc">{p.description}</span>
+                <span className="p-desc">{p.match === 'search' ? `searches ${(p.fields || []).join(', ')}` : p.field && p.field !== p.name ? `filters ${p.field}` : ''}</span>
               </label>
             ))}
           </div>
@@ -102,22 +127,20 @@ function Endpoint({ ep }) {
         <div className="req">
           <code className="req-url">{url}</code>
           <div className="req-btns">
-            <CopyButton label="Copy curl" text={() => `curl -H "Authorization: Bearer $FACADE_TOKEN" "${api.base}${fill(ep.path, trimmed())}"`} />
-            <button type="button" className="btn primary small" disabled={loading} onClick={run}>Run</button>
+            <CopyButton label="Copy curl" text={() => `curl "${(server && server.api) || BASE}${fill(op.path, trimmed())}${query()}"`} />
+            <button type="button" className="btn primary small" disabled={write} onClick={run}>Run</button>
           </div>
         </div>
 
         <div className="ep-sec">Response</div>
         <div className="resp">
-          {loading ? (
-            <div className="loading"><span className="dots"><i></i><i></i><i></i><i></i><i></i></span>Calling mock API…</div>
-          ) : res ? (
+          {write ? <p className="no-params">Write endpoints run through the Writer, which isn't connected yet.</p> : res ? (
             <>
               <div className="resp-head">
-                <span className={`code ${ok ? 'ok' : 'bad'}`}>{res.status} {ok ? 'OK' : res.status === 404 ? 'Not Found' : 'Bad Request'}</span>
+                <span className={`code ${ok ? 'ok' : 'bad'}`}>{res.status} {ok ? 'OK' : 'Not Found'}</span>
                 <span>{res.ms} ms</span>
                 <span>application/json</span>
-                <span className="mock-tag">mock data</span>
+                <span className="mock-tag">{res.from}</span>
                 <CopyButton label="Copy JSON" text={() => JSON.stringify(res.body, null, 2)} />
               </div>
               <Json value={res.body} />
@@ -129,44 +152,53 @@ function Endpoint({ ep }) {
   );
 }
 
-function TagSection({ group }) {
+function TagSection({ entity, ops, flagged, records, server }) {
   const [open, setOpen] = useState(true);
   return (
     <section className={'tag-sec' + (open ? ' open' : '')}>
       <button type="button" className="tag-head" aria-expanded={open} onClick={() => setOpen(!open)}>
-        <h3>{group.tag}</h3>
-        <span className="tag-desc">{group.description}</span>
-        <span className="tag-count">{group.endpoints.length}</span>
+        <h3>{entity}</h3>
+        <span className="tag-desc">{(records[entity] || []).length.toLocaleString('en-US')} records</span>
+        <span className="tag-count">{ops.length}</span>
         <ChevronIcon />
       </button>
       <div className="tag-list">
-        {group.endpoints.map((ep) => <Endpoint key={ep.method + ep.path} ep={ep} />)}
+        {ops.map((op) => <Endpoint key={op.method + op.path} op={op} flagged={flagged.includes(op.name)} records={records} server={server} />)}
       </div>
     </section>
   );
 }
 
-export default function ApiView({ host, on }) {
-  const total = api.spec.reduce((n, g) => n + g.endpoints.length, 0);
+export default function ApiView({ store, host, on }) {
+  const st = useSyncExternalStore(store.subscribe, store.get);
+  const ops = st.operations || [];
+  const groups = useMemo(() => {
+    const g = new Map();
+    for (const op of ops) { if (!g.has(op.entity)) g.set(op.entity, []); g.get(op.entity).push(op); }
+    return [...g.entries()];
+  }, [ops]);
+  const by = st.designedBy;
+  const status = !ops.length
+    ? (st.phase === 'exploring' || st.phase === 'designing' ? 'The operator agent hasn’t proposed endpoints yet. They appear here as Nemotron designs them.' : 'Run the agents on a site to design its API.')
+    : st.flagged.length ? 'Nemotron proposed these. The checker flagged a problem and Nemotron is fixing it.'
+      : by ? `Designed by ${by.by === 'nemotron' ? 'Nemotron' : by.by} (${by.model || ''}${by.nemotron_ms ? `, ${(by.nemotron_ms / 1000).toFixed(1)}s` : ''}). Run answers from the extracted records.`
+        : 'Endpoints proposed by Nemotron.';
   return (
     <main className={'app view' + (on ? ' on' : '')} id="view-api" aria-label="Generated API">
       <section className="api-head">
-        <div className="eyebrow"><span className="live-dot"></span><span>Generated API · OpenAPI 3.0</span></div>
+        <div className="eyebrow"><span className="live-dot"></span><span>Generated API{host ? ` · ${host}` : ''}</span></div>
         <h1>The plug. <span>Click an endpoint to try it.</span></h1>
-        <p className="api-source" id="apiSource">
-          {host
-            ? `Generated for ${host}. Showing mock data until the back end is connected.`
-            : 'Run the agents on a site to generate its API. Showing mock data for now.'}
-        </p>
+        <p className="api-source" id="apiSource">{status}</p>
         <div className="api-meta">
-          <code className="api-base" id="apiBase">{api.base}</code>
-          <span className="chip-tag" id="apiCount">{total} endpoints</span>
-          <span className="chip-tag">Bearer auth</span>
-          <span className="chip-tag solid">Mock data</span>
+          <code className="api-base" id="apiBase">{st.server ? st.server.api : BASE}</code>
+          <span className="chip-tag" id="apiCount">{ops.length} endpoints</span>
+          <span className="chip-tag">{ops.length} MCP tools{st.server ? ` · ${st.server.mcp}` : ''}</span>
+          {st.server ? <a className="chip-tag" href={st.server.docs} target="_blank" rel="noreferrer">/docs</a> : null}
+          <span className="chip-tag solid">{st.server ? 'Server live' : 'Extracted data'}</span>
         </div>
       </section>
       <section id="apiList">
-        {api.spec.map((g) => <TagSection key={g.tag} group={g} />)}
+        {groups.map(([entity, list]) => <TagSection key={entity} entity={entity} ops={list} flagged={st.flagged || []} records={st.records || {}} server={st.server} />)}
       </section>
     </main>
   );
