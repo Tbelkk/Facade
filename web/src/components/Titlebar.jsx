@@ -1,0 +1,17 @@
+const VIEWS = [['dashboard', 'Dashboard'], ['explorer', 'Explorer'], ['api', 'API']];
+
+export default function Titlebar({ view, onView }) {
+  return (
+    <header className="titlebar">
+      <div className="brand">Facade</div>
+      <div className="crumb">Website <span>→</span> data + API</div>
+      <nav className="tabs-nav" role="tablist" aria-label="Pages">
+        {VIEWS.map(([id, label]) => (
+          <button key={id} type="button" role="tab" aria-selected={view === id} data-view={id} onClick={() => onView(id)}>
+            {label}
+          </button>
+        ))}
+      </nav>
+    </header>
+  );
+}
