@@ -174,7 +174,7 @@ a { color: inherit; }
 .m-btn:hover { transform: translateY(-1px); }
 .m-btn.primary { background: var(--accent); color: #fff; box-shadow: 0 6px 16px rgba(37,99,235,.3); }
 .m-btn.ghost { border: 1px solid var(--line); color: var(--ink); background: var(--surface); }
-.r-head .m-btn { width: 150px; }
+.r-head .m-btn, .head-spacer { width: 150px; }
 
 .m-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 1px 3px rgba(11,27,58,.05); }
 .m-label { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }

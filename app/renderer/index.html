@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src ws://127.0.0.1:* ws://localhost:*">
+<title>Facade</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-agent" viewBox="0 0 24 24"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z" fill="currentColor"/></symbol>
+  <symbol id="i-apps" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="4" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="4" y="13" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="titlebar">
+  <div class="brand">Facade<span>.</span></div>
+  <div class="core" id="coreStatus" data-state="demo"><i></i><span>Demo mode</span></div>
+</header>
+
+<div class="shell">
+  <aside class="side">
+    <nav class="nav" aria-label="Sections">
+      <button class="on" data-view="home"><svg><use href="#i-home"/></svg>Home</button>
+      <button data-view="agent"><svg><use href="#i-agent"/></svg>Agent</button>
+      <button data-view="apps"><svg><use href="#i-apps"/></svg>Apps</button>
+      <button data-view="activity"><svg><use href="#i-activity"/></svg>Activity</button>
+      <button data-view="settings"><svg><use href="#i-settings"/></svg>Settings</button>
+    </nav>
+
+    <div class="power">
+      <div class="power-text">
+        <b id="powerLabel">Facade is ON</b>
+        <small id="powerSub">Originals are never changed</small>
+      </div>
+      <button class="switch" id="power" role="switch" aria-checked="true" aria-label="Turn Facade on or off"></button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- ================= HOME ================= -->
+    <section class="view on" id="view-home">
+      <h1>Your legacy apps, <span>modernized.</span></h1>
+      <p class="sub">Open a supported app and Facade rerenders it automatically, in its own style.</p>
+
+      <div class="metrics">
+        <div class="card metric"><div class="label">Screens rerendered</div><div class="value" id="mScreens">1,284</div></div>
+        <div class="card metric"><div class="label">Tasks completed</div><div class="value" id="mTasks">37</div></div>
+        <div class="card metric"><div class="label">Avg. first analysis</div><div class="value">2.1s</div></div>
+      </div>
+
+      <div class="cols">
+        <div class="card">
+          <div class="card-head"><h2>Detected apps</h2><span class="muted small">Live</span></div>
+          <ul class="app-list" id="homeApps"></ul>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Quality mode</h2></div>
+          <div class="segmented" id="modeSeg" role="radiogroup" aria-label="Quality mode">
+            <button role="radio" data-mode="faithful" aria-checked="false">Faithful</button>
+            <button role="radio" data-mode="enhanced" aria-checked="true">Enhanced</button>
+            <button role="radio" data-mode="reimagined" aria-checked="false" disabled title="Coming soon">Reimagined</button>
+          </div>
+          <p class="mode-desc" id="modeDesc"></p>
+        </div>
+      </div>
+
+      <form class="quick" id="quickForm">
+        <svg><use href="#i-agent"/></svg>
+        <input id="quickInput" type="text" placeholder="Ask Facade to do something… e.g. “Why did this PC shut down yesterday?”" autocomplete="off">
+        <button type="submit" class="btn primary">Run <svg><use href="#i-arrow"/></svg></button>
+      </form>
+    </section>
+
+    <!-- ================= AGENT ================= -->
+    <section class="view" id="view-agent">
+      <h1>Agent</h1>
+      <p class="sub">Describe a task in plain English. Facade plans it and runs it through the real app.</p>
+
+      <form class="quick big" id="agentForm">
+        <svg><use href="#i-agent"/></svg>
+        <input id="agentInput" type="text" placeholder="Describe a task…" autocomplete="off">
+        <button type="submit" class="btn primary" id="agentRun">Run <svg><use href="#i-arrow"/></svg></button>
+      </form>
+
+      <div class="suggest" id="suggest">
+        <button type="button">Text everyone unconfirmed for tomorrow a reminder</button>
+        <button type="button">Add a new patient: Jane Doe, 123 Main St, Dallas TX</button>
+        <button type="button">Why did this PC shut down unexpectedly yesterday?</button>
+      </div>
+
+      <div class="card plan" id="planCard" hidden>
+        <div class="card-head"><h2 id="planTitle">Plan</h2><span class="badge" id="planBadge">Running</span></div>
+        <ol class="steps" id="planSteps"></ol>
+
+        <div class="approval" id="approval" hidden>
+          <div>
+            <b>Approval needed</b>
+            <p id="approvalText"></p>
+          </div>
+          <div class="approval-btns">
+            <button type="button" class="btn ghost" id="deny">Deny</button>
+            <button type="button" class="btn primary" id="approve">Approve</button>
+          </div>
+        </div>
+
+        <p class="result" id="planResult" hidden></p>
+      </div>
+    </section>
+
+    <!-- ================= APPS ================= -->
+    <section class="view" id="view-apps">
+      <h1>Apps</h1>
+      <p class="sub">Each app keeps its own colors and personality, modernized. Like DLSS for software.</p>
+      <div class="apps-grid" id="appsGrid"></div>
+    </section>
+
+    <!-- ================= ACTIVITY ================= -->
+    <section class="view" id="view-activity">
+      <h1>Activity</h1>
+      <p class="sub">Every Nemotron call and agent action, logged.</p>
+      <div class="card table-card">
+        <table class="log">
+          <thead><tr><th>Time</th><th>Model</th><th>Purpose</th><th>Latency</th><th>Summary</th></tr></thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= SETTINGS ================= -->
+    <section class="view" id="view-settings">
+      <h1>Settings</h1>
+      <p class="sub">Connection to the Facade core running on this PC.</p>
+
+      <div class="card settings">
+        <label class="row">
+          <div><b>Core address</b><small>WebSocket the Python core listens on</small></div>
+          <input id="coreUrl" type="text" spellcheck="false">
+        </label>
+        <div class="row">
+          <div><b>Connection</b><small id="connText">Not connected. Showing demo data.</small></div>
+          <button type="button" class="btn ghost" id="reconnect">Reconnect</button>
+        </div>
+        <div class="row">
+          <div><b>Ask before risky actions</b><small>Writes, deletes and text messages always need your approval</small></div>
+          <button class="switch" role="switch" aria-checked="true" disabled aria-label="Ask before risky actions (always on)"></button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
