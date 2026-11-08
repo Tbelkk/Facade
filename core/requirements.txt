@@ -18,3 +18,4 @@ pytest
 fastapi>=0.100
 uvicorn>=0.23
 httpx
+pypdfium2>=4.0      # Parser agent: render PDF pages for Nemotron Parse

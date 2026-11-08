@@ -147,6 +147,22 @@ def start_run(body: RunRequest) -> Dict[str, Any]:
     return {"id": run_id, "status": "running", "reused": False}
 
 
+def agent_models() -> Dict[str, Any]:
+    """The model behind each agent, from core/.env (MODEL_EXPLORER / MODEL_OPERATOR / ...), for the dashboard."""
+    from ingest import nemotron as N
+    out = {}
+    for agent, purpose in (("explorer", "extract_page"), ("split", "split_column"), ("operator", "operator_design")):
+        model, base = N.route(purpose, N.MODEL_AGENT)
+        out[agent] = {"model": model, "hosted": "integrate.api.nvidia.com" in base}
+    out["parser"] = {"model": N.MODEL_PARSER, "hosted": "integrate.api.nvidia.com" in N.BASE_URL}
+    return out
+
+
+@router.get("/models")
+def models() -> Dict[str, Any]:
+    return agent_models()
+
+
 @router.get("/runs/current")
 def current_run() -> Dict[str, Any]:
     with _lock:

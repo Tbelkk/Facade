@@ -24,6 +24,8 @@ export default function App() {
   const [recorded, setRecorded] = useState(null);     // the recorded run in web/public/run/
   const [replaying, setReplaying] = useState(false);
   useEffect(() => { loadRecordedRun().then(setRecorded); }, []);
+  // which NVIDIA model runs each agent (from core/.env), shown next to the agent's name
+  useEffect(() => { fetch(`${API_BASE}/models`).then((r) => r.json()).then((m) => driver.store.set({ models: m })).catch(() => {}); }, [driver]);
   useEffect(() => () => { replay.current && replay.current.stop(); driver.stop(); }, [driver]);
   // Globals: window.dashboard, plus facadeEvent(evt) so a live back end can push real events.
   useEffect(() => {

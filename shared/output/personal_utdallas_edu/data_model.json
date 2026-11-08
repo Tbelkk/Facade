@@ -2,167 +2,117 @@
   "site": "https://personal.utdallas.edu/~John.cole/",
   "entities": [
     {
-      "name": "TeachingPhilosophy",
-      "record_count": 1,
+      "name": "Announcement",
+      "record_count": 17,
       "fields": [
         {
-          "name": "description",
-          "label": "description",
+          "name": "date_posted",
+          "label": "date_posted",
           "type": "string",
           "required": false,
-          "description": "Narrative describing the teaching philosophy."
+          "description": "The date the announcement was posted."
+        },
+        {
+          "name": "announcement",
+          "label": "announcement",
+          "type": "string",
+          "required": false,
+          "description": "The main text content of the announcement."
+        },
+        {
+          "name": "title",
+          "label": "title",
+          "type": "string",
+          "required": false,
+          "description": "The title or heading of the announcement."
         }
       ],
       "rules": [],
       "key": "legacy_id",
       "forms": [],
       "relations": [],
-      "description": "A statement describing the teaching approach for courses."
-    },
-    {
-      "name": "UsefulLink",
-      "record_count": 1,
-      "fields": [
-        {
-          "name": "description",
-          "label": "description",
-          "type": "string",
-          "required": false,
-          "description": "Text describing the useful link or resource."
-        }
-      ],
-      "rules": [],
-      "key": "legacy_id",
-      "forms": [],
-      "relations": [],
-      "description": "A link or resource providing useful code samples for classes."
+      "description": "A dated announcement posted on the home page."
     },
     {
       "name": "Course",
-      "record_count": 89,
+      "record_count": 79,
       "fields": [
         {
           "name": "term",
           "label": "term",
           "type": "string",
           "required": false,
-          "description": "Term identifier, e.g., Fall 2026."
+          "description": "The term in which the course is offered (e.g., Fall 2026)."
         },
         {
-          "name": "course_info",
-          "label": "course_info",
+          "name": "course_details",
+          "label": "course_details",
           "type": "string",
           "required": false,
-          "description": "Details about the course schedule and section."
-        },
-        {
-          "name": "title",
-          "label": "title",
-          "type": "string",
-          "required": false,
-          "description": "Course title or identifier."
-        },
-        {
-          "name": "details",
-          "label": "details",
-          "type": "string",
-          "required": false,
-          "description": "Additional course details such as room and update date."
-        }
-      ],
-      "rules": [
-        "instructor is required",
-        "room is required",
-        "section is required",
-        "title is required"
-      ],
-      "key": "legacy_id",
-      "forms": [],
-      "relations": [],
-      "description": "A course offering for a specific term."
-    },
-    {
-      "name": "Guideline",
-      "record_count": 20,
-      "fields": [
-        {
-          "name": "guideline",
-          "label": "guideline",
-          "type": "string",
-          "required": false,
-          "description": "Text of the guideline or recommendation."
+          "description": "Details about the course schedule, sections, and format."
         }
       ],
       "rules": [],
       "key": "legacy_id",
       "forms": [],
       "relations": [],
-      "description": "A rule or recommendation for grading or programming."
+      "description": "A specific course offering for a term."
     },
     {
-      "name": "Schedule",
-      "record_count": 17,
+      "name": "CourseInfo",
+      "description": "Move announcement rows from the ProgrammingTips page to a separate CourseInfo entity.",
       "fields": [
-        {
-          "name": "week",
-          "label": "Week",
-          "type": "string",
-          "required": false,
-          "source_type": "int",
-          "description": "Week number."
-        },
-        {
-          "name": "date",
-          "label": "Date",
-          "type": "string",
-          "required": false,
-          "note": "values are not ISO dates (for example relative times)",
-          "source_type": "date",
-          "description": "Date of the class session."
-        },
-        {
-          "name": "topic",
-          "label": "Topic",
-          "type": "string",
-          "required": false,
-          "description": "Topic covered in the class."
-        },
-        {
-          "name": "assignments",
-          "label": "Assignments",
-          "type": "string",
-          "required": false,
-          "description": "Assignments due for the week."
-        }
-      ],
-      "rules": [],
-      "key": "legacy_id",
-      "forms": [],
-      "relations": [],
-      "description": "Weekly schedule listing dates, topics, and assignments."
-    },
-    {
-      "name": "Project",
-      "description": "Project entries from the Projects page.",
-      "fields": [
-        {
-          "name": "description",
-          "label": "description",
-          "type": "string",
-          "required": false
-        },
         {
           "name": "title",
           "label": "title",
           "type": "string",
           "required": false
+        },
+        {
+          "name": "page",
+          "label": "Page",
+          "type": "integer",
+          "required": false,
+          "values": [
+            "ProgrammingTips"
+          ],
+          "source_type": "int"
+        },
+        {
+          "name": "source_url",
+          "label": "Document link",
+          "type": "string",
+          "required": false,
+          "values": [
+            "https://personal.utdallas.edu/~John.cole/ProgrammingTips/AndroidFileIO.html"
+          ]
+        },
+        {
+          "name": "found_on",
+          "label": "Page that links to it",
+          "type": "string",
+          "required": false,
+          "values": [
+            "https://personal.utdallas.edu/~John.cole/ProgrammingTips/AndroidFileIO.html"
+          ]
+        },
+        {
+          "name": "file_type",
+          "label": "pdf or image",
+          "type": "enum",
+          "required": false,
+          "values": [
+            "HTML",
+            "image",
+            "pdf"
+          ]
         }
       ],
       "rules": [],
       "forms": [],
       "relations": [],
       "key": "legacy_id",
-      "record_count": 4
+      "record_count": 5
     }
   ]
 }

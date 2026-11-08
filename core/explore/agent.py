@@ -326,6 +326,15 @@ def resolve_splits(tm, t, run, budget=None):
     tm["_split_samples"] = {t["headers"][i]: [v for v in col(i) if v][:10] for i in out}
     return out
 
+DOCUMENT_FIELDS = [
+    {"name": "title", "label": "Title", "type": "string"},
+    {"name": "page", "label": "Page", "type": "int"},
+    {"name": "text", "label": "Text (markdown, read by Nemotron Parse)", "type": "string"},
+    {"name": "source_url", "label": "Document link", "type": "string"},
+    {"name": "found_on", "label": "Page that links to it", "type": "string"},
+    {"name": "file_type", "label": "pdf or image", "type": "enum", "values": ["pdf", "image"]},
+]
+
 CREDENTIAL = re.compile(r"\b(pw|pwd|pass(word)?|passwd|acct|login|username|user_?name|otp|2fa|captcha|secret|token)\b", re.I)
 
 def structure_sig(snap):
@@ -498,6 +507,19 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
     r = Run(start_url, live=live_w)
     queue = deque([(start_url, "start")])
     seen_urls, patterns, signatures = set(), {}, {}
+    parser = None
+    if os.getenv("PARSER", "on").lower() not in ("0", "off", "false", "no"):
+        from .parser import Parser
+        parser = Parser(r.host, log=r.log)   # Nemotron Parse reads PDFs/images in the background
+
+    def take_documents():
+        """Parsed document pages -> Document records (on this thread, so the records dict is never shared)."""
+        n = 0
+        for key, rec in (parser.drain() if parser else []):
+            n += r.add_record("Document", rec, key)
+        if n:
+            r.learn("Document", DOCUMENT_FIELDS, [])
+        return n
     queued_detail, paged_lists = set(), {}   # detail page types already queued; pages followed per list
     print(f"RESTore agent → {start_url}")
     print(f"model={nemotron.MODEL_VISION if vision else nemotron.MODEL_AGENT}  page limit={limit if max_pages else 'auto'}"
@@ -666,6 +688,11 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
             tag = "reused" if known else f"{ms / 1000:.1f}s"
             print(f"  [{visited:>2}] {a.get('page_type', '?'):<6} {', '.join(shown) or entity or '-':<14} +{new_records:<4} "
                   f"({tag}) {norm[:70]}")
+            if parser:
+                for d in snap["web"].get("documents", []):
+                    if not UNSAFE.search(d.get("url", "")):
+                        parser.offer(d.get("url"), d.get("text"), norm)
+                take_documents()
             r.save()
             if live_w:
                 live_w.job_update(visited)
@@ -673,6 +700,10 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
                 stop_reason = "Nemotron: done"
                 break
         browser.close()
+
+    if parser:   # let the Parser finish what it found (bounded), then keep its records
+        parser.finish(wait_s=float(os.getenv("PARSER_WAIT_SECONDS", "120")))
+        take_documents()
 
     r.save()
     if live_w:
