@@ -1,0 +1,168 @@
+{
+  "site": "https://personal.utdallas.edu/~John.cole/",
+  "entities": [
+    {
+      "name": "TeachingPhilosophy",
+      "record_count": 1,
+      "fields": [
+        {
+          "name": "description",
+          "label": "description",
+          "type": "string",
+          "required": false,
+          "description": "Narrative describing the teaching philosophy."
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": [],
+      "description": "A statement describing the teaching approach for courses."
+    },
+    {
+      "name": "UsefulLink",
+      "record_count": 1,
+      "fields": [
+        {
+          "name": "description",
+          "label": "description",
+          "type": "string",
+          "required": false,
+          "description": "Text describing the useful link or resource."
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": [],
+      "description": "A link or resource providing useful code samples for classes."
+    },
+    {
+      "name": "Course",
+      "record_count": 89,
+      "fields": [
+        {
+          "name": "term",
+          "label": "term",
+          "type": "string",
+          "required": false,
+          "description": "Term identifier, e.g., Fall 2026."
+        },
+        {
+          "name": "course_info",
+          "label": "course_info",
+          "type": "string",
+          "required": false,
+          "description": "Details about the course schedule and section."
+        },
+        {
+          "name": "title",
+          "label": "title",
+          "type": "string",
+          "required": false,
+          "description": "Course title or identifier."
+        },
+        {
+          "name": "details",
+          "label": "details",
+          "type": "string",
+          "required": false,
+          "description": "Additional course details such as room and update date."
+        }
+      ],
+      "rules": [
+        "instructor is required",
+        "room is required",
+        "section is required",
+        "title is required"
+      ],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": [],
+      "description": "A course offering for a specific term."
+    },
+    {
+      "name": "Guideline",
+      "record_count": 20,
+      "fields": [
+        {
+          "name": "guideline",
+          "label": "guideline",
+          "type": "string",
+          "required": false,
+          "description": "Text of the guideline or recommendation."
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": [],
+      "description": "A rule or recommendation for grading or programming."
+    },
+    {
+      "name": "Schedule",
+      "record_count": 17,
+      "fields": [
+        {
+          "name": "week",
+          "label": "Week",
+          "type": "string",
+          "required": false,
+          "source_type": "int",
+          "description": "Week number."
+        },
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "string",
+          "required": false,
+          "note": "values are not ISO dates (for example relative times)",
+          "source_type": "date",
+          "description": "Date of the class session."
+        },
+        {
+          "name": "topic",
+          "label": "Topic",
+          "type": "string",
+          "required": false,
+          "description": "Topic covered in the class."
+        },
+        {
+          "name": "assignments",
+          "label": "Assignments",
+          "type": "string",
+          "required": false,
+          "description": "Assignments due for the week."
+        }
+      ],
+      "rules": [],
+      "key": "legacy_id",
+      "forms": [],
+      "relations": [],
+      "description": "Weekly schedule listing dates, topics, and assignments."
+    },
+    {
+      "name": "Project",
+      "description": "Project entries from the Projects page.",
+      "fields": [
+        {
+          "name": "description",
+          "label": "description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "title",
+          "label": "title",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "rules": [],
+      "forms": [],
+      "relations": [],
+      "key": "legacy_id",
+      "record_count": 4
+    }
+  ]
+}

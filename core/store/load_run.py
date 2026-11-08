@@ -47,7 +47,16 @@ def _records(path):
             yield legacy_id_of(r), data
 
 
-def load(folder, clear=False, workers=8, max_events=500):
+def _tables(model, entity, done, total, ev_done, ev_total):
+    ents = model.get("entities", [])
+    return [{"name": "site", "done": 1, "total": 1, "note": "site map + model + API design"},
+            {"name": "entity_schema", "done": len(ents), "total": len(ents), "note": ", ".join(e["name"] for e in ents)},
+            {"name": "record", "done": done, "total": total, "note": f"{entity} rows" if entity else "extracted rows"},
+            {"name": "event", "done": ev_done, "total": ev_total, "note": "agent log"}]
+
+
+def load(folder, clear=False, workers=8, max_events=500, progress=None):
+    """progress(tables) is called as rows go in: [{name, done, total, note}] (the dashboard's Database tile)."""
     folder = Path(folder)
     model = _read_json(folder / "data_model.json")
     if not model:
@@ -84,11 +93,14 @@ def load(folder, clear=False, workers=8, max_events=500):
                 failed += 0 if ok else 1
                 if done % 200 == 0 or done == len(rows):
                     db.update_job(job, done, len(rows), "running" if done < len(rows) else "done")
+                    if progress:
+                        progress(_tables(model, entity, done, len(rows), 0, 0))
                     print(f"\r  {entity}: {done}/{len(rows)}  ({failed} failed)", end="", flush=True)
         print(f"   {time.time() - t0:.1f}s")
         totals[entity] = (len(rows) - failed, len(rows))
 
     log = folder / "run_log.jsonl"
+    n_events = 0
     if log.exists():
         lines = [json.loads(l) for l in log.read_text(encoding="utf-8").splitlines() if l.strip()][:max_events]
         for ev in lines:
@@ -97,6 +109,10 @@ def load(folder, clear=False, workers=8, max_events=500):
                    if kind == "page" else f"{kind}: {ev.get('error') or ev.get('reason') or ev.get('url') or ''}")
             db.log_event(site, "explorer", msg.strip(), ev, "error" if "fail" in kind or kind == "error" else "info")
         print(f"  log_event: {len(lines)} events")
+        n_events = len(lines)
+    if progress:
+        rec_total = sum(t for _, t in totals.values())
+        progress(_tables(model, None, rec_total, rec_total, n_events, n_events))
 
     print("\nCheck (rows now in the database):")
     for entity, (ok, total) in totals.items():

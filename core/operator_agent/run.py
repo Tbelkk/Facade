@@ -15,7 +15,7 @@ import os
 import time
 from pathlib import Path
 
-from . import design as design_mod, docs, inputs
+from . import design as design_mod, docs, inputs, tidy
 
 CORE = Path(__file__).resolve().parent.parent
 
@@ -26,12 +26,15 @@ def run(run_dir, use_nemotron=None, log=print):
     if use_nemotron is None:
         key = os.getenv("NVIDIA_API_KEY", "")
         use_nemotron = key.startswith("nvapi-") and "paste" not in key
+    log("Operator: tidying names before designing the API...")
+    dm, records, cleaned = tidy.tidy(run_dir, dm, records, use_nemotron=use_nemotron, log=log)
     ops, meta = design_mod.design(dm, records, use_nemotron=use_nemotron, log=log)
     docs.add_examples(ops, records)
     doc = {"version": 1, "site": dm.get("site") or site_map.get("site"),
-           "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "designed_by": meta,
+           "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "designed_by": meta, "cleaned_by": cleaned,
            "entities": {e["name"]: {"key": "legacy_id", "record_count": len(records.get(e["name"], [])),
-                                    "fields": e["fields"]} for e in dm["entities"]},
+                                    "description": e.get("description", ""), "fields": e["fields"]}
+                        for e in dm["entities"]},
            "operations": ops}
     (run_dir / "operations.json").write_text(json.dumps(doc, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
     (run_dir / "api_docs.md").write_text(docs.markdown(doc, dm), encoding="utf-8")

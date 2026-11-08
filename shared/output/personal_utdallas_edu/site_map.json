@@ -1,0 +1,148 @@
+{
+  "site": "https://personal.utdallas.edu/~John.cole/",
+  "pages": [
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/",
+      "url_pattern": "/~John.cole/",
+      "page_type": "list",
+      "entity": "Announcement",
+      "entities": [
+        "Announcement",
+        "TeachingPhilosophy",
+        "UsefulLink",
+        "Course"
+      ],
+      "next_page_link": null,
+      "purpose": "Provide an overview of John Cole's faculty information, including announcements, teaching philosophy, useful links, and courses taught.",
+      "reached_by": "start",
+      "nemotron_ms": 18240,
+      "records_new": 93
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/2026Fall/CS3162Fall2026.htm",
+      "url_pattern": "/~John.cole/2026Fall/CS3162Fall2026.htm",
+      "page_type": "list",
+      "entity": "Course",
+      "entities": [
+        "Course"
+      ],
+      "next_page_link": null,
+      "purpose": "Display the course schedule and related information for CS3162.",
+      "reached_by": "detail",
+      "nemotron_ms": 30747,
+      "records_new": 10
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/NotesForStudents.html",
+      "url_pattern": "/~John.cole/NotesForStudents.html",
+      "page_type": "list",
+      "entity": "Announcement",
+      "entities": [
+        "Announcement"
+      ],
+      "next_page_link": null,
+      "purpose": "Display a list of student notes and teaching philosophy items.",
+      "reached_by": "Visit Notes for Students for more detailed information",
+      "nemotron_ms": 21277,
+      "records_new": 2
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/Projects/Projects.html",
+      "url_pattern": "/~John.cole/Projects/Projects.html",
+      "page_type": "list",
+      "entity": "Announcement",
+      "entities": [
+        "Announcement"
+      ],
+      "next_page_link": null,
+      "purpose": "Display a list of student notes and teaching philosophy items.",
+      "reached_by": "Explore Projects for course-specific resources",
+      "nemotron_ms": 0,
+      "records_new": 4
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/GraderGuidelines.html",
+      "url_pattern": "/~John.cole/GraderGuidelines.html",
+      "page_type": "list",
+      "entity": "Guideline",
+      "entities": [
+        "Guideline"
+      ],
+      "next_page_link": null,
+      "purpose": "Reads the grader and TA guidelines for grading assignments.",
+      "reached_by": "Review grader guidelines for assignment expectations",
+      "nemotron_ms": 13704,
+      "records_new": 12
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/2026Fall/CS3162Fall2026ScheduleA.htm",
+      "url_pattern": "/~John.cole/2026Fall/CS3162Fall2026ScheduleA.htm",
+      "page_type": "list",
+      "entity": "Schedule",
+      "entities": [
+        "Schedule"
+      ],
+      "next_page_link": null,
+      "purpose": "View the CS3162 course schedule showing weekly topics and assignments.",
+      "reached_by": "View detailed schedule for sections 051 and 052",
+      "nemotron_ms": 28884,
+      "records_new": 0
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/2026Fall/CS3162Fall2026ScheduleB.htm",
+      "url_pattern": "/~John.cole/2026Fall/CS3162Fall2026ScheduleB.htm",
+      "page_type": "list",
+      "entity": "Schedule",
+      "entities": [
+        "Schedule"
+      ],
+      "next_page_link": null,
+      "purpose": "View the tentative class schedule for the CS3162 Professional Responsibility course.",
+      "reached_by": "View detailed schedule for sections 091 and 092",
+      "nemotron_ms": 9011,
+      "records_new": 17
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ProgrammingTips/",
+      "url_pattern": "/~John.cole/ProgrammingTips/",
+      "page_type": "list",
+      "entity": "Guideline",
+      "entities": [
+        "Guideline"
+      ],
+      "next_page_link": null,
+      "purpose": "Reads the grader and TA guidelines for grading assignments.",
+      "reached_by": "Potential detail page of another entity",
+      "nemotron_ms": 0,
+      "records_new": 3
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/ExamRules.htm",
+      "url_pattern": "/~John.cole/ExamRules.htm",
+      "page_type": "list",
+      "entity": "Guideline",
+      "entities": [
+        "Guideline"
+      ],
+      "next_page_link": null,
+      "purpose": "Reads the grader and TA guidelines for grading assignments.",
+      "reached_by": "Potential detail page of another entity",
+      "nemotron_ms": 0,
+      "records_new": 2
+    },
+    {
+      "url": "https://personal.utdallas.edu/~John.cole/Documentation.htm",
+      "url_pattern": "/~John.cole/Documentation.htm",
+      "page_type": "list",
+      "entity": "Guideline",
+      "entities": [
+        "Guideline"
+      ],
+      "next_page_link": null,
+      "purpose": "Reads the grader and TA guidelines for grading assignments.",
+      "reached_by": "Potential detail page of another entity",
+      "nemotron_ms": 0,
+      "records_new": 3
+    }
+  ]
+}

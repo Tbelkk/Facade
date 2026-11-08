@@ -149,12 +149,25 @@ EXTRACT_JS = r"""
   // Data tables. Handles legacy layouts: no header row, and records spread over several rows
   // (e.g. a title row + a details row + a spacer row, repeating).
   const ACTION = /vote|hide|flag|delete|remove|logout|log out|[?&](how|action|act|op|do|cmd)=/i;
-  const tables = Array.from(document.querySelectorAll('table')).filter(vis).map((t, i) => {
+  let tables = Array.from(document.querySelectorAll('table')).filter(vis).map((t, i) => {
     if (t.querySelector('input, select, textarea, table')) return null;     // forms / layout wrappers
     const rows = Array.from(t.rows).filter(r => vis(r));
     if (rows.length < 2) return null;
-    const headRow = t.tHead ? t.tHead.rows[0] : (rows[0].querySelector('th') ? rows[0] : null);
-    const data = rows.filter(r => r !== headRow);
+    let headRow = t.tHead ? t.tHead.rows[0] : (rows[0].querySelector('th') ? rows[0] : null);
+    let data = rows.filter(r => r !== headRow);
+    let title = txt(t.caption ? t.caption.innerText : '');
+    if (!headRow && data.length >= 2) {
+      // old sites often put the header in plain <td>s ("Date Posted | Announcement"), or open the table
+      // with a one-cell title row ("Courses Fall 2026"). Recognise both instead of treating them as data.
+      const first = Array.from(data[0].cells).map(c => txt(c.innerText));
+      const labelish = x => x && x.length <= 40 && !/\d{3,}|\d+\/\d+|[.!?:]$/.test(x);
+      if (first.length >= 2 && first.length === data[1].cells.length && first.every(labelish)) {
+        headRow = data[0]; data = data.slice(1);
+      } else if (first.filter(Boolean).length === 1 && first.find(Boolean).length <= 60
+                 && (first.length === 1 || data[0].cells[0].colSpan > 1)) {
+        title = title || first.find(Boolean); data = data.slice(1);
+      }
+    }
     if (!data.length) return null;
     // find how many rows make up one record (1, 2 or 3) from the repeating cell-count pattern
     // row "shape" = cell count + which cells have text + class; a record repeats the same shapes
@@ -170,7 +183,7 @@ EXTRACT_JS = r"""
     for (let k = 1; k < Math.min(period, data.length); k++) if (size[k] > size[startAt]) startAt = k;
     const groups = [];
     for (let k = startAt; k + period <= data.length; k += period) groups.push(data.slice(k, k + period));
-    const recCells = g => g.flatMap(r => Array.from(r.cells)).map(c => txt(c.innerText).slice(0, 200));
+    const recCells = g => g.flatMap(r => Array.from(r.cells)).map(c => txt(c.innerText).slice(0, 4000));
     const recLinks = g => g.flatMap(r => Array.from(r.querySelectorAll('a[href]')))
       .map(a => [txt(a.innerText).slice(0, 60), a.href]).filter(([tx, h]) => tx && !h.startsWith('javascript:') && !ACTION.test(h + ' ' + tx)).slice(0, 10);
     const records = groups.map(g => ({ cells: recCells(g), links: recLinks(g) })).filter(r => r.cells.some(Boolean));
@@ -179,10 +192,10 @@ EXTRACT_JS = r"""
     let headers;
     if (headRow && period === 1) headers = Array.from(headRow.cells).map((c, k) => txt(c.innerText) || `col${k + 1}`);
     else headers = Array.from({ length: width }, (_, k) => `col${k + 1}`);
-    if (width < 2 && !records.some(r => r.links.length)) return null;
+    if (width < 2 && !title && !records.some(r => r.links.length)) return null;
     if (headRow && headers.filter(h => !/^col\d+$/.test(h)).length < headers.length * 0.6) return null;
     return {
-      index: i, css: cssFor(t), headers, has_header: !!headRow, rows_per_record: period, row_count: records.length,
+      index: i, css: cssFor(t), title, headers, has_header: !!headRow, rows_per_record: period, row_count: records.length,
       sample_rows: records.slice(0, 5).map(r => r.cells.map(c => c.slice(0, 80))),
       sample_links: records.slice(0, 3).map(r => r.links),
       rows: records.slice(0, 500).map(r => r.cells),
@@ -190,6 +203,70 @@ EXTRACT_JS = r"""
       link_column: null,
     };
   }).filter(Boolean);
+
+  // Several small tables with the same columns and the same kind of title ("Courses Fall 2026", "Courses
+  // Spring 2026", ...) are one data set split by heading: merge them, keeping the heading as a column.
+  const groups = {};
+  for (const t of tables) {
+    const k = t.title ? t.headers.join('|') + '#' + t.title.split(/\s+/)[0].toLowerCase() : null;
+    if (k) (groups[k] = groups[k] || []).push(t);
+  }
+  for (const g of Object.values(groups)) {
+    if (g.length < 2) continue;
+    const m = g[0];
+    const titles = g.map(t => t.title);
+    m.rows = g.flatMap((t, j) => t.rows.map(r => [titles[j], ...r]));
+    m.title = titles[0].split(/\s+/)[0] + ' (' + g.length + ' tables, one per heading)';
+    m.headers = ['table_heading', ...m.headers];
+    m.row_links = g.flatMap(t => t.row_links);
+    m.sample_rows = g.slice(0, 5).map((t, j) => [titles[j], ...t.rows[0]].map(c => (c || '').slice(0, 80)));  // one per heading
+    m.sample_links = m.row_links.slice(0, 3);
+    m.row_count = m.rows.length;
+    m.has_header = true;
+    for (const t of g.slice(1)) t._drop = true;
+  }
+  tables = tables.filter(t => !t._drop);
+
+  // Repeated blocks that aren't tables (book lists, course lists, cards): a container whose children mostly
+  // share the same tag + class. Each child becomes a record; its lines of text become columns. Menus are skipped.
+  const inChrome = el => !!el.closest('nav, header, footer, aside, [role=navigation], [role=banner], [role=contentinfo]');
+  const sigOf = el => el.tagName + '.' + (typeof el.className === 'string' ? el.className.trim().split(/\s+/).sort().join('.') : '');
+  const listCands = [];
+  for (const box of document.querySelectorAll('ul, ol, div, section, main, article, dl')) {
+    if (!vis(box) || inChrome(box) || box.closest('table')) continue;
+    const kids = Array.from(box.children).filter(k => vis(k) && txt(k.innerText).length > 2);
+    if (kids.length < 3) continue;
+    const counts = {};
+    for (const k of kids) counts[sigOf(k)] = (counts[sigOf(k)] || 0) + 1;
+    const [sig, n] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+    if (n < 3 || n / kids.length < 0.7) continue;
+    const items = kids.filter(k => sigOf(k) === sig);
+    // a menu: every item is one short link
+    const linkOnly = items.every(k => k.querySelectorAll('a').length === 1 && txt(k.innerText).length < 30 && txt(k.innerText) === txt(k.querySelector('a').innerText));
+    if (linkOnly && items.length < 12) continue;
+    if (items.some(k => k.querySelector('input, select, textarea'))) continue;
+    listCands.push({ box, items });
+  }
+  // keep the outermost useful containers, biggest first, at most 3
+  const lists = listCands
+    .filter(c => !listCands.some(o => o !== c && o.box.contains(c.box) && o.items.length >= c.items.length))
+    .sort((a, b) => b.items.length - a.items.length).slice(0, 3)
+    .map(({ box, items }, j) => {
+      const recs = items.map(k => ({
+        cells: (k.innerText || '').split(/\n+/).map(x => txt(x)).filter(Boolean).slice(0, 5).map(x => x.slice(0, 4000)),
+        links: Array.from(k.querySelectorAll('a[href]')).map(a => [txt(a.innerText).slice(0, 60), a.href])
+          .filter(([tx, h]) => tx && !h.startsWith('javascript:') && !ACTION.test(h + ' ' + tx)).slice(0, 10),
+      })).filter(r => r.cells.length);
+      const width = Math.max(1, ...recs.slice(0, 20).map(r => r.cells.length));
+      return {
+        index: tables.length + j, kind: 'list', css: cssFor(box), headers: Array.from({ length: width }, (_, k) => `col${k + 1}`),
+        has_header: false, rows_per_record: 1, row_count: recs.length,
+        sample_rows: recs.slice(0, 5).map(r => r.cells.map(c => c.slice(0, 80))),
+        sample_links: recs.slice(0, 3).map(r => r.links),
+        rows: recs.slice(0, 500).map(r => r.cells), row_links: recs.slice(0, 500).map(r => r.links), link_column: null,
+      };
+    }).filter(t => t.row_count >= 3);
+  tables.push(...lists);
 
   const sameSite = h => { try { return new URL(h).host === location.host; } catch { return false; } };
   const allLinks = Array.from(document.querySelectorAll('a[href]')).filter(vis)
@@ -207,11 +284,11 @@ EXTRACT_JS = r"""
     if (tr.cells.length !== 2 || !vis(tr) || tr.querySelector('th')) continue;
     if (tr.cells[1].querySelector('input, select, textarea, table')) continue;
     const k = clean(tr.cells[0].innerText), v = txt(tr.cells[1].innerText);
-    if (k && k.length <= 40) label_values.push([k, v.slice(0, 300)]);
+    if (k && k.length <= 40) label_values.push([k, v.slice(0, 2000)]);
   }
   for (const dt of document.querySelectorAll('dt')) {
     const dd = dt.nextElementSibling;
-    if (dd && dd.tagName === 'DD' && vis(dt)) label_values.push([clean(dt.innerText), txt(dd.innerText).slice(0, 300)]);
+    if (dd && dd.tagName === 'DD' && vis(dt)) label_values.push([clean(dt.innerText), txt(dd.innerText).slice(0, 2000)]);
   }
   const alertSel = '[role=alert], .error, .errors, .alert, .warning, .notice, .message, font[color=red], font[color="#FF0000"], .msg';
   const alerts = Array.from(document.querySelectorAll(alertSel)).filter(vis).map(e => txt(e.innerText)).filter(t => t.length > 2).slice(0, 10);

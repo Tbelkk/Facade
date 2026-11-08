@@ -37,7 +37,24 @@
         "designed_by": "nemotron",
         "model": "nvidia/nemotron-3.5-super-vl-120b-a12b"
       }
+    },
+    "personal_utdallas_edu": {
+      "site": "https://personal.utdallas.edu/~John.cole/",
+      "published_at": "2026-11-08T06:33:30",
+      "records": {
+        "Course": 89,
+        "Guideline": 20,
+        "Project": 4,
+        "Schedule": 17,
+        "TeachingPhilosophy": 1,
+        "UsefulLink": 1
+      },
+      "operations": {
+        "count": 12,
+        "designed_by": "nemotron",
+        "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+      }
     }
   },
-  "latest": "hackernews"
+  "latest": "personal_utdallas_edu"
 }

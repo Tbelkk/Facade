@@ -210,6 +210,15 @@ def check(ops, dm):
             problems.append(f"{tag}: read operations take no body inputs")
         if op["kind"] in ("create", "update"):
             problems += _check_write(op, e, tag)
+    # one base path per entity: /faculty_members and /facultymembers/{id} would confuse anyone using the API
+    bases = {}
+    for op in ops:
+        if isinstance(op, dict) and isinstance(op.get("path"), str) and op.get("entity"):
+            bases.setdefault(op["entity"], set()).add(op["path"].strip("/").split("/")[0])
+    for ent, b in bases.items():
+        if len(b) > 1:
+            problems.append(f"{ent}: all its endpoints must share one base path (now: {', '.join('/' + x for x in sorted(b))}); "
+                            f"use {plural_path(ent)}")
     return problems
 
 

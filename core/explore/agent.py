@@ -32,6 +32,7 @@ from collections import deque
 from pathlib import Path
 from urllib.parse import urlparse
 
+from facade.events import emit
 from ingest import nemotron
 from ingest.paths import CACHE_DIR, PROMPTS_DIR
 
@@ -45,8 +46,44 @@ UNSAFE = re.compile(
     r"|vote|upvote|downvote|flag|hide|unhide|favorite|fave|like|follow|subscribe|approve|reject|archive"
     r"|[?&](how|action|act|op|do|cmd|method)=", re.I)
 # Note: viewing /edit or /new pages is fine (they only SHOW a form, and we never submit).
+INDEX_PAGE = re.compile(r"/(index|default|home)\.(html?|php|aspx?|jsp)$", re.I)   # /index.htm is the same page as /
 NO_DATA = re.compile(r"log\s*in|sign\s*in|signin|login|register|sign\s*up|signup|forgot|password|captcha|/auth", re.I)
-SKIP_EXT = re.compile(r"\.(pdf|zip|jpg|jpeg|png|gif|docx?|xlsx?|csv|mp4|mp3)(\?|$)", re.I)
+SKIP_EXT = re.compile(r"(\.(pdf|zip|jpg|jpeg|png|gif|svg|docx?|xlsx?|pptx?|csv|mp4|mp3|epub\d*|mobi|azw3?|kf8|kindle|rdf|exe|dmg|tar|gz|txt|java|asm|cpp|hpp|c|h|py|cs|sql|json|xml|jar|class)(\.\w+)*(\?|$))|\.txt\.utf-8$|/files/\d+/", re.I)
+
+
+def label_values(w):
+    """label: value pairs, minus the ones that are really rows of a data table (already in 'tables')."""
+    in_tables = {(r[0], r[1][:100]) for t in w.get("tables", []) for r in t.get("rows", []) if len(r) >= 2}
+    in_tables |= {tuple(t["headers"][:2]) for t in w.get("tables", []) if len(t["headers"]) >= 2}
+    return [[k, v[:300]] for k, v in w.get("label_values", []) if (k, v[:100]) not in in_tables and (k, v) not in in_tables]
+
+
+def mappings_of(a):
+    """Nemotron's table mappings as a list (it may give table_mappings: [...] or the older table_mapping: {...})."""
+    ms = a.get("table_mappings") if isinstance(a, dict) else None
+    if isinstance(ms, dict):
+        ms = [ms]
+    if not isinstance(ms, list) or not ms:
+        tm = a.get("table_mapping") if isinstance(a, dict) else None
+        ms = [tm] if isinstance(tm, dict) else []
+    out = []
+    for m in ms:
+        if isinstance(m, dict):
+            if not m.get("entity") and a.get("entity"):
+                m["entity"] = a["entity"]
+            out.append(m)
+    return out
+
+
+def table_for(m, tables):
+    """The table a mapping is for. On a reused mapping the index may shift, so match by headers too."""
+    ti = m.get("table_index", 0) if isinstance(m.get("table_index"), int) else 0
+    want = m.get("_headers")
+    if 0 <= ti < len(tables) and (not want or tables[ti]["headers"] == want):
+        return tables[ti]
+    if want:
+        return next((t for t in tables if t["headers"] == want), None)
+    return tables[0] if tables else None
 
 
 def page_context(snap, learned, visited_patterns):
@@ -63,22 +100,23 @@ def page_context(snap, learned, visited_patterns):
     links = uniq[:40]
     ctx = {
         "url": w["url"], "title": w["title"], "messages": w["alerts"],
-        "tables": [{"table_index": i, "headers": t["headers"], "has_header_row": t.get("has_header"),
+        "tables": [{"table_index": i, "kind": t.get("kind", "table"), "title": t.get("title") or None,
+                    "headers": t["headers"], "has_header_row": t.get("has_header"),
                     "rows_per_record": t.get("rows_per_record", 1), "record_count": t["row_count"],
                     # each record as {header: value} so column names can't be miscounted
-                    "sample_records": [dict(zip(t["headers"], row)) for row in t["sample_rows"][:3]],
+                    "sample_records": [dict(zip(t["headers"], [c[:100] for c in row])) for row in t["sample_rows"][:3]],
                     "sample_record_links": t.get("sample_links", [])[:2]}
-                   for i, t in enumerate(w["tables"])],
+                   for i, t in enumerate(w["tables"][:12])],
         "forms": [{"action": f["action"], "method": f["method"], "submit": f["submit"],
                    "fields": [{k: x[k] for k in ("label", "name", "type", "required", "options", "pattern", "maxlength")}
                               for x in f["fields"]]} for f in w["forms"]],
-        "label_values": w.get("label_values", [])[:60],
+        "label_values": label_values(w)[:40],
         "pagination": {k: (v or {}).get("text") for k, v in (w["pagination"] or {}).items()},
         "same_site_links": links,
         "learned_so_far": {"entities": {e: sorted(v["fields"]) for e, v in learned.items()},
                            "page_types_visited": sorted(visited_patterns)},
     }
-    return (json.dumps(ctx, ensure_ascii=False, separators=(",", ":"))[:9000]
+    return (json.dumps(ctx, ensure_ascii=False, separators=(",", ":"))[:14000]
             + "\n\nAccessibility tree (truncated):\n" + w["aria_yaml"][:2500])
 
 
@@ -88,26 +126,38 @@ def problems(a, snap):
     if not isinstance(a, dict) or not a.get("page_type"):
         return ["the answer is not the JSON object described in the instructions (page_type is missing); "
                 "return that full object"]
-    tm = a.get("table_mapping")
-    if a.get("page_type") == "list" and tables and not isinstance(tm, dict):
-        out.append("this is a list page with a data table but table_mapping is missing")
-    if isinstance(tm, dict):
-        if not a.get("entity"):
-            out.append('"entity" is missing: give the singular PascalCase name of what each table record is (e.g. Patient, Story)')
-        ti = tm.get("table_index", 0) if isinstance(tm.get("table_index"), int) else 0
-        t = tables[ti] if 0 <= ti < len(tables) else (tables[0] if tables else None)
-        cols = tm.get("columns") if isinstance(tm.get("columns"), dict) else {}
-        if t:
-            bad = [h for h in cols if h not in t["headers"]]
-            if bad:
-                out.append(f"columns {bad} do not exist; the table's headers are exactly {t['headers']}")
-            mapped = [h for h, f in cols.items() if f and h in t["headers"]]
-            if not mapped and not tm.get("split"):
-                out.append("no column is mapped to a field")
-            # a mapped column that is empty in every sample is probably miscounted
-            empty = [h for h in mapped if all(not dict(zip(t["headers"], r)).get(h) for r in t["sample_rows"][:5])]
-            if empty:
-                out.append(f"columns {empty} are empty in every sample record; check which column holds which value")
+    ms = mappings_of(a)
+    if a.get("page_type") == "list" and tables and not ms:
+        out.append("this is a list page with a data table but table_mappings is missing")
+    used = set()
+    for m in ms:
+        ti = m.get("table_index", 0) if isinstance(m.get("table_index"), int) else 0
+        tag = f"table_mappings[table_index={ti}]"
+        if ti in used:
+            out.append(f"{tag}: table {ti} is mapped twice")
+        used.add(ti)
+        if not m.get("entity"):
+            out.append(f'{tag}: "entity" is missing: give the singular PascalCase name of what each record is (e.g. Announcement, Course)')
+        elif re.fullmatch(r"(Item|Record|Entry|Data|Info|Row|Note|Content|Section|Block|Text|Page|Thing)s?", m["entity"]):
+            out.append(f'{tag}: entity "{m["entity"]}" is vague; name what ONE record actually is (e.g. Announcement, Course, Project)')
+        t = tables[ti] if 0 <= ti < len(tables) else None
+        if not t:
+            out.append(f"{tag}: there is no table {ti}; tables are numbered 0..{len(tables) - 1}")
+            continue
+        cols = m.get("columns") if isinstance(m.get("columns"), dict) else {}
+        bad = [h for h in cols if h not in t["headers"]]
+        if bad:
+            out.append(f"{tag}: columns {bad} do not exist; the table's headers are exactly {t['headers']}")
+        mapped = [h for h, f in cols.items() if f and h in t["headers"]]
+        if not mapped and not m.get("split"):
+            out.append(f"{tag}: no column is mapped to a field")
+        vague = [f for f in cols.values() if f and re.fullmatch(r"(col\d+|field\d*|value\d*|text\d*|data|info|note|note_detail|details?|content|item|misc|other)", str(f))]
+        if vague:
+            out.append(f"{tag}: field names {vague} say nothing about the value; name each field for what it holds (e.g. date_posted, course_code, room)")
+        # a mapped column that is empty in every sample is probably miscounted
+        empty = [h for h in mapped if all(not dict(zip(t["headers"], r)).get(h) for r in t["sample_rows"][:5])]
+        if empty:
+            out.append(f"{tag}: columns {empty} are empty in every sample record; check which column holds which value")
     return out
 
 
@@ -297,6 +347,8 @@ def snake(s):
 class Run:
     def __init__(self, start_url, live=None):
         self.live = live       # store.live.Live or None: mirrors everything into SpacetimeDB as it happens
+        self.page_rows = []    # records first seen on the current page
+        self.cur_page = None   # url pattern of the page being read; kept on each record as _page
         self.dir = CACHE_DIR / "extract" / time.strftime("%Y%m%d-%H%M%S")
         (self.dir / "records").mkdir(parents=True, exist_ok=True)
         self.start = start_url
@@ -310,6 +362,11 @@ class Run:
         row = {"ts": time.time(), "kind": kind, **data}
         self.log_f.write(json.dumps(row, ensure_ascii=False) + "\n")
         self.log_f.flush()
+        evt = {"stage": "explore", **row}
+        if kind == "page":
+            evt["rows"] = [{k: v for k, v in r.items() if not k.startswith("_")} for r in self.page_rows[:14]]
+            self.page_rows = []
+        emit(evt)
         if self.live:
             if kind == "page":
                 how = "reused mapping" if data.get("reused_mapping") else f"Nemotron {data.get('nemotron_ms', 0) / 1000:.1f}s"
@@ -347,14 +404,19 @@ class Run:
         key = key_hint or hashlib.sha1(json.dumps(rec, sort_keys=True).encode()).hexdigest()[:12]
         bucket = self.records.setdefault(entity, {})
         merged = {**bucket.get(key, {}), **rec}   # detail pages enrich rows from list pages
+        merged.setdefault("_page", self.cur_page)  # where it was first seen (metadata: not served by the API)
         new = key not in bucket
         bucket[key] = merged
+        if new:
+            self.page_rows.append(merged)   # shown on the dashboard for the page that produced them
         if self.live:
             from operator_agent.inputs import legacy_id_of
-            self.live.record(entity, legacy_id_of({"_key": key}) or key, self.typed(entity, merged))
+            self.live.record(entity, legacy_id_of({"_key": key}) or key,
+                             {k: v for k, v in self.typed(entity, merged).items() if not k.startswith("_")})
         e = self.learned.setdefault(entity, {"fields": {}, "rules": set()})
         for k in rec:
-            e["fields"].setdefault(k, {"label": k, "type": "string", "required": False})
+            if not k.startswith("_"):
+                e["fields"].setdefault(k, {"label": k, "type": "string", "required": False})
         return new
 
     def typed(self, entity, rec):
@@ -388,6 +450,7 @@ class Run:
              "fields": [{"name": k, **v} for k, v in e["fields"].items()], "rules": sorted(e["rules"])}
             for n, e in self.learned.items()]}
         (self.dir / "data_model.json").write_text(json.dumps(model, indent=2, ensure_ascii=False), encoding="utf-8")
+        emit({"stage": "model", "entities": model["entities"]})
         (self.dir / "site_map.json").write_text(json.dumps({"site": self.start, "pages": self.pages}, indent=2,
                                                            ensure_ascii=False), encoding="utf-8")
         if self.live:  # the Console draws the site map + data model from these as they grow
@@ -458,7 +521,7 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
                 stop_reason = f"time limit ({max_minutes:g} min)"
                 break
             url, why = queue.popleft()
-            norm = url.split("#")[0]
+            norm = INDEX_PAGE.sub("/", url.split("#")[0])
             if norm in seen_urls or not same_site(norm, r.host) or UNSAFE.search(norm) or SKIP_EXT.search(norm) \
                     or (not why.startswith("start") and NO_DATA.search(norm)):
                 continue
@@ -469,13 +532,20 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
                     time.sleep(wait)
             last_load = time.time()
             try:
-                page.goto(norm, wait_until="domcontentloaded", timeout=20000)
+                resp = page.goto(norm, wait_until="domcontentloaded", timeout=20000)
+                ctype = ((resp.headers or {}).get("content-type") or "") if resp else ""
+                if ctype and "html" not in ctype.lower():   # source code, plain text, images: not pages of data
+                    r.log("skipped_not_html", url=norm, content_type=ctype[:60])
+                    continue
                 try:
                     page.wait_for_load_state("networkidle", timeout=4000)
                 except Exception:
                     pass
                 snap = capture_page(page)
             except Exception as e:
+                if "Download is starting" in str(e):   # a file link, not a page: skip quietly
+                    r.log("skipped_download", url=norm)
+                    continue
                 r.log("error", url=norm, error=str(e)[:200])
                 print(f"  ✗ {norm}: {str(e)[:80]}")
                 continue
@@ -511,12 +581,17 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
             entity = a.get("entity") or None
             new_records = 0
 
-            # table rows -> records, done by code for every row
-            tm = a.get("table_mapping") or None
+            r.cur_page = pat
+            # table rows -> records, done by code for every row (a page can hold several kinds of records)
             tables = snap["web"]["tables"]
-            if entity and isinstance(tm, dict) and isinstance(tm.get("columns"), dict) and tables:
-                ti = tm.get("table_index", 0) if isinstance(tm.get("table_index"), int) else 0
-                t = tables[ti] if 0 <= ti < len(tables) else tables[0]
+            page_entities = []
+            for tm in mappings_of(a):
+                ent = tm.get("entity") or entity
+                t = table_for(tm, tables)
+                if not (ent and t and isinstance(tm.get("columns"), dict)):
+                    continue
+                tm["_headers"] = t["headers"]   # lets a reused mapping find its table even if the index shifts
+                page_entities.append(ent)
                 col_idx = {i: snake(tm["columns"][h]) for i, h in enumerate(t["headers"])
                            if h in tm["columns"] and tm["columns"][h]}
                 pat_link = tm.get("detail_link_pattern") if isinstance(tm.get("detail_link_pattern"), str) else None
@@ -537,7 +612,7 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
                     detail = None
                     if pat_link:  # the record's own detail page = the link whose URL contains the pattern
                         detail = next((h for _, h in links if pat_link in h and not UNSAFE.search(h)), None)
-                    new_records += r.add_record(entity, rec, detail)
+                    new_records += r.add_record(ent, rec, detail)
                     dp = url_pattern(detail) if detail else None
                     if dp and same_site(detail, r.host) and dp not in patterns and dp not in queued_detail:
                         queued_detail.add(dp)
@@ -579,15 +654,17 @@ def run(start_url, max_pages=None, vision=False, login=False, headed=False, budg
                 if u and same_site(u, r.host) and not UNSAFE.search(u) and not NO_DATA.search(u):
                     queue.append((u, (n.get("why") or "agent")[:80]))
 
-            r.pages.append({"url": norm, "url_pattern": pat, "page_type": a.get("page_type"), "entity": entity,
+            shown = [e for e in dict.fromkeys(page_entities + ([entity] if entity and rec else []))]
+            r.pages.append({"url": norm, "url_pattern": pat, "page_type": a.get("page_type"),
+                            "entity": shown[0] if shown else entity, "entities": shown,
                             "next_page_link": (nxt or {}).get("text"),
                             "purpose": a.get("purpose"), "reached_by": why, "nemotron_ms": ms,
                             "records_new": new_records})
-            r.log("page", url=norm, page_type=a.get("page_type"), entity=entity, purpose=a.get("purpose"),
+            r.log("page", url=norm, page_type=a.get("page_type"), entity=", ".join(shown) or entity, purpose=a.get("purpose"),
                   reached_by=why, nemotron_ms=ms, records_new=new_records, reused_mapping=bool(known),
-                  table_mapping=a.get("table_mapping"), detail_mapping=a.get("detail_mapping"))
+                  table_mapping=mappings_of(a), detail_mapping=a.get("detail_mapping"))
             tag = "reused" if known else f"{ms / 1000:.1f}s"
-            print(f"  [{visited:>2}] {a.get('page_type', '?'):<6} {entity or '-':<14} +{new_records:<4} "
+            print(f"  [{visited:>2}] {a.get('page_type', '?'):<6} {', '.join(shown) or entity or '-':<14} +{new_records:<4} "
                   f"({tag}) {norm[:70]}")
             r.save()
             if live_w:

@@ -20,6 +20,8 @@ from urllib.parse import parse_qsl, urlsplit
 
 from ingest import nemotron  # noqa: F401  (loads core/.env)
 
+from facade.events import emit
+
 from .api import build_app
 from .data import load
 
@@ -112,6 +114,17 @@ def run(folder, port=8000, host="127.0.0.1", check_only=False, live=True, log=pr
         log(f"  {message}")
         if lw:
             lw.event(kind, message, data or {}, level)
+        d = data or {}
+        if kind == "server_start":
+            emit({"stage": "server", "kind": "start", "source": d.get("source"), "records": d.get("records")})
+        elif kind == "server_built":
+            emit({"stage": "server", "kind": "built", "routes": [r.split(" ", 1) for r in d.get("routes", [])], "tools": d.get("tools", [])})
+        elif kind == "server_route":
+            emit({"stage": "server", "kind": "route", **d})
+        elif kind == "server_tool":
+            emit({"stage": "server", "kind": "tool", **d})
+        elif kind in ("server_live", "server_checked"):
+            emit({"stage": "server", "kind": "live", **d})
 
     n_rec = sum(len(v) for v in state["records"].values())
     ops = state["ops"]["operations"]
@@ -139,7 +152,7 @@ def run(folder, port=8000, host="127.0.0.1", check_only=False, live=True, log=pr
         return summary
     import uvicorn
     log(f"Serving {base}  (Ctrl+C to stop)\n")
-    uvicorn.run(app, host=host, port=port, log_level="warning")
+    uvicorn.Server(uvicorn.Config(app, host=host, port=port, log_level="warning")).run()   # also works in a thread
     return summary
 
 

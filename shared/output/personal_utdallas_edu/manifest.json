@@ -1,0 +1,32 @@
+{
+  "name": "personal_utdallas_edu",
+  "site": "https://personal.utdallas.edu/~John.cole/",
+  "published_at": "2026-11-08T06:33:30",
+  "source_run": "core/cache/extract/20261108-062838",
+  "records": {
+    "Course": 89,
+    "Guideline": 20,
+    "Project": 4,
+    "Schedule": 17,
+    "TeachingPhilosophy": 1,
+    "UsefulLink": 1
+  },
+  "operations": {
+    "count": 12,
+    "designed_by": "nemotron",
+    "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+  },
+  "files": [
+    "data_model.json",
+    "site_map.json",
+    "operations.json",
+    "api_docs.md",
+    "records/Course.jsonl",
+    "records/Guideline.jsonl",
+    "records/Project.jsonl",
+    "records/Schedule.jsonl",
+    "records/TeachingPhilosophy.jsonl",
+    "records/UsefulLink.jsonl"
+  ],
+  "normalized_from_flat_records": true
+}

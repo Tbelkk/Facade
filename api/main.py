@@ -8,6 +8,7 @@ Then open http://localhost:8000/docs to try the endpoints.
 Endpoints so far:
     GET  /health   -> {"ok": true}           (is the API up?)
     POST /check    -> URL fit check           (used by the Console's start panel)
+    POST /runs     -> start the agents on a URL; GET /runs/{id}/events follows them live
 
 Settings (environment variables):
     CONSOLE_ORIGINS  extra comma-separated web addresses allowed to call this API from a browser
@@ -23,6 +24,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from api.fitcheck import check_url
+from api.runs import router as runs_router
 
 log = logging.getLogger("facade.api")
 
@@ -42,6 +44,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+app.include_router(runs_router)   # POST /runs, GET /runs/{id}/events: start the agents and follow them live
 
 
 class CheckRequest(BaseModel):
