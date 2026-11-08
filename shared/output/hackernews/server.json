@@ -1,0 +1,81 @@
+{
+  "site": "https://news.ycombinator.com",
+  "api": "http://127.0.0.1:8000",
+  "docs": "http://127.0.0.1:8000/docs",
+  "mcp": "http://127.0.0.1:8000/mcp",
+  "source": "SpacetimeDB https://maincloud.spacetimedb.com/facade",
+  "records": 2582,
+  "passed": 6,
+  "tested": 6,
+  "seconds": 2.8,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/posts",
+      "name": "list_posts",
+      "request": "/posts?min_points=3&time=13+hours+ago&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 29,
+      "expected": 29,
+      "ms": 1490.4,
+      "first": "Italy's Privacy Chief Warns EU: Don't Spy on Kids to Protect Them (garanteprivacy.it)"
+    },
+    {
+      "method": "GET",
+      "path": "/posts/{id}",
+      "name": "get_post",
+      "request": "/posts/50410107",
+      "ok": true,
+      "status": 200,
+      "total": null,
+      "expected": null,
+      "ms": 14.1,
+      "first": "Goodbye Claude, Hello Pi (caleb.software)"
+    },
+    {
+      "method": "GET",
+      "path": "/posts/search",
+      "name": "search_posts",
+      "request": "/posts/search?q=%28github.com%2Fcrmne%29&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 1,
+      "expected": 1,
+      "ms": 15.4,
+      "first": "ZapFast: A fast, native WhatsApp client in Rust and egui (github.com/crmne)"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list_posts",
+      "args": {
+        "min_points": "3",
+        "time": "13 hours ago",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 29,
+      "description": "Returns a paginated list of posts with optional filters by title, author, points, comments, and time."
+    },
+    {
+      "name": "get_post",
+      "args": {
+        "id": "50410107"
+      },
+      "ok": true,
+      "total": null,
+      "description": "Returns a single post by its legacy ID."
+    },
+    {
+      "name": "search_posts",
+      "args": {
+        "q": "(github.com/crmne)",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 1,
+      "description": "Searches posts by free-text query across title and author."
+    }
+  ]
+}

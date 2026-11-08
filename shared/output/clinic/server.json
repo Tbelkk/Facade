@@ -1,0 +1,178 @@
+{
+  "site": "http://127.0.0.1:65355",
+  "api": "http://127.0.0.1:8000",
+  "docs": "http://127.0.0.1:8000/docs",
+  "mcp": "http://127.0.0.1:8000/mcp",
+  "source": "SpacetimeDB https://maincloud.spacetimedb.com/facade",
+  "records": 62,
+  "passed": 12,
+  "tested": 12,
+  "seconds": 1.3,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/patients",
+      "name": "list_patients",
+      "request": "/patients?min_dob=1966-03-25&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 18,
+      "expected": 18,
+      "ms": 234.4,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/patients/{id}",
+      "name": "get_patient",
+      "request": "/patients/1",
+      "ok": true,
+      "status": 200,
+      "total": null,
+      "expected": null,
+      "ms": 19.2,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/patients/search",
+      "name": "search_patients",
+      "request": "/patients/search?q=ins-80239&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 1,
+      "expected": 1,
+      "ms": 14.5,
+      "first": null
+    },
+    {
+      "method": "POST",
+      "path": "/patients",
+      "name": "create_patient",
+      "request": "/patients",
+      "ok": null,
+      "note": "write endpoint: waits for the Writer"
+    },
+    {
+      "method": "PATCH",
+      "path": "/patients/{id}",
+      "name": "update_patient",
+      "request": "/patients/1",
+      "ok": null,
+      "note": "write endpoint: waits for the Writer"
+    },
+    {
+      "method": "GET",
+      "path": "/appointments",
+      "name": "list_appointments",
+      "request": "/appointments?min_date=2026-03-05&time=8%3A00&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 1,
+      "expected": 1,
+      "ms": 14.0,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/appointments/{id}",
+      "name": "get_appointment",
+      "request": "/appointments/1000",
+      "ok": true,
+      "status": 200,
+      "total": null,
+      "expected": null,
+      "ms": 13.2,
+      "first": null
+    },
+    {
+      "method": "GET",
+      "path": "/appointments/search",
+      "name": "search_appointments",
+      "request": "/appointments/search?q=cleaning&limit=3",
+      "ok": true,
+      "status": 200,
+      "total": 4,
+      "expected": 4,
+      "ms": 12.8,
+      "first": null
+    },
+    {
+      "method": "POST",
+      "path": "/appointments",
+      "name": "create_appointment",
+      "request": "/appointments",
+      "ok": null,
+      "note": "write endpoint: waits for the Writer"
+    },
+    {
+      "method": "PATCH",
+      "path": "/appointments/{id}",
+      "name": "update_appointment",
+      "request": "/appointments/1000",
+      "ok": null,
+      "note": "write endpoint: waits for the Writer"
+    }
+  ],
+  "tools": [
+    {
+      "name": "list_patients",
+      "args": {
+        "min_dob": "1966-03-25",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 18,
+      "description": "Returns a paginated list of patients with optional filters by name, date of birth, phone, and insurance ID."
+    },
+    {
+      "name": "get_patient",
+      "args": {
+        "id": "1"
+      },
+      "ok": true,
+      "total": null,
+      "description": "Returns a single patient by its legacy identifier."
+    },
+    {
+      "name": "search_patients",
+      "args": {
+        "q": "ins-80239",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 1,
+      "description": "Searches patients by free-text query across name, phone, and insurance ID."
+    },
+    {
+      "name": "list_appointments",
+      "args": {
+        "min_date": "2026-03-05",
+        "time": "8:00",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 1,
+      "description": "Returns a paginated list of appointments with optional filters by date, time, patient, provider, status, and reason."
+    },
+    {
+      "name": "get_appointment",
+      "args": {
+        "id": "1000"
+      },
+      "ok": true,
+      "total": null,
+      "description": "Returns a single appointment by its legacy identifier."
+    },
+    {
+      "name": "search_appointments",
+      "args": {
+        "q": "cleaning",
+        "limit": "3"
+      },
+      "ok": true,
+      "total": 4,
+      "description": "Searches appointments by free-text query across reason."
+    }
+  ]
+}
