@@ -9,6 +9,8 @@ Endpoints so far:
     GET  /health   -> {"ok": true}           (is the API up?)
     POST /check    -> URL fit check           (used by the Console's start panel)
     POST /runs     -> start the agents on a URL; GET /runs/{id}/events follows them live
+                      (a site that's already saved is served from SpacetimeDB instead; {"reuse": false} re-runs it)
+    GET  /sites    -> every site with a saved API;  GET /sites/lookup?url=... -> is this site saved?
 
 Settings (environment variables):
     CONSOLE_ORIGINS  extra comma-separated web addresses allowed to call this API from a browser
@@ -25,6 +27,7 @@ from pydantic import BaseModel
 
 from api.fitcheck import check_url
 from api.runs import router as runs_router
+from api.sites import router as sites_router
 
 log = logging.getLogger("facade.api")
 
@@ -47,6 +50,7 @@ app.add_middleware(
 
 
 app.include_router(runs_router)   # POST /runs, GET /runs/{id}/events: start the agents and follow them live
+app.include_router(sites_router)  # GET /sites, GET /sites/lookup: saved APIs, so a site isn't explored twice
 
 
 class CheckRequest(BaseModel):
