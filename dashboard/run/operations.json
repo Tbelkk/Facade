@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "site": "https://news.ycombinator.com",
+  "generated_at": "2026-11-08T01:12:25",
+  "designed_by": {
+    "by": "nemotron",
+    "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+    "attempts": 2,
+    "nemotron_ms": 31871,
+    "problems_found": [
+      "search_posts: search input 'q' needs 'fields' that are text fields of Post; bad: none given"
+    ],
+    "problems_after_fix": [],
+    "dropped": [],
+    "added_by_code": []
+  },
+  "entities": {
+    "Post": {
+      "key": "legacy_id",
+      "record_count": 2582,
+      "fields": [
+        {
+          "name": "title",
+          "label": "col3",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "points",
+          "label": "col5",
+          "type": "integer",
+          "required": true,
+          "source_type": "int"
+        },
+        {
+          "name": "author",
+          "label": "col5",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "time",
+          "label": "col5",
+          "type": "string",
+          "required": true,
+          "note": "values are not ISO dates (for example relative times)",
+          "source_type": "date"
+        },
+        {
+          "name": "rank",
+          "label": "col1",
+          "type": "integer",
+          "required": true,
+          "source_type": "int"
+        },
+        {
+          "name": "hide",
+          "label": "col5",
+          "type": "boolean",
+          "required": false,
+          "source_type": "bool"
+        },
+        {
+          "name": "comments",
+          "label": "col5",
+          "type": "integer",
+          "required": false,
+          "source_type": "int"
+        },
+        {
+          "name": "text",
+          "label": "Text",
+          "type": "string",
+          "required": true,
+          "source_type": "textarea"
+        }
+      ]
+    }
+  },
+  "operations": [
+    {
+      "name": "list_posts",
+      "method": "GET",
+      "path": "/posts",
+      "entity": "Post",
+      "kind": "list",
+      "source": "database",
+      "summary": "Retrieve a list of posts with optional filtering, sorting and pagination.",
+      "inputs": [
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": "limit",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": "offset",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": "sort",
+          "match": "sort",
+          "values": [
+            "points",
+            "-points"
+          ],
+          "required": false
+        },
+        {
+          "name": "title_contains",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "author_contains",
+          "in": "query",
+          "type": "string",
+          "field": "author",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "points_min",
+          "in": "query",
+          "type": "integer",
+          "field": "points",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "points_max",
+          "in": "query",
+          "type": "integer",
+          "field": "points",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "comments_min",
+          "in": "query",
+          "type": "integer",
+          "field": "comments",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "comments_max",
+          "in": "query",
+          "type": "integer",
+          "field": "comments",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "time_contains",
+          "in": "query",
+          "type": "string",
+          "field": "time",
+          "match": "contains",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts?points_min=3&limit=3",
+        "response": {
+          "total": 281,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "50410107",
+              "title": "Goodbye Claude, Hello Pi (caleb.software)",
+              "points": 62,
+              "author": "karagenit",
+              "time": "2 hours ago"
+            },
+            {
+              "legacy_id": "50406670",
+              "title": "What I run on my $10 USD OpenStick homelab (bosscher.ch)",
+              "points": 472,
+              "author": "LaurensBER",
+              "time": "11 hours ago"
+            },
+            {
+              "legacy_id": "50407882",
+              "title": "Claude Code's \"Don't Ask Again\" exposes passwords in 1,122 public GitHub files (apiiro.com)",
+              "points": 292,
+              "author": "shmulc",
+              "time": "9 hours ago"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_post",
+      "method": "GET",
+      "path": "/posts/{id}",
+      "entity": "Post",
+      "kind": "get",
+      "source": "database",
+      "summary": "Retrieve a single post by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts/50410107",
+        "response": {
+          "legacy_id": "50410107",
+          "title": "Goodbye Claude, Hello Pi (caleb.software)",
+          "points": 62,
+          "author": "karagenit",
+          "time": "2 hours ago"
+        }
+      }
+    },
+    {
+      "name": "search_posts",
+      "method": "GET",
+      "path": "/posts/search",
+      "entity": "Post",
+      "kind": "search",
+      "source": "database",
+      "summary": "Search posts by a free‑text query on the title.",
+      "inputs": [
+        {
+          "name": "q",
+          "in": "query",
+          "type": "string",
+          "field": "title",
+          "match": "search",
+          "required": true,
+          "fields": [
+            "title"
+          ]
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts/search?q=%28github.com%2Fcrmne%29&limit=3",
+        "response": {
+          "total": 1,
+          "limit": 50,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "50409855",
+              "title": "ZapFast: A fast, native WhatsApp client in Rust and egui (github.com/crmne)",
+              "points": 30,
+              "author": "handfuloflight",
+              "time": "3 hours ago"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
