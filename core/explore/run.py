@@ -71,6 +71,7 @@ def main(argv=None):
         print(f"  note: {n}")
     print(f"  stats: {json.dumps(sm['stats'])}")
     print(f"\nSaved {result['site_map_path']}")
+    print(f"Saved {result['recipes_path']} ({len(result['recipes']['recipes'])} recipes)")
     if problems:
         print("FORMAT PROBLEMS:\n  " + "\n  ".join(problems), file=sys.stderr)
         return 1

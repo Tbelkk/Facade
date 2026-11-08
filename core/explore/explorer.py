@@ -12,7 +12,8 @@ Safety (team rule 4: the Explorer never submits forms):
     * Links whose text or URL looks destructive (logout, delete, remove, ...) are never followed.
     * Navigation is always page.goto(<link href>); the explorer never clicks buttons.
 
-Output (format 7.2): site_map.json, plus one page model per page type in pages/ for the Understand step.
+Output (format 7.2): site_map.json, plus one page model per page type in pages/ for the Understand step,
+plus recipes.json (how the Operator reads/fills each list, detail and form page without Nemotron).
 """
 import json
 import os
@@ -22,8 +23,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from . import capture_web, policy, sink as sink_mod
-from .capture_web import NEXT_TEXT, PREV_TEXT
+from . import capture_dom, policy, recipes as recipes_mod, sink as sink_mod
+from .capture_dom import NEXT_TEXT, PREV_TEXT
 from .urlpattern import normalize, same_origin, slug, type_key, url_pattern
 
 DENY = re.compile(
@@ -259,7 +260,7 @@ class Explorer:
             self.log(f"{cand['url']} answered HTTP {status}", level="warn", action="http_error", status=status)
             self.notes.append(f"HTTP {status} at {cand['url_pattern']}")
             return None
-        model = capture_web.capture(page, shots_dir=self.run_dir / "shots" if self.cfg.screenshots else None)
+        model = capture_dom.capture(page, shots_dir=self.run_dir / "shots" if self.cfg.screenshots else None)
         via = {"from": cand["from_page"], "type": cand["type"], "text": cand["label"]}
         return self._register(model, via=via)
 
@@ -282,11 +283,11 @@ class Explorer:
             page.on("dialog", lambda d: d.dismiss())
             try:
                 self._goto(page, cfg.start_url)
-                first = capture_web.capture(page, shots_dir=self.run_dir / "shots" if cfg.screenshots else None)
+                first = capture_dom.capture(page, shots_dir=self.run_dir / "shots" if cfg.screenshots else None)
                 current = self._register(first, via={"type": "start"})
                 if first["dom"]["has_password"]:
                     self._login(page)
-                    after = capture_web.capture(page, shots_dir=self.run_dir / "shots" if cfg.screenshots else None)
+                    after = capture_dom.capture(page, shots_dir=self.run_dir / "shots" if cfg.screenshots else None)
                     current = self._register(after, via={"from": current, "type": "login"})
 
                 while len(self.pages) < cfg.page_budget and steps < cfg.max_steps:
@@ -322,12 +323,19 @@ class Explorer:
 
         site_map = self.site_map(stop_reason, steps, time.time() - t0)
         path = self.sink.save_site(site_map)
+        recipes = recipes_mod.build(site_map, {pid: p["_model"] for pid, p in self.pages.items()}, self.key_to_id)
+        rpath = self.sink.save_recipes(recipes)
+        for problem in recipes_mod.validate(recipes):
+            self.log(f"Recipe check: {problem}", level="warn", action="recipe_warning")
         DEFAULT_OUT.mkdir(parents=True, exist_ok=True)
         (DEFAULT_OUT / "latest_site_map.json").write_text(json.dumps(site_map, indent=2), encoding="utf-8")
+        (DEFAULT_OUT / "latest_recipes.json").write_text(json.dumps(recipes, indent=2), encoding="utf-8")
         self.sink.job("done", len(self.pages), cfg.page_budget)
-        self.log(f"Done: {len(self.pages)} page types in {steps} steps, stop={stop_reason}. Site map: {path}",
-                 action="done", pages=len(self.pages), steps=steps, stop=stop_reason)
-        return {"site_map": site_map, "run_dir": str(self.run_dir), "site_map_path": str(path)}
+        self.log(f"Done: {len(self.pages)} page types in {steps} steps, stop={stop_reason}. Site map: {path}; "
+                 f"recipes: {rpath} ({len(recipes['recipes'])})",
+                 action="done", pages=len(self.pages), steps=steps, stop=stop_reason, recipes=len(recipes["recipes"]))
+        return {"site_map": site_map, "recipes": recipes, "run_dir": str(self.run_dir), "site_map_path": str(path),
+                "recipes_path": str(rpath)}
 
     # ------------------------------------------------------------ site map (format 7.2)
 

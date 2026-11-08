@@ -1,0 +1,649 @@
+{
+ "name": "Sunrise Dental",
+ "brand": "ClinicPro 2005",
+ "login": {
+  "username": "admin",
+  "password": "mock-only-password"
+ },
+ "page_size": 10,
+ "session_max_requests": 60,
+ "entities": [
+  {
+   "name": "Patient",
+   "path": "patients",
+   "title": "Patients",
+   "display": "{last_name}, {first_name}",
+   "fields": [
+    {
+     "key": "last_name",
+     "label": "Last Name",
+     "required": true
+    },
+    {
+     "key": "first_name",
+     "label": "First Name"
+    },
+    {
+     "key": "dob",
+     "label": "DOB",
+     "type": "date"
+    },
+    {
+     "key": "phone",
+     "label": "Phone"
+    },
+    {
+     "key": "insurance_id",
+     "label": "Insurance ID"
+    }
+   ],
+   "list_columns": [
+    {
+     "header": "Name",
+     "template": "{last_name}, {first_name}"
+    },
+    {
+     "header": "DOB",
+     "field": "dob"
+    },
+    {
+     "header": "Phone",
+     "field": "phone"
+    }
+   ],
+   "records": [
+    {
+     "id": "1",
+     "last_name": "Smith",
+     "first_name": "John",
+     "dob": "1960-03-13",
+     "phone": "",
+     "insurance_id": ""
+    },
+    {
+     "id": "2",
+     "last_name": "Johnson",
+     "first_name": "Raj",
+     "dob": "1981-01-03",
+     "phone": "(214) 555-1037",
+     "insurance_id": "INS-80239"
+    },
+    {
+     "id": "3",
+     "last_name": "Lee",
+     "first_name": "Amy",
+     "dob": "1946-06-19",
+     "phone": "(214) 555-1074",
+     "insurance_id": "INS-17602"
+    },
+    {
+     "id": "4",
+     "last_name": "Garcia",
+     "first_name": "Wei",
+     "dob": "1998-09-07",
+     "phone": "(214) 555-1111",
+     "insurance_id": "INS-14914"
+    },
+    {
+     "id": "5",
+     "last_name": "Brown",
+     "first_name": "Ana",
+     "dob": "1945-07-14",
+     "phone": "(214) 555-1148",
+     "insurance_id": ""
+    },
+    {
+     "id": "6",
+     "last_name": "Davis",
+     "first_name": "Tom",
+     "dob": "1944-04-03",
+     "phone": "(214) 555-1185",
+     "insurance_id": "INS-82226"
+    },
+    {
+     "id": "7",
+     "last_name": "Miller",
+     "first_name": "Joy",
+     "dob": "1967-01-27",
+     "phone": "(214) 555-1222",
+     "insurance_id": "INS-84115"
+    },
+    {
+     "id": "8",
+     "last_name": "Wilson",
+     "first_name": "Max",
+     "dob": "1947-04-21",
+     "phone": "(214) 555-1259",
+     "insurance_id": "INS-92238"
+    },
+    {
+     "id": "9",
+     "last_name": "Moore",
+     "first_name": "Kim",
+     "dob": "1977-01-19",
+     "phone": "(214) 555-1296",
+     "insurance_id": ""
+    },
+    {
+     "id": "10",
+     "last_name": "Taylor",
+     "first_name": "Ian",
+     "dob": "1977-07-02",
+     "phone": "",
+     "insurance_id": "INS-38977"
+    },
+    {
+     "id": "11",
+     "last_name": "Clark",
+     "first_name": "Lena",
+     "dob": "1942-09-28",
+     "phone": "(214) 555-1370",
+     "insurance_id": "INS-27455"
+    },
+    {
+     "id": "12",
+     "last_name": "Lewis",
+     "first_name": "Mary",
+     "dob": "1958-07-05",
+     "phone": "(214) 555-1407",
+     "insurance_id": "INS-80868"
+    },
+    {
+     "id": "13",
+     "last_name": "Walker",
+     "first_name": "Eve",
+     "dob": "1947-10-10",
+     "phone": "(214) 555-1444",
+     "insurance_id": ""
+    },
+    {
+     "id": "14",
+     "last_name": "Hall",
+     "first_name": "Bob",
+     "dob": "1975-11-06",
+     "phone": "(214) 555-1481",
+     "insurance_id": "INS-23507"
+    },
+    {
+     "id": "15",
+     "last_name": "Young",
+     "first_name": "Zoe",
+     "dob": "1977-10-21",
+     "phone": "(214) 555-1518",
+     "insurance_id": "INS-34624"
+    },
+    {
+     "id": "16",
+     "last_name": "King",
+     "first_name": "Luis",
+     "dob": "1963-02-18",
+     "phone": "(214) 555-1555",
+     "insurance_id": "INS-18229"
+    },
+    {
+     "id": "17",
+     "last_name": "Wright",
+     "first_name": "Sue",
+     "dob": "1976-01-20",
+     "phone": "(214) 555-1592",
+     "insurance_id": ""
+    },
+    {
+     "id": "18",
+     "last_name": "Lopez",
+     "first_name": "Omar",
+     "dob": "1953-08-22",
+     "phone": "(214) 555-1629",
+     "insurance_id": "INS-79693"
+    },
+    {
+     "id": "19",
+     "last_name": "Hill",
+     "first_name": "John",
+     "dob": "1967-06-15",
+     "phone": "",
+     "insurance_id": "INS-86750"
+    },
+    {
+     "id": "20",
+     "last_name": "Scott",
+     "first_name": "Raj",
+     "dob": "1999-08-12",
+     "phone": "(214) 555-1703",
+     "insurance_id": "INS-49291"
+    },
+    {
+     "id": "21",
+     "last_name": "Green",
+     "first_name": "Amy",
+     "dob": "1955-03-23",
+     "phone": "(214) 555-1740",
+     "insurance_id": ""
+    },
+    {
+     "id": "22",
+     "last_name": "Adams",
+     "first_name": "Wei",
+     "dob": "1989-04-03",
+     "phone": "(214) 555-1777",
+     "insurance_id": "INS-85290"
+    },
+    {
+     "id": "23",
+     "last_name": "Baker",
+     "first_name": "Ana",
+     "dob": "1959-09-16",
+     "phone": "(214) 555-1814",
+     "insurance_id": "INS-55020"
+    },
+    {
+     "id": "24",
+     "last_name": "Nguyen",
+     "first_name": "Tom",
+     "dob": "1986-08-10",
+     "phone": "(214) 555-1851",
+     "insurance_id": "INS-89817"
+    },
+    {
+     "id": "25",
+     "last_name": "Patel",
+     "first_name": "Joy",
+     "dob": "1944-02-17",
+     "phone": "(214) 555-1888",
+     "insurance_id": ""
+    },
+    {
+     "id": "26",
+     "last_name": "Rivera",
+     "first_name": "Max",
+     "dob": "1966-03-25",
+     "phone": "(214) 555-1925",
+     "insurance_id": "INS-54833"
+    },
+    {
+     "id": "27",
+     "last_name": "Cohen",
+     "first_name": "Kim",
+     "dob": "1949-08-14",
+     "phone": "(214) 555-1962",
+     "insurance_id": "INS-15138"
+    },
+    {
+     "id": "28",
+     "last_name": "Okafor",
+     "first_name": "Ian",
+     "dob": "1982-02-25",
+     "phone": "",
+     "insurance_id": "INS-83148"
+    },
+    {
+     "id": "29",
+     "last_name": "Kowalski",
+     "first_name": "Lena",
+     "dob": "1976-06-11",
+     "phone": "(214) 555-2036",
+     "insurance_id": ""
+    },
+    {
+     "id": "30",
+     "last_name": "Silva",
+     "first_name": "Mary",
+     "dob": "1984-06-20",
+     "phone": "(214) 555-2073",
+     "insurance_id": "INS-75100"
+    },
+    {
+     "id": "31",
+     "last_name": "Smith",
+     "first_name": "Eve",
+     "dob": "1977-08-03",
+     "phone": "(214) 555-2110",
+     "insurance_id": "INS-22267"
+    },
+    {
+     "id": "32",
+     "last_name": "Johnson",
+     "first_name": "Bob",
+     "dob": "1957-08-23",
+     "phone": "(214) 555-2147",
+     "insurance_id": "INS-97051"
+    },
+    {
+     "id": "33",
+     "last_name": "Lee",
+     "first_name": "Zoe",
+     "dob": "1944-01-24",
+     "phone": "(214) 555-2184",
+     "insurance_id": ""
+    },
+    {
+     "id": "34",
+     "last_name": "Garcia",
+     "first_name": "Luis",
+     "dob": "1984-05-21",
+     "phone": "(214) 555-2221",
+     "insurance_id": "INS-85752"
+    },
+    {
+     "id": "35",
+     "last_name": "Smith",
+     "first_name": "John",
+     "dob": "1960-03-13",
+     "phone": "(214) 555-9999",
+     "insurance_id": ""
+    }
+   ]
+  },
+  {
+   "name": "Appointment",
+   "path": "appointments",
+   "title": "Schedule",
+   "fields": [
+    {
+     "key": "date",
+     "label": "Date",
+     "type": "date",
+     "required": true
+    },
+    {
+     "key": "time",
+     "label": "Time",
+     "required": true
+    },
+    {
+     "key": "patient_id",
+     "label": "Patient",
+     "ref": "Patient",
+     "required": true
+    },
+    {
+     "key": "provider",
+     "label": "Provider",
+     "options": [
+      "Dr. Lee",
+      "Dr. Patel",
+      "Hyg. Kim"
+     ]
+    },
+    {
+     "key": "status",
+     "label": "Status",
+     "options": [
+      "Booked",
+      "Completed",
+      "No-show",
+      "Cancelled"
+     ]
+    },
+    {
+     "key": "reason",
+     "label": "Reason",
+     "type": "text"
+    }
+   ],
+   "list_columns": [
+    {
+     "header": "Date",
+     "field": "date"
+    },
+    {
+     "header": "Time",
+     "field": "time"
+    },
+    {
+     "header": "Patient",
+     "field": "patient_id"
+    },
+    {
+     "header": "Provider",
+     "field": "provider"
+    }
+   ],
+   "records": [
+    {
+     "id": "1000",
+     "date": "2026-04-10",
+     "time": "14:30",
+     "patient_id": "2",
+     "provider": "Dr. Patel",
+     "status": "No-show",
+     "reason": "Checkup"
+    },
+    {
+     "id": "1001",
+     "date": "2026-01-16",
+     "time": "8:00",
+     "patient_id": "19",
+     "provider": "Dr. Lee",
+     "status": "Completed",
+     "reason": "Crown fitting"
+    },
+    {
+     "id": "1002",
+     "date": "2026-04-28",
+     "time": "15:00",
+     "patient_id": "11",
+     "provider": "Dr. Patel",
+     "status": "Cancelled",
+     "reason": "X-rays"
+    },
+    {
+     "id": "1003",
+     "date": "2026-03-05",
+     "time": "14:30",
+     "patient_id": "27",
+     "provider": "Dr. Patel",
+     "status": "Cancelled",
+     "reason": "Checkup"
+    },
+    {
+     "id": "1004",
+     "date": "2026-02-03",
+     "time": "10:00",
+     "patient_id": "15",
+     "provider": "Hyg. Kim",
+     "status": "Completed",
+     "reason": "Cleaning"
+    },
+    {
+     "id": "1005",
+     "date": "2026-04-27",
+     "time": "10:30",
+     "patient_id": "19",
+     "provider": "Dr. Lee",
+     "status": "Completed",
+     "reason": "Crown fitting"
+    },
+    {
+     "id": "1006",
+     "date": "2026-03-20",
+     "time": "13:00",
+     "patient_id": "33",
+     "provider": "Hyg. Kim",
+     "status": "Booked",
+     "reason": "Crown fitting"
+    },
+    {
+     "id": "1007",
+     "date": "2026-04-13",
+     "time": "14:30",
+     "patient_id": "7",
+     "provider": "Dr. Patel",
+     "status": "Cancelled",
+     "reason": "Cleaning"
+    },
+    {
+     "id": "1008",
+     "date": "2026-02-03",
+     "time": "11:30",
+     "patient_id": "11",
+     "provider": "Dr. Lee",
+     "status": "No-show",
+     "reason": "X-rays"
+    },
+    {
+     "id": "1009",
+     "date": "2026-01-04",
+     "time": "8:00",
+     "patient_id": "35",
+     "provider": "Dr. Lee",
+     "status": "No-show",
+     "reason": "X-rays"
+    },
+    {
+     "id": "1010",
+     "date": "2026-01-03",
+     "time": "11:30",
+     "patient_id": "10",
+     "provider": "Hyg. Kim",
+     "status": "No-show",
+     "reason": "Filling"
+    },
+    {
+     "id": "1011",
+     "date": "2026-03-16",
+     "time": "9:00",
+     "patient_id": "32",
+     "provider": "Dr. Patel",
+     "status": "Cancelled",
+     "reason": "Crown fitting"
+    },
+    {
+     "id": "1012",
+     "date": "2026-03-03",
+     "time": "10:00",
+     "patient_id": "22",
+     "provider": "Hyg. Kim",
+     "status": "No-show",
+     "reason": "Crown fitting"
+    },
+    {
+     "id": "1013",
+     "date": "2026-02-17",
+     "time": "8:00",
+     "patient_id": "34",
+     "provider": "Dr. Patel",
+     "status": "Completed",
+     "reason": ""
+    },
+    {
+     "id": "1014",
+     "date": "2026-01-25",
+     "time": "16:30",
+     "patient_id": "6",
+     "provider": "Hyg. Kim",
+     "status": "No-show",
+     "reason": "X-rays"
+    },
+    {
+     "id": "1015",
+     "date": "2026-03-06",
+     "time": "13:00",
+     "patient_id": "35",
+     "provider": "Hyg. Kim",
+     "status": "No-show",
+     "reason": ""
+    },
+    {
+     "id": "1016",
+     "date": "2026-02-20",
+     "time": "11:00",
+     "patient_id": "26",
+     "provider": "Hyg. Kim",
+     "status": "Completed",
+     "reason": "Checkup"
+    },
+    {
+     "id": "1017",
+     "date": "2026-04-12",
+     "time": "8:00",
+     "patient_id": "18",
+     "provider": "Dr. Patel",
+     "status": "No-show",
+     "reason": "Checkup"
+    },
+    {
+     "id": "1018",
+     "date": "2026-03-15",
+     "time": "13:30",
+     "patient_id": "6",
+     "provider": "Dr. Lee",
+     "status": "Booked",
+     "reason": "Checkup"
+    },
+    {
+     "id": "1019",
+     "date": "2026-04-07",
+     "time": "13:00",
+     "patient_id": "31",
+     "provider": "Hyg. Kim",
+     "status": "Booked",
+     "reason": "Crown fitting"
+    },
+    {
+     "id": "1020",
+     "date": "2026-03-26",
+     "time": "9:00",
+     "patient_id": "25",
+     "provider": "Hyg. Kim",
+     "status": "Completed",
+     "reason": "Crown fitting"
+    },
+    {
+     "id": "1021",
+     "date": "2026-02-14",
+     "time": "13:00",
+     "patient_id": "26",
+     "provider": "Dr. Patel",
+     "status": "Cancelled",
+     "reason": ""
+    },
+    {
+     "id": "1022",
+     "date": "2026-01-24",
+     "time": "10:00",
+     "patient_id": "9",
+     "provider": "Dr. Lee",
+     "status": "Completed",
+     "reason": "X-rays"
+    },
+    {
+     "id": "1023",
+     "date": "2026-04-26",
+     "time": "10:30",
+     "patient_id": "23",
+     "provider": "Dr. Lee",
+     "status": "Completed",
+     "reason": "Cleaning"
+    },
+    {
+     "id": "1024",
+     "date": "2026-01-26",
+     "time": "9:00",
+     "patient_id": "28",
+     "provider": "Dr. Lee",
+     "status": "Completed",
+     "reason": "Cleaning"
+    },
+    {
+     "id": "1025",
+     "date": "2026-03-07",
+     "time": "12:00",
+     "patient_id": "21",
+     "provider": "Dr. Patel",
+     "status": "Cancelled",
+     "reason": "Checkup"
+    },
+    {
+     "id": "1026",
+     "date": "2026-01-24",
+     "time": "13:30",
+     "patient_id": "34",
+     "provider": "Dr. Patel",
+     "status": "Completed",
+     "reason": "X-rays"
+    }
+   ]
+  }
+ ]
+}

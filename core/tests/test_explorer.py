@@ -133,7 +133,7 @@ def test_nemotron_roles_with_simulated_model(site, tmp_path, creds, monkeypatch)
     assert pages["appt_list"]["entity"] == "Appointment" and pages["appt_list"]["read_by"] == "nemotron"
     detail = next(p for p in sm["pages"] if p["url_pattern"] == "/patients/{id}")
     assert detail["id"] == "patient_detail" and detail["entity"] == "Patient"
-    assert {m for p, m in calls if p == "explore_plan"} == {"nvidia/nemotron-3-super-120b-a12b"}
+    assert {m for p, m in calls if p == "explore_plan"} == {policy.NemotronPlanner().model}
     assert {m for p, m in calls if p == "explore_read"} == {"nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"}
 
 

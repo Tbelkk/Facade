@@ -18,7 +18,7 @@ test = ["pytest"]
 facade_explorer = "explore.nat_plugin"
 
 [tool.setuptools.packages.find]
-include = ["ingest*", "explore*"]
+include = ["ingest*", "explore*", "extract*", "mock_sites*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

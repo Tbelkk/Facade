@@ -28,8 +28,25 @@ python -m explore.run http://localhost:5005 --login manual --headed  # a person 
 python -m explore.run http://localhost:5005 --sink spacetime       # also stream to SpacetimeDB
 ```
 
-Output: `core/cache/explore/<host>_<time>/` → `site_map.json`, `pages/<page_id>.json`, `shots/`, `events.jsonl`
-(also copied to `core/cache/explore/latest_site_map.json`).
+Output: `core/cache/explore/<host>_<time>/` → `site_map.json`, `recipes.json`, `pages/<page_id>.json`, `shots/`,
+`events.jsonl` (also copied to `core/cache/explore/latest_site_map.json` and `latest_recipes.json`).
+
+### recipes.json (for the Operator)
+
+One recipe per list / detail / form page type, measured from the DOM, so extraction runs without Nemotron:
+
+- **list**: `url_pattern`, `table.index` (nth `<table>` on the page), `table.columns[]` (header → `field`,
+  `is_link`, `type`/`format` such as date `MM/DD/YYYY`, and `split` for cells like `"Smith, John"` →
+  `last_name`, `first_name` with a regex), `detail_link` (which column, `url_pattern`, `url_regex`, `id_param`,
+  `goes_to`), `next_page` (link text + fallback regex, `page_param`, `page_size`; `null` = single page)
+- **detail**: `id_param` and `labels[]` (label → `field`, table index, sample, format)
+- **form**: fields by label with role/label/css locators, required, options, and submit buttons
+
+Rebuild it for an older run folder without re-exploring: `python -m explore.recipes <run folder>`.
+
+Extract every record with those recipes (output in the SpacetimeDB table shape, see `mock_sites/README.md`):
+`python -m extract.run <run folder> --login env`. To test the whole pipeline on fake data:
+`python -m mock_sites.run clinic`.
 
 ### As a NeMo Agent Toolkit workflow
 

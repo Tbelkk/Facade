@@ -4,7 +4,7 @@
 llms:
   nemotron_super:
     _type: nim
-    model_name: nvidia/nemotron-3-super-120b-a12b
+    model_name: nvidia/nemotron-3.5-super-vl-120b-a12b
     temperature: 0.2
     max_tokens: 4096
 

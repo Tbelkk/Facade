@@ -36,6 +36,11 @@ class JsonSink:
         p.write_text(json.dumps(site_map, indent=2, ensure_ascii=False), encoding="utf-8")
         return p
 
+    def save_recipes(self, recipes):
+        p = self.run_dir / "recipes.json"
+        p.write_text(json.dumps(recipes, indent=2, ensure_ascii=False), encoding="utf-8")
+        return p
+
     def job(self, status, done, total):
         self.log_event(f"job {status}: {done}/{total}", kind="job", status=status, done=done, total=total)
 

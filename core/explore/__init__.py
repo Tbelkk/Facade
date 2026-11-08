@@ -3,7 +3,7 @@
 Modules
 -------
 urlpattern   URL -> url_pattern ("/patients/42" -> "/patients/{id}") so the explorer visits each page TYPE once
-capture_web  Playwright page -> page model (schema_version 1, screen.source = "dom"): links, forms, tables, ARIA
+capture_dom  Playwright page -> page model (schema_version 1, screen.source = "dom"): links, forms, tables, ARIA
 policy       The two Nemotron roles: PageReader (Nano Omni labels a page) and Planner (Super picks the next step).
              Each has a heuristic twin, so everything runs offline with no API key.
 sink         Where results go: local JSON files (always) and SpacetimeDB (optional, never blocks)

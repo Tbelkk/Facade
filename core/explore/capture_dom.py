@@ -3,7 +3,7 @@
 Everything here is MEASURED from the DOM. Nemotron's judgment is added later under `screen.ai`.
 
 Usage (from core/), handy for checking a single page:
-    python -m explore.capture_web https://example.com
+    python -m explore.capture_dom https://example.com
 """
 import hashlib
 import json
@@ -368,7 +368,7 @@ def main(argv=None):
 
     argv = argv if argv is not None else sys.argv[1:]
     if not argv:
-        raise SystemExit("usage: python -m explore.capture_web URL")
+        raise SystemExit("usage: python -m explore.capture_dom URL")
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()

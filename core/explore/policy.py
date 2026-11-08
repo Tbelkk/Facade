@@ -11,7 +11,7 @@ fallback is reported so it shows up in the agent log (team rule 5: log every Nem
 import os
 import re
 
-from .capture_web import summarize
+from .capture_dom import summarize
 from .urlpattern import page_id_from_pattern, slug
 
 KINDS = {"list", "detail", "form", "menu", "login", "other"}
@@ -137,7 +137,7 @@ class NemotronPlanner:
     name = "nemotron"
 
     def __init__(self, model=None, budget=None, max_candidates=40):
-        self.model = model or os.getenv("MODEL_AGENT", "nvidia/nemotron-3-super-120b-a12b")
+        self.model = model or os.getenv("MODEL_AGENT", "nvidia/nemotron-3.5-super-vl-120b-a12b")
         self.budget = budget
         self.max_candidates = max_candidates
         self.fallback = HeuristicPlanner()

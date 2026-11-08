@@ -1,0 +1,501 @@
+{
+  "version": 1,
+  "site": "http://127.0.0.1:65294",
+  "generated_at": "2026-11-08T00:14:46",
+  "designed_by": {
+    "by": "nemotron",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "attempts": 1,
+    "nemotron_ms": 18995,
+    "problems_found": [],
+    "problems_after_fix": [],
+    "dropped": [],
+    "added_by_code": []
+  },
+  "entities": {
+    "Post": {
+      "key": "legacy_id",
+      "record_count": 26,
+      "fields": [
+        {
+          "name": "title",
+          "label": "Title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "points",
+          "label": "Points",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "author",
+          "label": "Author",
+          "type": "string",
+          "display_of": "author_id"
+        },
+        {
+          "name": "author_id",
+          "label": "Author",
+          "type": "ref",
+          "to": "User",
+          "required": false
+        },
+        {
+          "name": "time",
+          "label": "Time",
+          "type": "date",
+          "format": "YYYY-MM-DD",
+          "legacy_format": "MM/DD/YYYY",
+          "required": false
+        },
+        {
+          "name": "comments",
+          "label": "Comments",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "label": "Domain",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "User": {
+      "key": "legacy_id",
+      "record_count": 12,
+      "fields": [
+        {
+          "name": "username",
+          "label": "Username",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "karma",
+          "label": "Karma",
+          "type": "integer",
+          "required": false
+        },
+        {
+          "name": "joined",
+          "label": "Joined",
+          "type": "date",
+          "format": "YYYY-MM-DD",
+          "legacy_format": "MM/DD/YYYY",
+          "required": false
+        }
+      ]
+    }
+  },
+  "operations": [
+    {
+      "name": "list_posts",
+      "method": "GET",
+      "path": "/posts",
+      "entity": "Post",
+      "kind": "list",
+      "source": "database",
+      "summary": "List posts with optional filters on points, time, comments, domain, and author.",
+      "inputs": [
+        {
+          "name": "min_points",
+          "in": "query",
+          "type": "integer",
+          "field": "points",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_points",
+          "in": "query",
+          "type": "integer",
+          "field": "points",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "min_time",
+          "in": "query",
+          "type": "string",
+          "field": "time",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_time",
+          "in": "query",
+          "type": "string",
+          "field": "time",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "min_comments",
+          "in": "query",
+          "type": "integer",
+          "field": "comments",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_comments",
+          "in": "query",
+          "type": "integer",
+          "field": "comments",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "domain",
+          "in": "query",
+          "type": "string",
+          "field": "domain",
+          "match": "eq",
+          "values": [
+            "nytimes.com",
+            "blog.dev",
+            "example.org",
+            "github.com",
+            "arxiv.org"
+          ],
+          "required": false
+        },
+        {
+          "name": "author_id",
+          "in": "query",
+          "type": "string",
+          "field": "author_id",
+          "match": "eq",
+          "values": [
+            "u101",
+            "u109",
+            "u102",
+            "u112",
+            "u104",
+            "u107",
+            "u105",
+            "u108",
+            "u103",
+            "u106",
+            "u111"
+          ],
+          "required": false
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "match": "sort",
+          "values": [
+            "points",
+            "-points",
+            "time",
+            "-time",
+            "comments",
+            "-comments"
+          ],
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts?min_points=161&domain=nytimes.com&limit=3",
+        "response": {
+          "total": 5,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "40103",
+              "title": "Why legacy COBOL still runs the banks",
+              "points": 177,
+              "author": "alice",
+              "author_id": "u101",
+              "time": "2026-09-19",
+              "comments": 110,
+              "domain": "nytimes.com"
+            },
+            {
+              "legacy_id": "40112",
+              "title": "Rust in the Linux kernel: one year later",
+              "points": 161,
+              "author": "bob",
+              "author_id": "u102",
+              "time": "2026-10-11",
+              "comments": 15,
+              "domain": "nytimes.com"
+            },
+            {
+              "legacy_id": "40139",
+              "title": "Datalog for everyday queries",
+              "points": 802,
+              "author": "grace",
+              "author_id": "u107",
+              "time": "2026-10-20",
+              "comments": 80,
+              "domain": "nytimes.com"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_post",
+      "method": "GET",
+      "path": "/posts/{id}",
+      "entity": "Post",
+      "kind": "get",
+      "source": "database",
+      "summary": "Get a single post by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts/40100",
+        "response": {
+          "legacy_id": "40100",
+          "title": "Show HN: A Postgres extension for vector search",
+          "points": 294,
+          "author": "ines",
+          "author_id": "u109",
+          "time": "2026-09-23",
+          "comments": 260,
+          "domain": "blog.dev"
+        }
+      }
+    },
+    {
+      "name": "search_post",
+      "method": "GET",
+      "path": "/posts/search",
+      "entity": "Post",
+      "kind": "search",
+      "source": "database",
+      "summary": "Search posts by free-text query against the title field.",
+      "inputs": [
+        {
+          "name": "q",
+          "in": "query",
+          "type": "string",
+          "match": "search",
+          "required": true,
+          "fields": [
+            "title"
+          ]
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "match": "offset",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Post"
+      },
+      "example": {
+        "request": "/posts/search?q=extension&limit=3",
+        "response": {
+          "total": 1,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "40100",
+              "title": "Show HN: A Postgres extension for vector search",
+              "points": 294,
+              "author": "ines",
+              "author_id": "u109",
+              "time": "2026-09-23",
+              "comments": 260,
+              "domain": "blog.dev"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "list_users",
+      "method": "GET",
+      "path": "/users",
+      "entity": "User",
+      "kind": "list",
+      "source": "database",
+      "summary": "List users with optional filters on username, karma, and joined date.",
+      "inputs": [
+        {
+          "name": "username",
+          "in": "query",
+          "type": "string",
+          "field": "username",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "min_karma",
+          "in": "query",
+          "type": "integer",
+          "field": "karma",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_karma",
+          "in": "query",
+          "type": "integer",
+          "field": "karma",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "min_joined",
+          "in": "query",
+          "type": "string",
+          "field": "joined",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_joined",
+          "in": "query",
+          "type": "string",
+          "field": "joined",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "match": "sort",
+          "values": [
+            "karma",
+            "-karma",
+            "joined",
+            "-joined"
+          ],
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "User"
+      },
+      "example": {
+        "request": "/users?min_karma=14833&limit=3",
+        "response": {
+          "total": 7,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "u101",
+              "username": "alice",
+              "karma": 14833,
+              "joined": "2022-08-17"
+            },
+            {
+              "legacy_id": "u102",
+              "username": "bob",
+              "karma": 19257,
+              "joined": "2014-03-26"
+            },
+            {
+              "legacy_id": "u103",
+              "username": "carol",
+              "karma": 16784,
+              "joined": "2023-11-20"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_user",
+      "method": "GET",
+      "path": "/users/{id}",
+      "entity": "User",
+      "kind": "get",
+      "source": "database",
+      "summary": "Get a single user by its legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "User"
+      },
+      "example": {
+        "request": "/users/u101",
+        "response": {
+          "legacy_id": "u101",
+          "username": "alice",
+          "karma": 14833,
+          "joined": "2022-08-17"
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright
 
-from explore import capture_web
+from explore import capture_dom
 
 
 def _capture(site, path):
@@ -14,7 +14,7 @@ def _capture(site, path):
         page.click("input[type=submit]")
         page.wait_for_url("**/home")
         page.goto(site.url + path)
-        m = capture_web.capture(page)
+        m = capture_dom.capture(page)
         b.close()
     return m
 
@@ -60,5 +60,5 @@ def test_form_page_labels_required_and_options(site):
 
 def test_summary_is_compact(site):
     m = _capture(site, "/patients")
-    text = capture_web.summarize(m)
+    text = capture_dom.summarize(m)
     assert "Table (10 rows)" in text and len(text) < 3000

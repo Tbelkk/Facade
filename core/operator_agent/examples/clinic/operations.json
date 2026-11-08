@@ -1,0 +1,927 @@
+{
+  "version": 1,
+  "site": "http://127.0.0.1:65355",
+  "generated_at": "2026-11-08T00:41:24",
+  "designed_by": {
+    "by": "nemotron",
+    "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "attempts": 1,
+    "nemotron_ms": 38720,
+    "problems_found": [],
+    "problems_after_fix": [],
+    "dropped": [],
+    "added_by_code": []
+  },
+  "entities": {
+    "Patient": {
+      "key": "legacy_id",
+      "record_count": 35,
+      "fields": [
+        {
+          "name": "last_name",
+          "label": "Last Name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "first_name",
+          "label": "First Name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "dob",
+          "label": "DOB",
+          "type": "date",
+          "format": "YYYY-MM-DD",
+          "legacy_format": "MM/DD/YYYY",
+          "required": false
+        },
+        {
+          "name": "phone",
+          "label": "Phone",
+          "type": "string",
+          "format": "phone",
+          "required": false
+        },
+        {
+          "name": "insurance_id",
+          "label": "Insurance ID",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    "Appointment": {
+      "key": "legacy_id",
+      "record_count": 27,
+      "fields": [
+        {
+          "name": "date",
+          "label": "Date",
+          "type": "date",
+          "format": "YYYY-MM-DD",
+          "legacy_format": "MM/DD/YYYY",
+          "required": true
+        },
+        {
+          "name": "time",
+          "label": "Time",
+          "type": "string",
+          "format": "time",
+          "required": true
+        },
+        {
+          "name": "patient",
+          "label": "Patient",
+          "type": "string",
+          "display_of": "patient_id"
+        },
+        {
+          "name": "patient_id",
+          "label": "Patient",
+          "type": "ref",
+          "to": "Patient",
+          "required": true
+        },
+        {
+          "name": "provider",
+          "label": "Provider",
+          "type": "enum",
+          "values": [
+            "Dr. Lee",
+            "Dr. Patel",
+            "Hyg. Kim"
+          ],
+          "required": false
+        },
+        {
+          "name": "status",
+          "label": "Status",
+          "type": "enum",
+          "values": [
+            "Booked",
+            "Completed",
+            "No-show",
+            "Cancelled"
+          ],
+          "required": false
+        },
+        {
+          "name": "reason",
+          "label": "Reason",
+          "type": "string",
+          "required": false
+        }
+      ]
+    }
+  },
+  "operations": [
+    {
+      "name": "list_patients",
+      "method": "GET",
+      "path": "/patients",
+      "entity": "Patient",
+      "kind": "list",
+      "source": "database",
+      "summary": "List patients with optional filters by name, phone, insurance ID, date of birth range, pagination, and sort.",
+      "inputs": [
+        {
+          "name": "last_name",
+          "in": "query",
+          "type": "string",
+          "field": "last_name",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "first_name",
+          "in": "query",
+          "type": "string",
+          "field": "first_name",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "phone",
+          "in": "query",
+          "type": "string",
+          "field": "phone",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "insurance_id",
+          "in": "query",
+          "type": "string",
+          "field": "insurance_id",
+          "match": "contains",
+          "required": false
+        },
+        {
+          "name": "min_dob",
+          "in": "query",
+          "type": "date",
+          "field": "dob",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_dob",
+          "in": "query",
+          "type": "date",
+          "field": "dob",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": null,
+          "match": "sort",
+          "values": [
+            "dob",
+            "-dob"
+          ],
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Patient"
+      },
+      "example": {
+        "request": "/patients?min_dob=1966-03-25&limit=3",
+        "response": {
+          "total": 18,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "2",
+              "last_name": "Johnson",
+              "first_name": "Raj",
+              "dob": "1981-01-03",
+              "phone": "(214) 555-1037",
+              "insurance_id": "INS-80239"
+            },
+            {
+              "legacy_id": "4",
+              "last_name": "Garcia",
+              "first_name": "Wei",
+              "dob": "1998-09-07",
+              "phone": "(214) 555-1111",
+              "insurance_id": "INS-14914"
+            },
+            {
+              "legacy_id": "7",
+              "last_name": "Miller",
+              "first_name": "Joy",
+              "dob": "1967-01-27",
+              "phone": "(214) 555-1222",
+              "insurance_id": "INS-84115"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_patient",
+      "method": "GET",
+      "path": "/patients/{id}",
+      "entity": "Patient",
+      "kind": "get",
+      "source": "database",
+      "summary": "Get a single patient by legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Patient"
+      },
+      "example": {
+        "request": "/patients/1",
+        "response": {
+          "legacy_id": "1",
+          "last_name": "Smith",
+          "first_name": "John",
+          "dob": "1960-03-13",
+          "phone": null,
+          "insurance_id": null
+        }
+      }
+    },
+    {
+      "name": "search_patients",
+      "method": "GET",
+      "path": "/patients/search",
+      "entity": "Patient",
+      "kind": "search",
+      "source": "database",
+      "summary": "Search patients by free-text query across name fields.",
+      "inputs": [
+        {
+          "name": "q",
+          "in": "query",
+          "type": "string",
+          "field": null,
+          "match": "search",
+          "required": true,
+          "fields": [
+            "last_name",
+            "first_name"
+          ]
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "offset",
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Patient"
+      },
+      "example": {
+        "request": "/patients/search?q=johnson&limit=3",
+        "response": {
+          "total": 2,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "2",
+              "last_name": "Johnson",
+              "first_name": "Raj",
+              "dob": "1981-01-03",
+              "phone": "(214) 555-1037",
+              "insurance_id": "INS-80239"
+            },
+            {
+              "legacy_id": "32",
+              "last_name": "Johnson",
+              "first_name": "Bob",
+              "dob": "1957-08-23",
+              "phone": "(214) 555-2147",
+              "insurance_id": "INS-97051"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "create_patient",
+      "method": "POST",
+      "path": "/patients",
+      "entity": "Patient",
+      "kind": "create",
+      "source": "legacy",
+      "summary": "Create a new patient using the patient new form.",
+      "inputs": [
+        {
+          "name": "last_name",
+          "in": "body",
+          "type": "string",
+          "field": "last_name",
+          "required": true,
+          "match": "set"
+        },
+        {
+          "name": "first_name",
+          "in": "body",
+          "type": "string",
+          "field": "first_name",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "dob",
+          "in": "body",
+          "type": "date",
+          "field": "dob",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "phone",
+          "in": "body",
+          "type": "string",
+          "field": "phone",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "insurance_id",
+          "in": "body",
+          "type": "string",
+          "field": "insurance_id",
+          "required": false,
+          "match": "set"
+        }
+      ],
+      "output": {
+        "type": "op_result",
+        "entity": "Patient"
+      },
+      "legacy": {
+        "form_page": "patient_new",
+        "steps": []
+      },
+      "example": {
+        "request": "/patients",
+        "body": {
+          "last_name": "Smith",
+          "first_name": "John",
+          "dob": "1960-03-13"
+        },
+        "response": {
+          "status": "done",
+          "verified": true,
+          "result": {
+            "entity": "Patient",
+            "legacy_id": "1",
+            "data": {
+              "last_name": "Smith",
+              "first_name": "John",
+              "dob": "1960-03-13"
+            }
+          },
+          "error": null
+        },
+        "note": "illustration: the Operator fills the legacy form, submits it and re-reads the record; on a rule violation status is 'failed' and error is the site's own message"
+      }
+    },
+    {
+      "name": "update_patient",
+      "method": "PATCH",
+      "path": "/patients/{id}",
+      "entity": "Patient",
+      "kind": "update",
+      "source": "legacy",
+      "summary": "Update an existing patient using the patient edit form.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        },
+        {
+          "name": "last_name",
+          "in": "body",
+          "type": "string",
+          "field": "last_name",
+          "required": true,
+          "match": "set"
+        },
+        {
+          "name": "first_name",
+          "in": "body",
+          "type": "string",
+          "field": "first_name",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "dob",
+          "in": "body",
+          "type": "date",
+          "field": "dob",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "phone",
+          "in": "body",
+          "type": "string",
+          "field": "phone",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "insurance_id",
+          "in": "body",
+          "type": "string",
+          "field": "insurance_id",
+          "required": false,
+          "match": "set"
+        }
+      ],
+      "output": {
+        "type": "op_result",
+        "entity": "Patient"
+      },
+      "legacy": {
+        "form_page": "patient_edit",
+        "steps": []
+      },
+      "example": {
+        "request": "/patients/1",
+        "body": {
+          "last_name": "Smith",
+          "first_name": "John",
+          "dob": "1960-03-13"
+        },
+        "response": {
+          "status": "done",
+          "verified": true,
+          "result": {
+            "entity": "Patient",
+            "legacy_id": "1",
+            "data": {
+              "last_name": "Smith",
+              "first_name": "John",
+              "dob": "1960-03-13"
+            }
+          },
+          "error": null
+        },
+        "note": "illustration: the Operator fills the legacy form, submits it and re-reads the record; on a rule violation status is 'failed' and error is the site's own message"
+      }
+    },
+    {
+      "name": "list_appointments",
+      "method": "GET",
+      "path": "/appointments",
+      "entity": "Appointment",
+      "kind": "list",
+      "source": "database",
+      "summary": "List appointments with optional filters by date range, time, patient, provider, status, reason, pagination, and sort.",
+      "inputs": [
+        {
+          "name": "min_date",
+          "in": "query",
+          "type": "date",
+          "field": "date",
+          "match": "gte",
+          "required": false
+        },
+        {
+          "name": "max_date",
+          "in": "query",
+          "type": "date",
+          "field": "date",
+          "match": "lte",
+          "required": false
+        },
+        {
+          "name": "time",
+          "in": "query",
+          "type": "string",
+          "field": "time",
+          "match": "eq",
+          "values": [
+            "8:00",
+            "9:00",
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "13:00",
+            "13:30",
+            "14:30",
+            "15:00",
+            "16:30"
+          ],
+          "required": false
+        },
+        {
+          "name": "patient_id",
+          "in": "query",
+          "type": "string",
+          "field": "patient_id",
+          "match": "eq",
+          "required": false
+        },
+        {
+          "name": "provider",
+          "in": "query",
+          "type": "string",
+          "field": "provider",
+          "match": "eq",
+          "values": [
+            "Dr. Lee",
+            "Dr. Patel",
+            "Hyg. Kim"
+          ],
+          "required": false
+        },
+        {
+          "name": "status",
+          "in": "query",
+          "type": "string",
+          "field": "status",
+          "match": "eq",
+          "values": [
+            "Booked",
+            "Completed",
+            "No-show",
+            "Cancelled"
+          ],
+          "required": false
+        },
+        {
+          "name": "reason",
+          "in": "query",
+          "type": "string",
+          "field": "reason",
+          "match": "eq",
+          "values": [
+            "Crown fitting",
+            "Checkup",
+            "X-rays",
+            "Cleaning",
+            "Filling"
+          ],
+          "required": false
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "limit",
+          "required": false
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "type": "integer",
+          "field": null,
+          "match": "offset",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "in": "query",
+          "type": "string",
+          "field": null,
+          "match": "sort",
+          "values": [
+            "date",
+            "-date"
+          ],
+          "required": false
+        }
+      ],
+      "output": {
+        "type": "list",
+        "entity": "Appointment"
+      },
+      "example": {
+        "request": "/appointments?min_date=2026-03-05&time=13%3A00&limit=3",
+        "response": {
+          "total": 3,
+          "limit": 3,
+          "offset": 0,
+          "items": [
+            {
+              "legacy_id": "1006",
+              "date": "2026-03-20",
+              "time": "13:00",
+              "patient": "Lee, Zoe",
+              "patient_id": "33",
+              "provider": "Hyg. Kim",
+              "status": "Booked",
+              "reason": "Crown fitting"
+            },
+            {
+              "legacy_id": "1015",
+              "date": "2026-03-06",
+              "time": "13:00",
+              "patient": "Smith, John",
+              "patient_id": "35",
+              "provider": "Hyg. Kim",
+              "status": "No-show",
+              "reason": null
+            },
+            {
+              "legacy_id": "1019",
+              "date": "2026-04-07",
+              "time": "13:00",
+              "patient": "Smith, Eve",
+              "patient_id": "31",
+              "provider": "Hyg. Kim",
+              "status": "Booked",
+              "reason": "Crown fitting"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_appointment",
+      "method": "GET",
+      "path": "/appointments/{id}",
+      "entity": "Appointment",
+      "kind": "get",
+      "source": "database",
+      "summary": "Get a single appointment by legacy ID.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        }
+      ],
+      "output": {
+        "type": "record",
+        "entity": "Appointment"
+      },
+      "example": {
+        "request": "/appointments/1000",
+        "response": {
+          "legacy_id": "1000",
+          "date": "2026-04-10",
+          "time": "14:30",
+          "patient": "Johnson, Raj",
+          "patient_id": "2",
+          "provider": "Dr. Patel",
+          "status": "No-show",
+          "reason": "Checkup"
+        }
+      }
+    },
+    {
+      "name": "create_appointment",
+      "method": "POST",
+      "path": "/appointments",
+      "entity": "Appointment",
+      "kind": "create",
+      "source": "legacy",
+      "summary": "Create a new appointment using the appointment new form.",
+      "inputs": [
+        {
+          "name": "date",
+          "in": "body",
+          "type": "date",
+          "field": "date",
+          "required": true,
+          "match": "set"
+        },
+        {
+          "name": "time",
+          "in": "body",
+          "type": "string",
+          "field": "time",
+          "required": true,
+          "match": "set"
+        },
+        {
+          "name": "patient_id",
+          "in": "body",
+          "type": "string",
+          "field": "patient_id",
+          "required": true,
+          "match": "set"
+        },
+        {
+          "name": "provider",
+          "in": "body",
+          "type": "string",
+          "field": "provider",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "status",
+          "in": "body",
+          "type": "string",
+          "field": "status",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "reason",
+          "in": "body",
+          "type": "string",
+          "field": "reason",
+          "required": false,
+          "match": "set"
+        }
+      ],
+      "output": {
+        "type": "op_result",
+        "entity": "Appointment"
+      },
+      "legacy": {
+        "form_page": "appointment_new",
+        "steps": []
+      },
+      "example": {
+        "request": "/appointments",
+        "body": {
+          "date": "2026-04-10",
+          "time": "14:30",
+          "patient_id": "2",
+          "provider": "Dr. Patel",
+          "status": "No-show",
+          "reason": "Checkup"
+        },
+        "response": {
+          "status": "done",
+          "verified": true,
+          "result": {
+            "entity": "Appointment",
+            "legacy_id": "1000",
+            "data": {
+              "date": "2026-04-10",
+              "time": "14:30",
+              "patient_id": "2",
+              "provider": "Dr. Patel",
+              "status": "No-show",
+              "reason": "Checkup"
+            }
+          },
+          "error": null
+        },
+        "note": "illustration: the Operator fills the legacy form, submits it and re-reads the record; on a rule violation status is 'failed' and error is the site's own message"
+      }
+    },
+    {
+      "name": "update_appointment",
+      "method": "PATCH",
+      "path": "/appointments/{id}",
+      "entity": "Appointment",
+      "kind": "update",
+      "source": "legacy",
+      "summary": "Update an existing appointment using the appointment edit form.",
+      "inputs": [
+        {
+          "name": "id",
+          "in": "path",
+          "type": "string",
+          "field": "legacy_id",
+          "match": "id",
+          "required": true
+        },
+        {
+          "name": "date",
+          "in": "body",
+          "type": "date",
+          "field": "date",
+          "required": true,
+          "match": "set"
+        },
+        {
+          "name": "time",
+          "in": "body",
+          "type": "string",
+          "field": "time",
+          "required": true,
+          "match": "set"
+        },
+        {
+          "name": "patient_id",
+          "in": "body",
+          "type": "string",
+          "field": "patient_id",
+          "required": true,
+          "match": "set"
+        },
+        {
+          "name": "provider",
+          "in": "body",
+          "type": "string",
+          "field": "provider",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "status",
+          "in": "body",
+          "type": "string",
+          "field": "status",
+          "required": false,
+          "match": "set"
+        },
+        {
+          "name": "reason",
+          "in": "body",
+          "type": "string",
+          "field": "reason",
+          "required": false,
+          "match": "set"
+        }
+      ],
+      "output": {
+        "type": "op_result",
+        "entity": "Appointment"
+      },
+      "legacy": {
+        "form_page": "appointment_edit",
+        "steps": []
+      },
+      "example": {
+        "request": "/appointments/1000",
+        "body": {
+          "date": "2026-04-10",
+          "time": "14:30",
+          "patient_id": "2",
+          "provider": "Dr. Patel",
+          "status": "No-show",
+          "reason": "Checkup"
+        },
+        "response": {
+          "status": "done",
+          "verified": true,
+          "result": {
+            "entity": "Appointment",
+            "legacy_id": "1000",
+            "data": {
+              "date": "2026-04-10",
+              "time": "14:30",
+              "patient_id": "2",
+              "provider": "Dr. Patel",
+              "status": "No-show",
+              "reason": "Checkup"
+            }
+          },
+          "error": null
+        },
+        "note": "illustration: the Operator fills the legacy form, submits it and re-reads the record; on a rule violation status is 'failed' and error is the site's own message"
+      }
+    }
+  ]
+}
