@@ -1,4 +1,4 @@
-const VIEWS = [['dashboard', 'Dashboard'], ['explorer', 'Explorer'], ['api', 'API']];
+const VIEWS = [['dashboard', 'Dashboard'], ['api', 'API']];
 
 export default function Titlebar({ view, onView }) {
   return (

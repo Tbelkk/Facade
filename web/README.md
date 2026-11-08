@@ -39,26 +39,6 @@ src/
     hooks.js               useSettings, useTile
 ```
 
-## Explorer tab (replay of a real run)
-
-The Explorer tab replays a run of the Explorer agent line by line: the site map, the agent log,
-the record counter, the data model and a data browser for the records.
-
-Put the agent's output in `public/run/`:
-
-```
-public/run/run_log.jsonl
-public/run/site_map.json
-public/run/data_model.json
-public/run/records/Post.jsonl
-```
-
-You can also drop a run folder onto the Explorer tab, or use **Load run files**.
-
-Everything about loading lives in `src/run/data/source.js`. To switch to SpacetimeDB, write
-`createSpacetimeSource` there (a sketch is at the bottom of the file) and pass it to `setSource`
-in `src/run/ExplorerView.jsx`. The panels in `src/run/components/` don't change.
-
 ## Hooking up the back end
 
 Same calls as the HTML app. `window.dashboard` and `window.facadeSettings` are still set:
@@ -87,4 +67,4 @@ python3 -m http.server 8000   # http://localhost:8000/
 ```
 
 Rebuild after changing anything in `web/`. Commit `dashboard/` too if the site is hosted as static files
-(for example GitHub Pages). The Explorer tab's run comes from `public/run/`, which is copied into the build.
+(for example GitHub Pages). 

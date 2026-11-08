@@ -3,6 +3,7 @@
     python -m facade.run https://news.ycombinator.com
     python -m facade.run http://localhost:5005 --login        # a person logs in once in the browser
     python -m facade.run <url> --offline-design               # API design without Nemotron
+    python -m facade.run <url> --pause 2 --minutes 20         # go easy on a fragile old server
 
   1. Explore + extract   (explore.agent, Nemotron)   writes to SpacetimeDB live as it goes
   2. Design the API      (operator_agent, Nemotron)  operations.json + api_docs.md
@@ -18,7 +19,8 @@ import time
 from ingest import nemotron  # noqa: F401  (loads core/.env)
 
 
-def run(url, login=False, headed=False, offline_design=False, full=False, live=True, serve=True, port=8000):
+def run(url, login=False, headed=False, offline_design=False, full=False, live=True, serve=True, port=8000,
+        pause=None, minutes=None, pages=None):
     from explore import agent
     from extract.handoff import publish
     from operator_agent import run as operator
@@ -28,7 +30,7 @@ def run(url, login=False, headed=False, offline_design=False, full=False, live=T
     t0 = time.time()
     emit({"stage": "run", "kind": "start", "site": url})
     print("== 1/5  Explore + extract ==")
-    r = agent.run(url, login=login, headed=headed, full=full, live=live)
+    r = agent.run(url, max_pages=pages, login=login, headed=headed, full=full, live=live, pause=pause, minutes=minutes)
     if not r.records:
         raise SystemExit("No records were extracted, so there is nothing to design an API for. See the run log above.")
 
@@ -63,9 +65,12 @@ def main(argv=None):
     ap.add_argument("--no-live", action="store_true", help="don't write to SpacetimeDB during the run")
     ap.add_argument("--no-serve", action="store_true", help="self-test the API + MCP server, then exit instead of serving")
     ap.add_argument("--port", type=int, default=8000)
+    ap.add_argument("--pause", type=float, default=None, help="seconds between page loads (speed limit for old servers)")
+    ap.add_argument("--minutes", type=float, default=None, help="stop exploring after this many minutes")
+    ap.add_argument("--pages", type=int, default=None, help="stop exploring after this many pages")
     a = ap.parse_args(argv)
     run(a.url, login=a.login, headed=a.headed, offline_design=a.offline_design, full=a.full, live=not a.no_live,
-        serve=not a.no_serve, port=a.port)
+        serve=not a.no_serve, port=a.port, pause=a.pause, minutes=a.minutes, pages=a.pages)
 
 
 if __name__ == "__main__":

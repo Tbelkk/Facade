@@ -1,0 +1,782 @@
+{
+  "site": "http://127.0.0.1:65355",
+  "source": "files in shared/output/clinic",
+  "tools": [
+    {
+      "name": "list_patients",
+      "description": "Returns a paginated list of patients with optional filters by name, date of birth, phone, and insurance ID. Example: /patients?min_dob=1966-03-25&limit=3",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "last_name": {
+            "type": "string",
+            "description": "Text that last_name contains (case-insensitive)"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Text that first_name contains (case-insensitive)"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Text that phone contains (case-insensitive)"
+          },
+          "insurance_id": {
+            "type": "string",
+            "description": "Text that insurance_id contains (case-insensitive)"
+          },
+          "min_dob": {
+            "type": "string",
+            "description": "Smallest dob to include",
+            "format": "date"
+          },
+          "max_dob": {
+            "type": "string",
+            "description": "Largest dob to include",
+            "format": "date"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "How many results to return (default 50)"
+          },
+          "offset": {
+            "type": "integer",
+            "description": "How many results to skip, for paging"
+          },
+          "sort": {
+            "type": "string",
+            "description": "Field to sort by; put - in front for descending",
+            "enum": [
+              "dob",
+              "-dob"
+            ]
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Patient",
+        "kind": "list",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "last_name",
+            "field": "last_name",
+            "match": "contains"
+          },
+          {
+            "name": "first_name",
+            "field": "first_name",
+            "match": "contains"
+          },
+          {
+            "name": "phone",
+            "field": "phone",
+            "match": "contains"
+          },
+          {
+            "name": "insurance_id",
+            "field": "insurance_id",
+            "match": "contains"
+          },
+          {
+            "name": "min_dob",
+            "field": "dob",
+            "match": "gte"
+          },
+          {
+            "name": "max_dob",
+            "field": "dob",
+            "match": "lte"
+          },
+          {
+            "name": "limit",
+            "field": null,
+            "match": "limit"
+          },
+          {
+            "name": "offset",
+            "field": null,
+            "match": "offset"
+          },
+          {
+            "name": "sort",
+            "field": null,
+            "match": "sort"
+          }
+        ],
+        "legacy": null
+      }
+    },
+    {
+      "name": "get_patient",
+      "description": "Returns a single patient by its legacy identifier. Example: /patients/1",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The record's id"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Patient",
+        "kind": "get",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "id",
+            "field": "legacy_id",
+            "match": "id"
+          }
+        ],
+        "legacy": null
+      }
+    },
+    {
+      "name": "search_patients",
+      "description": "Searches patients by free-text query across name, phone, and insurance ID. Example: /patients/search?q=ins-80239&limit=3",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Words to look for in last_name, first_name, phone, insurance_id"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "How many results to return (default 50)"
+          },
+          "offset": {
+            "type": "integer",
+            "description": "How many results to skip, for paging"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Patient",
+        "kind": "search",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "q",
+            "field": null,
+            "fields": [
+              "last_name",
+              "first_name",
+              "phone",
+              "insurance_id"
+            ],
+            "match": "search"
+          },
+          {
+            "name": "limit",
+            "field": null,
+            "match": "limit"
+          },
+          {
+            "name": "offset",
+            "field": null,
+            "match": "offset"
+          }
+        ],
+        "legacy": null
+      }
+    },
+    {
+      "name": "create_patient",
+      "description": "Creates a new patient record using the legacy patient new form. Example: /patients Runs on the legacy system and can take a while; returns status, verified and the record.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "last_name": {
+            "type": "string",
+            "description": "New value for last_name"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "New value for first_name"
+          },
+          "dob": {
+            "type": "string",
+            "description": "New value for dob",
+            "format": "date"
+          },
+          "phone": {
+            "type": "string",
+            "description": "New value for phone"
+          },
+          "insurance_id": {
+            "type": "string",
+            "description": "New value for insurance_id"
+          }
+        },
+        "required": [
+          "last_name"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "_facade": {
+        "entity": "Patient",
+        "kind": "create",
+        "source": "legacy",
+        "inputs": [
+          {
+            "name": "last_name",
+            "field": "last_name",
+            "match": "set"
+          },
+          {
+            "name": "first_name",
+            "field": "first_name",
+            "match": "set"
+          },
+          {
+            "name": "dob",
+            "field": "dob",
+            "match": "set"
+          },
+          {
+            "name": "phone",
+            "field": "phone",
+            "match": "set"
+          },
+          {
+            "name": "insurance_id",
+            "field": "insurance_id",
+            "match": "set"
+          }
+        ],
+        "legacy": {
+          "form_page": "patient_new",
+          "steps": []
+        }
+      }
+    },
+    {
+      "name": "update_patient",
+      "description": "Updates an existing patient record using the legacy patient edit form. Example: /patients/1 Runs on the legacy system and can take a while; returns status, verified and the record.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The record's id"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "New value for last_name"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "New value for first_name"
+          },
+          "dob": {
+            "type": "string",
+            "description": "New value for dob",
+            "format": "date"
+          },
+          "phone": {
+            "type": "string",
+            "description": "New value for phone"
+          },
+          "insurance_id": {
+            "type": "string",
+            "description": "New value for insurance_id"
+          }
+        },
+        "required": [
+          "id",
+          "last_name"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "_facade": {
+        "entity": "Patient",
+        "kind": "update",
+        "source": "legacy",
+        "inputs": [
+          {
+            "name": "id",
+            "field": "legacy_id",
+            "match": "id"
+          },
+          {
+            "name": "last_name",
+            "field": "last_name",
+            "match": "set"
+          },
+          {
+            "name": "first_name",
+            "field": "first_name",
+            "match": "set"
+          },
+          {
+            "name": "dob",
+            "field": "dob",
+            "match": "set"
+          },
+          {
+            "name": "phone",
+            "field": "phone",
+            "match": "set"
+          },
+          {
+            "name": "insurance_id",
+            "field": "insurance_id",
+            "match": "set"
+          }
+        ],
+        "legacy": {
+          "form_page": "patient_edit",
+          "steps": []
+        }
+      }
+    },
+    {
+      "name": "list_appointments",
+      "description": "Returns a paginated list of appointments with optional filters by date, time, patient, provider, status, and reason. Example: /appointments?min_date=2026-03-05&time=8%3A00&limit=3",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "min_date": {
+            "type": "string",
+            "description": "Smallest date to include",
+            "format": "date"
+          },
+          "max_date": {
+            "type": "string",
+            "description": "Largest date to include",
+            "format": "date"
+          },
+          "time": {
+            "type": "string",
+            "description": "Exact time",
+            "enum": [
+              "8:00",
+              "9:00",
+              "10:00",
+              "10:30",
+              "11:00",
+              "11:30",
+              "12:00",
+              "13:00",
+              "13:30",
+              "14:30",
+              "15:00",
+              "16:30"
+            ]
+          },
+          "patient_id": {
+            "type": "string",
+            "description": "Exact patient_id"
+          },
+          "provider": {
+            "type": "string",
+            "description": "Exact provider",
+            "enum": [
+              "Dr. Lee",
+              "Dr. Patel",
+              "Hyg. Kim"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "Exact status",
+            "enum": [
+              "Booked",
+              "Completed",
+              "No-show",
+              "Cancelled"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "Exact reason",
+            "enum": [
+              "Crown fitting",
+              "Checkup",
+              "X-rays",
+              "Cleaning",
+              "Filling"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "description": "How many results to return (default 50)"
+          },
+          "offset": {
+            "type": "integer",
+            "description": "How many results to skip, for paging"
+          },
+          "sort": {
+            "type": "string",
+            "description": "Field to sort by; put - in front for descending",
+            "enum": [
+              "date",
+              "-date"
+            ]
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Appointment",
+        "kind": "list",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "min_date",
+            "field": "date",
+            "match": "gte"
+          },
+          {
+            "name": "max_date",
+            "field": "date",
+            "match": "lte"
+          },
+          {
+            "name": "time",
+            "field": "time",
+            "match": "eq"
+          },
+          {
+            "name": "patient_id",
+            "field": "patient_id",
+            "match": "eq"
+          },
+          {
+            "name": "provider",
+            "field": "provider",
+            "match": "eq"
+          },
+          {
+            "name": "status",
+            "field": "status",
+            "match": "eq"
+          },
+          {
+            "name": "reason",
+            "field": "reason",
+            "match": "eq"
+          },
+          {
+            "name": "limit",
+            "field": null,
+            "match": "limit"
+          },
+          {
+            "name": "offset",
+            "field": null,
+            "match": "offset"
+          },
+          {
+            "name": "sort",
+            "field": null,
+            "match": "sort"
+          }
+        ],
+        "legacy": null
+      }
+    },
+    {
+      "name": "get_appointment",
+      "description": "Returns a single appointment by its legacy identifier. Example: /appointments/1000",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The record's id"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Appointment",
+        "kind": "get",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "id",
+            "field": "legacy_id",
+            "match": "id"
+          }
+        ],
+        "legacy": null
+      }
+    },
+    {
+      "name": "search_appointments",
+      "description": "Searches appointments by free-text query across reason. Example: /appointments/search?q=cleaning&limit=3",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Words to look for in reason"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "How many results to return (default 50)"
+          },
+          "offset": {
+            "type": "integer",
+            "description": "How many results to skip, for paging"
+          }
+        },
+        "required": []
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false
+      },
+      "_facade": {
+        "entity": "Appointment",
+        "kind": "search",
+        "source": "database",
+        "inputs": [
+          {
+            "name": "q",
+            "field": null,
+            "fields": [
+              "reason"
+            ],
+            "match": "search"
+          },
+          {
+            "name": "limit",
+            "field": null,
+            "match": "limit"
+          },
+          {
+            "name": "offset",
+            "field": null,
+            "match": "offset"
+          }
+        ],
+        "legacy": null
+      }
+    },
+    {
+      "name": "create_appointment",
+      "description": "Creates a new appointment record using the legacy appointment new form. Example: /appointments Runs on the legacy system and can take a while; returns status, verified and the record.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "New value for date",
+            "format": "date"
+          },
+          "time": {
+            "type": "string",
+            "description": "New value for time"
+          },
+          "patient_id": {
+            "type": "string",
+            "description": "New value for patient_id"
+          },
+          "provider": {
+            "type": "string",
+            "description": "New value for provider"
+          },
+          "status": {
+            "type": "string",
+            "description": "New value for status"
+          },
+          "reason": {
+            "type": "string",
+            "description": "New value for reason"
+          }
+        },
+        "required": [
+          "date",
+          "time",
+          "patient_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "_facade": {
+        "entity": "Appointment",
+        "kind": "create",
+        "source": "legacy",
+        "inputs": [
+          {
+            "name": "date",
+            "field": "date",
+            "match": "set"
+          },
+          {
+            "name": "time",
+            "field": "time",
+            "match": "set"
+          },
+          {
+            "name": "patient_id",
+            "field": "patient_id",
+            "match": "set"
+          },
+          {
+            "name": "provider",
+            "field": "provider",
+            "match": "set"
+          },
+          {
+            "name": "status",
+            "field": "status",
+            "match": "set"
+          },
+          {
+            "name": "reason",
+            "field": "reason",
+            "match": "set"
+          }
+        ],
+        "legacy": {
+          "form_page": "appointment_new",
+          "steps": []
+        }
+      }
+    },
+    {
+      "name": "update_appointment",
+      "description": "Updates an existing appointment record using the legacy appointment edit form. Example: /appointments/1000 Runs on the legacy system and can take a while; returns status, verified and the record.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The record's id"
+          },
+          "date": {
+            "type": "string",
+            "description": "New value for date",
+            "format": "date"
+          },
+          "time": {
+            "type": "string",
+            "description": "New value for time"
+          },
+          "patient_id": {
+            "type": "string",
+            "description": "New value for patient_id"
+          },
+          "provider": {
+            "type": "string",
+            "description": "New value for provider"
+          },
+          "status": {
+            "type": "string",
+            "description": "New value for status"
+          },
+          "reason": {
+            "type": "string",
+            "description": "New value for reason"
+          }
+        },
+        "required": [
+          "id",
+          "date",
+          "time",
+          "patient_id"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "openWorldHint": true
+      },
+      "_facade": {
+        "entity": "Appointment",
+        "kind": "update",
+        "source": "legacy",
+        "inputs": [
+          {
+            "name": "id",
+            "field": "legacy_id",
+            "match": "id"
+          },
+          {
+            "name": "date",
+            "field": "date",
+            "match": "set"
+          },
+          {
+            "name": "time",
+            "field": "time",
+            "match": "set"
+          },
+          {
+            "name": "patient_id",
+            "field": "patient_id",
+            "match": "set"
+          },
+          {
+            "name": "provider",
+            "field": "provider",
+            "match": "set"
+          },
+          {
+            "name": "status",
+            "field": "status",
+            "match": "set"
+          },
+          {
+            "name": "reason",
+            "field": "reason",
+            "match": "set"
+          }
+        ],
+        "legacy": {
+          "form_page": "appointment_edit",
+          "steps": []
+        }
+      }
+    }
+  ]
+}

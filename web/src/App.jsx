@@ -7,7 +7,6 @@ import Intake from './components/Intake.jsx';
 import Board from './components/Board.jsx';
 import ApiView from './components/ApiView.jsx';
 import SettingsDrawer from './components/SettingsDrawer.jsx';
-import ExplorerView from './run/ExplorerView.jsx';
 import { createDashboard } from './lib/dashboard.js';
 import { createRunDriver, loadRecordedRun, replayRun } from './lib/runDriver.js';
 import DevPanel from './components/DevPanel.jsx';
@@ -146,11 +145,9 @@ export default function App() {
         <Board dashboard={dashboard} store={driver.store} working={summary.working} total={summary.total} clock={clock} />
       </main>
 
-      <ExplorerView on={view === 'explorer'} />
-
       <ApiView store={driver.store} host={host} on={view === 'api'} />
 
-      <SettingsDrawer open={settingsOpen} onClose={closeSettings} />
+      <SettingsDrawer open={settingsOpen} onClose={closeSettings} url={url} />
 
       <DevPanel recorded={recorded} running={running} replaying={replaying} onRun={startReplay} onStop={stopRun} />
     </>
