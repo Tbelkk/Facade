@@ -1,0 +1,389 @@
+{
+  "url": "http://mock-hr.local",
+  "site_map": {
+    "site": "http://mock-hr.local",
+    "pages": [
+      {
+        "id": "directory",
+        "url_pattern": "/directory.aspx?pg={n}&dept={dept}",
+        "purpose": "Employee directory",
+        "entity": "Employee",
+        "kind": "list",
+        "pagination": {
+          "next": {
+            "role": "link",
+            "name": ">"
+          },
+          "page_size": 15
+        },
+        "row_link": {
+          "column": "Employee",
+          "goes_to": "employee_profile"
+        }
+      },
+      {
+        "id": "employee_profile",
+        "url_pattern": "/employee.aspx?id={id}",
+        "entity": "Employee",
+        "kind": "detail"
+      },
+      {
+        "id": "employee_edit",
+        "url_pattern": "/employee_edit.aspx?id={id}",
+        "entity": "Employee",
+        "kind": "form"
+      },
+      {
+        "id": "timeoff_list",
+        "url_pattern": "/timeoff.aspx?status={status}",
+        "purpose": "Time off requests",
+        "entity": "TimeOffRequest",
+        "kind": "list",
+        "row_link": {
+          "column": "Request #",
+          "goes_to": "timeoff_detail"
+        }
+      },
+      {
+        "id": "timeoff_detail",
+        "url_pattern": "/timeoff_view.aspx?req={id}",
+        "entity": "TimeOffRequest",
+        "kind": "detail"
+      },
+      {
+        "id": "timeoff_new",
+        "url_pattern": "/timeoff_new.aspx?emp={id}",
+        "entity": "TimeOffRequest",
+        "kind": "form"
+      }
+    ],
+    "edges": [
+      {
+        "from": "directory",
+        "to": "employee_profile",
+        "via": "row link"
+      },
+      {
+        "from": "employee_profile",
+        "to": "employee_edit",
+        "via": "Edit link"
+      },
+      {
+        "from": "employee_profile",
+        "to": "timeoff_new",
+        "via": "Request Time Off button"
+      },
+      {
+        "from": "timeoff_list",
+        "to": "timeoff_detail",
+        "via": "row link"
+      }
+    ],
+    "unexplored": [
+      "Payroll",
+      "Benefits Enrollment"
+    ],
+    "notes": [
+      "Pages use ASP.NET postbacks",
+      "Directory can be filtered by department"
+    ]
+  },
+  "model": {
+    "entities": [
+      {
+        "name": "Employee",
+        "key": "legacy_id",
+        "fields": [
+          {
+            "name": "first_name",
+            "label": "First Name",
+            "type": "string",
+            "required": true,
+            "read": {
+              "page": "employee_profile",
+              "label": "First Name"
+            }
+          },
+          {
+            "name": "last_name",
+            "label": "Last Name",
+            "type": "string",
+            "required": true,
+            "read": {
+              "page": "employee_profile",
+              "label": "Last Name"
+            }
+          },
+          {
+            "name": "email",
+            "label": "Work Email",
+            "type": "string",
+            "read": {
+              "page": "employee_profile",
+              "label": "E-mail"
+            }
+          },
+          {
+            "name": "department",
+            "label": "Department",
+            "type": "enum",
+            "values": [
+              "Engineering",
+              "Sales",
+              "Finance",
+              "Operations",
+              "Support"
+            ],
+            "read": {
+              "page": "employee_profile",
+              "label": "Dept."
+            },
+            "write": {
+              "page": "employee_edit",
+              "label": "Department"
+            }
+          },
+          {
+            "name": "title",
+            "label": "Job Title",
+            "type": "string",
+            "read": {
+              "page": "employee_profile",
+              "label": "Position"
+            }
+          },
+          {
+            "name": "hire_date",
+            "label": "Hire Date",
+            "type": "date",
+            "format": "MM/DD/YYYY",
+            "read": {
+              "page": "employee_profile",
+              "label": "Date Hired"
+            }
+          },
+          {
+            "name": "status",
+            "label": "Status",
+            "type": "enum",
+            "values": [
+              "Active",
+              "On Leave",
+              "Terminated"
+            ],
+            "read": {
+              "page": "employee_profile",
+              "label": "Employment Status"
+            }
+          },
+          {
+            "name": "phone",
+            "label": "Phone",
+            "type": "string",
+            "read": {
+              "page": "employee_profile",
+              "label": "Phone Ext."
+            },
+            "write": {
+              "page": "employee_edit",
+              "label": "Phone"
+            }
+          }
+        ]
+      },
+      {
+        "name": "TimeOffRequest",
+        "key": "legacy_id",
+        "relations": [
+          {
+            "field": "employee_id",
+            "to": "Employee"
+          }
+        ],
+        "fields": [
+          {
+            "name": "employee_id",
+            "label": "Employee",
+            "type": "string",
+            "required": true,
+            "read": {
+              "page": "timeoff_detail",
+              "label": "Employee #"
+            }
+          },
+          {
+            "name": "type",
+            "label": "Type",
+            "type": "enum",
+            "values": [
+              "Vacation",
+              "Sick",
+              "Personal",
+              "Bereavement"
+            ],
+            "read": {
+              "page": "timeoff_detail",
+              "label": "Leave Type"
+            },
+            "write": {
+              "page": "timeoff_new",
+              "label": "Leave Type"
+            }
+          },
+          {
+            "name": "start_date",
+            "label": "Start",
+            "type": "date",
+            "format": "MM/DD/YYYY",
+            "read": {
+              "page": "timeoff_detail",
+              "label": "From"
+            },
+            "write": {
+              "page": "timeoff_new",
+              "label": "From"
+            }
+          },
+          {
+            "name": "end_date",
+            "label": "End",
+            "type": "date",
+            "format": "MM/DD/YYYY",
+            "read": {
+              "page": "timeoff_detail",
+              "label": "To"
+            },
+            "write": {
+              "page": "timeoff_new",
+              "label": "To"
+            }
+          },
+          {
+            "name": "status",
+            "label": "Status",
+            "type": "enum",
+            "values": [
+              "Pending",
+              "Approved",
+              "Denied"
+            ],
+            "read": {
+              "page": "timeoff_detail",
+              "label": "Status"
+            }
+          },
+          {
+            "name": "notes",
+            "label": "Notes",
+            "type": "string",
+            "read": {
+              "page": "timeoff_detail",
+              "label": "Comments"
+            },
+            "write": {
+              "page": "timeoff_new",
+              "label": "Comments"
+            }
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r1",
+        "entity": "TimeOffRequest",
+        "text": "End date must be on or after start date",
+        "source": "error message seen"
+      },
+      {
+        "id": "r2",
+        "entity": "TimeOffRequest",
+        "text": "Requests must be at least 2 days in advance",
+        "source": "form hint text"
+      },
+      {
+        "id": "r3",
+        "entity": "Employee",
+        "text": "First and last name are required",
+        "source": "required marker on edit form"
+      }
+    ],
+    "not_visible": [
+      "Payroll calculations",
+      "Leave balance accrual",
+      "Manager approval routing"
+    ]
+  },
+  "operations": {
+    "operations": [
+      {
+        "name": "search_employees",
+        "kind": "list",
+        "entity": "Employee",
+        "source": "database",
+        "inputs": {
+          "name": "string?",
+          "department": "enum?",
+          "status": "enum?"
+        }
+      },
+      {
+        "name": "get_employee",
+        "kind": "get",
+        "entity": "Employee",
+        "source": "database",
+        "inputs": {
+          "legacy_id": "string"
+        }
+      },
+      {
+        "name": "list_time_off",
+        "kind": "list",
+        "entity": "TimeOffRequest",
+        "source": "database",
+        "inputs": {
+          "employee_id": "string?",
+          "status": "enum?"
+        }
+      },
+      {
+        "name": "update_employee_phone",
+        "kind": "update",
+        "entity": "Employee",
+        "source": "legacy",
+        "risk": "write",
+        "inputs": {
+          "legacy_id": "string",
+          "phone": "string"
+        },
+        "steps": [
+          "goto employee_edit(legacy_id)",
+          "fill Phone",
+          "click Update",
+          "verify: employee_profile shows new Phone Ext."
+        ]
+      },
+      {
+        "name": "request_time_off",
+        "kind": "create",
+        "entity": "TimeOffRequest",
+        "source": "legacy",
+        "risk": "write",
+        "inputs": {
+          "employee_id": "string",
+          "type": "enum",
+          "start_date": "date",
+          "end_date": "date",
+          "notes": "string?"
+        },
+        "steps": [
+          "goto timeoff_new(employee_id)",
+          "fill Leave Type/From/To/Comments",
+          "click Submit",
+          "verify: request number shown, else return the error text"
+        ]
+      }
+    ]
+  },
+  "docs_md": "# Mock HR Portal: data dictionary\n\n## Employee\n| Field | Type | Notes |\n|---|---|---|\n| first_name | string | required |\n| last_name | string | required |\n| email | string | |\n| department | enum | Engineering, Sales, Finance, Operations, Support |\n| title | string | |\n| hire_date | date | MM/DD/YYYY |\n| status | enum | Active, On Leave, Terminated |\n| phone | string | writable via update_employee_phone |\n\n## TimeOffRequest\n| Field | Type | Notes |\n|---|---|---|\n| employee_id | string | -> Employee |\n| type | enum | Vacation, Sick, Personal, Bereavement |\n| start_date | date | MM/DD/YYYY |\n| end_date | date | MM/DD/YYYY |\n| status | enum | Pending, Approved, Denied |\n| notes | string | |\n\n## Observed rules\n- End date must be on or after start date\n- Requests must be at least 2 days in advance\n- First and last name are required\n\n## Not visible\n- Payroll calculations, leave balance accrual, manager approval routing\n"
+}

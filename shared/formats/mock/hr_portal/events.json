@@ -1,0 +1,112 @@
+[
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Opened start page",
+    "data": {
+      "page": "home",
+      "nemotron_ms": 2050
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Directory looks like a paged employee list (15 per page)",
+    "data": {
+      "page": "directory",
+      "action": "navigate",
+      "nemotron_ms": 2440
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Opened an employee profile",
+    "data": {
+      "page": "employee_profile",
+      "action": "open row",
+      "nemotron_ms": 1890
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Read the employee edit form (did not submit)",
+    "data": {
+      "page": "employee_edit",
+      "action": "open form",
+      "nemotron_ms": 2010
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Opened Time Off list and one request",
+    "data": {
+      "page": "timeoff_detail",
+      "nemotron_ms": 1720
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "warn",
+    "message": "Skipped Payroll (out of page budget)",
+    "data": {
+      "unexplored": "Payroll"
+    }
+  },
+  {
+    "actor": "explorer",
+    "level": "info",
+    "message": "Inferred data model: Employee (8 fields), TimeOffRequest (6 fields)",
+    "data": {
+      "entities": 2,
+      "rules": 3,
+      "nemotron_ms": 7110
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "info",
+    "message": "Logged in",
+    "data": {}
+  },
+  {
+    "actor": "operator",
+    "level": "info",
+    "message": "Extracted all 36 employees",
+    "data": {
+      "entity": "Employee"
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "warn",
+    "message": "Possible duplicate: E1010 and E1036 (same name + hire date)",
+    "data": {
+      "entity": "Employee",
+      "legacy_ids": [
+        "E1010",
+        "E1036"
+      ]
+    }
+  },
+  {
+    "actor": "api",
+    "level": "info",
+    "message": "request_time_off requested for E1011",
+    "data": {
+      "op_request": "mock-hr-2"
+    }
+  },
+  {
+    "actor": "operator",
+    "level": "error",
+    "message": "request_time_off rejected by the old system",
+    "data": {
+      "op_request": "mock-hr-2",
+      "result": "failed",
+      "error": "Old system rule: End date must be on or after start date"
+    }
+  }
+]

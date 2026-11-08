@@ -1,0 +1,66 @@
+[
+  {
+    "request_key": "mock-bs-1",
+    "operation": "update_stock",
+    "inputs": {
+      "legacy_id": "B0007",
+      "stock": 14
+    },
+    "status": "done",
+    "result": {
+      "legacy_id": "B0007",
+      "stock": "14",
+      "verified": true
+    },
+    "error": ""
+  },
+  {
+    "request_key": "mock-bs-2",
+    "operation": "update_stock",
+    "inputs": {
+      "legacy_id": "B0012",
+      "stock": -3
+    },
+    "status": "failed",
+    "result": null,
+    "error": "Old system rule: Stock quantity cannot be negative"
+  },
+  {
+    "request_key": "mock-bs-3",
+    "operation": "create_reorder",
+    "inputs": {
+      "supplier_id": "S002",
+      "book_id": "B0020",
+      "quantity": 10
+    },
+    "status": "done",
+    "result": {
+      "confirmation": "PO-55821",
+      "verified": true
+    },
+    "error": ""
+  },
+  {
+    "request_key": "mock-bs-4",
+    "operation": "create_reorder",
+    "inputs": {
+      "supplier_id": "S004",
+      "book_id": "B0031",
+      "quantity": 6
+    },
+    "status": "running",
+    "result": null,
+    "error": ""
+  },
+  {
+    "request_key": "mock-bs-5",
+    "operation": "update_stock",
+    "inputs": {
+      "legacy_id": "B0002",
+      "stock": 4
+    },
+    "status": "pending",
+    "result": null,
+    "error": ""
+  }
+]

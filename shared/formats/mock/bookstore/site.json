@@ -1,0 +1,341 @@
+{
+  "url": "http://mock-bookstore.local",
+  "site_map": {
+    "site": "http://mock-bookstore.local",
+    "pages": [
+      {
+        "id": "book_list",
+        "url_pattern": "/inventory?page={n}&q={q}",
+        "purpose": "Search and browse books",
+        "entity": "Book",
+        "kind": "list",
+        "pagination": {
+          "next": {
+            "role": "link",
+            "name": "Next Page"
+          },
+          "page_size": 20
+        },
+        "row_link": {
+          "column": "Title",
+          "goes_to": "book_detail"
+        }
+      },
+      {
+        "id": "book_detail",
+        "url_pattern": "/inventory/item/{id}",
+        "entity": "Book",
+        "kind": "detail"
+      },
+      {
+        "id": "stock_adjust",
+        "url_pattern": "/inventory/item/{id}/adjust",
+        "entity": "Book",
+        "kind": "form"
+      },
+      {
+        "id": "supplier_list",
+        "url_pattern": "/suppliers",
+        "purpose": "List of suppliers",
+        "entity": "Supplier",
+        "kind": "list",
+        "row_link": {
+          "column": "Supplier",
+          "goes_to": "supplier_detail"
+        }
+      },
+      {
+        "id": "supplier_detail",
+        "url_pattern": "/suppliers/{id}",
+        "entity": "Supplier",
+        "kind": "detail"
+      },
+      {
+        "id": "reorder_new",
+        "url_pattern": "/orders/new?supplier={id}",
+        "entity": "Book",
+        "kind": "form"
+      }
+    ],
+    "edges": [
+      {
+        "from": "book_list",
+        "to": "book_detail",
+        "via": "row link"
+      },
+      {
+        "from": "book_detail",
+        "to": "stock_adjust",
+        "via": "Adjust Stock button"
+      },
+      {
+        "from": "book_detail",
+        "to": "supplier_detail",
+        "via": "supplier link"
+      },
+      {
+        "from": "supplier_list",
+        "to": "supplier_detail",
+        "via": "row link"
+      },
+      {
+        "from": "supplier_detail",
+        "to": "reorder_new",
+        "via": "New Order button"
+      }
+    ],
+    "unexplored": [
+      "Sales Reports",
+      "Point of Sale"
+    ],
+    "notes": [
+      "Session expires after ~15 minutes",
+      "Search matches title and author only"
+    ]
+  },
+  "model": {
+    "entities": [
+      {
+        "name": "Book",
+        "key": "legacy_id",
+        "relations": [
+          {
+            "field": "supplier_id",
+            "to": "Supplier"
+          }
+        ],
+        "fields": [
+          {
+            "name": "isbn",
+            "label": "ISBN",
+            "type": "string",
+            "required": true,
+            "read": {
+              "page": "book_detail",
+              "label": "ISBN"
+            }
+          },
+          {
+            "name": "title",
+            "label": "Title",
+            "type": "string",
+            "required": true,
+            "read": {
+              "page": "book_detail",
+              "label": "Title"
+            }
+          },
+          {
+            "name": "author",
+            "label": "Author",
+            "type": "string",
+            "read": {
+              "page": "book_detail",
+              "label": "Author"
+            }
+          },
+          {
+            "name": "genre",
+            "label": "Genre",
+            "type": "enum",
+            "values": [
+              "Fiction",
+              "Mystery",
+              "Science",
+              "History",
+              "Children",
+              "Cookbook"
+            ],
+            "read": {
+              "page": "book_detail",
+              "label": "Category"
+            }
+          },
+          {
+            "name": "price",
+            "label": "Price",
+            "type": "decimal",
+            "read": {
+              "page": "book_detail",
+              "label": "Retail Price"
+            }
+          },
+          {
+            "name": "stock",
+            "label": "In Stock",
+            "type": "integer",
+            "read": {
+              "page": "book_detail",
+              "label": "Qty On Hand"
+            },
+            "write": {
+              "page": "stock_adjust",
+              "label": "New Quantity"
+            }
+          },
+          {
+            "name": "supplier_id",
+            "label": "Supplier",
+            "type": "string",
+            "read": {
+              "page": "book_detail",
+              "label": "Supplier"
+            }
+          },
+          {
+            "name": "shelf",
+            "label": "Shelf",
+            "type": "string",
+            "read": {
+              "page": "book_detail",
+              "label": "Location"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Supplier",
+        "key": "legacy_id",
+        "fields": [
+          {
+            "name": "name",
+            "label": "Supplier",
+            "type": "string",
+            "required": true,
+            "read": {
+              "page": "supplier_detail",
+              "label": "Company"
+            }
+          },
+          {
+            "name": "contact",
+            "label": "Contact",
+            "type": "string",
+            "read": {
+              "page": "supplier_detail",
+              "label": "Contact Name"
+            }
+          },
+          {
+            "name": "phone",
+            "label": "Phone",
+            "type": "string",
+            "read": {
+              "page": "supplier_detail",
+              "label": "Phone"
+            }
+          },
+          {
+            "name": "email",
+            "label": "Email",
+            "type": "string",
+            "read": {
+              "page": "supplier_detail",
+              "label": "Email"
+            }
+          },
+          {
+            "name": "terms",
+            "label": "Terms",
+            "type": "enum",
+            "values": [
+              "Net 30",
+              "Net 60",
+              "Prepaid"
+            ],
+            "read": {
+              "page": "supplier_detail",
+              "label": "Payment Terms"
+            }
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r1",
+        "entity": "Book",
+        "text": "Stock quantity cannot be negative",
+        "source": "error message seen"
+      },
+      {
+        "id": "r2",
+        "entity": "Book",
+        "text": "Reorders need a quantity of at least 5",
+        "source": "form hint text"
+      }
+    ],
+    "not_visible": [
+      "Pricing/discount formulas",
+      "Sales tax rules",
+      "User permissions"
+    ]
+  },
+  "operations": {
+    "operations": [
+      {
+        "name": "search_books",
+        "kind": "list",
+        "entity": "Book",
+        "source": "database",
+        "inputs": {
+          "title": "string?",
+          "author": "string?",
+          "genre": "enum?"
+        }
+      },
+      {
+        "name": "get_book",
+        "kind": "get",
+        "entity": "Book",
+        "source": "database",
+        "inputs": {
+          "legacy_id": "string"
+        }
+      },
+      {
+        "name": "list_suppliers",
+        "kind": "list",
+        "entity": "Supplier",
+        "source": "database",
+        "inputs": {}
+      },
+      {
+        "name": "update_stock",
+        "kind": "update",
+        "entity": "Book",
+        "source": "legacy",
+        "risk": "write",
+        "inputs": {
+          "legacy_id": "string",
+          "stock": "integer"
+        },
+        "steps": [
+          "goto stock_adjust(legacy_id)",
+          "fill New Quantity",
+          "click Save",
+          "verify: book_detail shows new Qty On Hand"
+        ]
+      },
+      {
+        "name": "create_reorder",
+        "kind": "create",
+        "entity": "Book",
+        "source": "legacy",
+        "risk": "write",
+        "inputs": {
+          "supplier_id": "string",
+          "book_id": "string",
+          "quantity": "integer"
+        },
+        "steps": [
+          "goto reorder_new(supplier_id)",
+          "fill Book and Quantity",
+          "click Submit Order",
+          "verify: confirmation number shown, else return the error text"
+        ]
+      }
+    ]
+  },
+  "docs_md": "# Mock Bookstore Inventory: data dictionary\n\n## Book\n| Field | Type | Notes |\n|---|---|---|\n| isbn | string | required |\n| title | string | required |\n| author | string | |\n| genre | enum | Fiction, Mystery, Science, History, Children, Cookbook |\n| price | decimal | |\n| stock | integer | writable via update_stock |\n| supplier_id | string | -> Supplier |\n| shelf | string | |\n\n## Supplier\n| Field | Type | Notes |\n|---|---|---|\n| name | string | required |\n| contact | string | |\n| phone | string | |\n| email | string | |\n| terms | enum | Net 30, Net 60, Prepaid |\n\n## Observed rules\n- Stock quantity cannot be negative\n- Reorders need a quantity of at least 5\n\n## Not visible\n- Pricing/discount formulas, sales tax rules, user permissions\n"
+}

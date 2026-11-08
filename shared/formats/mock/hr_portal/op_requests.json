@@ -1,0 +1,57 @@
+[
+  {
+    "request_key": "mock-hr-1",
+    "operation": "update_employee_phone",
+    "inputs": {
+      "legacy_id": "E1004",
+      "phone": "(972) 555-0142"
+    },
+    "status": "done",
+    "result": {
+      "legacy_id": "E1004",
+      "phone": "(972) 555-0142",
+      "verified": true
+    },
+    "error": ""
+  },
+  {
+    "request_key": "mock-hr-2",
+    "operation": "request_time_off",
+    "inputs": {
+      "employee_id": "E1011",
+      "type": "Vacation",
+      "start_date": "12/20/2026",
+      "end_date": "12/18/2026"
+    },
+    "status": "failed",
+    "result": null,
+    "error": "Old system rule: End date must be on or after start date"
+  },
+  {
+    "request_key": "mock-hr-3",
+    "operation": "request_time_off",
+    "inputs": {
+      "employee_id": "E1022",
+      "type": "Personal",
+      "start_date": "11/20/2026",
+      "end_date": "11/21/2026"
+    },
+    "status": "done",
+    "result": {
+      "request_number": "TO-5026",
+      "verified": true
+    },
+    "error": ""
+  },
+  {
+    "request_key": "mock-hr-4",
+    "operation": "update_employee_phone",
+    "inputs": {
+      "legacy_id": "E1030",
+      "phone": "(214) 555-0199"
+    },
+    "status": "pending",
+    "result": null,
+    "error": ""
+  }
+]
