@@ -5,6 +5,7 @@
 //      status   'idle' | 'working' | 'done' | 'live'
 //      progress 0..1   (how far along the agent is)
 //      stat     optional text for the tile footer (otherwise the animation's own numbers are shown)
+//   dashboard.feed(agentId, payload)   real content for the animation (see agentKinds.js for each agent's payload)
 //   dashboard.reset()
 //   dashboard.summary() → { working, total }
 //   dashboard.agents    → [{ id, name }]
@@ -60,7 +61,7 @@ export function createDashboard() {
   }
 
   return {
-    agents: AGENTS.map((a) => ({ id: a.id, name: a.name, desc: a.desc })),
+    agents: AGENTS.map((a) => ({ id: a.id, name: a.name, desc: a.desc, about: a.about })),
 
     /** Called by each tile component once its canvas and stat element exist. */
     attach(id, canvas, statEl) {
@@ -87,6 +88,11 @@ export function createDashboard() {
       }
       if (stat !== undefined) tile.statText = stat;
       if (changed) { tile.version++; emit(); }
+    },
+    /** Adds real content to a tile's animation (a page visit, a field, records, endpoints, a check). */
+    feed(id, payload) {
+      const tile = byId(id);
+      if (tile && tile.kind.feed) tile.kind.feed(tile, payload);
     },
     reset() {
       for (const tile of tiles) {

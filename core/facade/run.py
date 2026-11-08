@@ -8,6 +8,7 @@
   2. Design the API      (operator_agent, Nemotron)  operations.json + api_docs.md
   3. Publish             (extract.handoff)           shared/output/<site>/
   4. Load                (store.load_run)            final data model, API design, docs, all records
+  5. Serve               (serve.run)                 starts the REST API + MCP server, self-tests every route and tool
 
 Every step also leaves its files on disk, so a database problem never loses a run.
 """
@@ -17,28 +18,30 @@ import time
 from ingest import nemotron  # noqa: F401  (loads core/.env)
 
 
-def run(url, login=False, headed=False, offline_design=False, full=False, live=True):
+def run(url, login=False, headed=False, offline_design=False, full=False, live=True, serve=True, port=8000):
     from explore import agent
     from extract.handoff import publish
     from operator_agent import run as operator
     from store.load_run import load
 
     t0 = time.time()
-    print("== 1/4  Explore + extract ==")
+    print("== 1/5  Explore + extract ==")
     r = agent.run(url, login=login, headed=headed, full=full, live=live)
     if not r.records:
         raise SystemExit("No records were extracted, so there is nothing to design an API for. See the run log above.")
 
-    print("\n== 2/4  Design the API (operator agent) ==")
+    print("\n== 2/5  Design the API (operator agent) ==")
     operator.run(r.dir, use_nemotron=False if offline_design else None)
 
-    print("\n== 3/4  Publish ==")
+    print("\n== 3/5  Publish ==")
     dest = publish(r.dir)
 
-    print("\n== 4/4  Load into SpacetimeDB ==")
+    print("\n== 4/5  Load into SpacetimeDB ==")
     load(dest)
 
-    print(f"\nFinished in {(time.time() - t0) / 60:.1f} min.  Output: {dest}")
+    print(f"\n== 5/5  Start the API + MCP server ==   (steps 1-4 took {(time.time() - t0) / 60:.1f} min, output: {dest})")
+    from serve.run import run as serve_run
+    serve_run(dest, port=port, check_only=not serve, live=live)
     return dest
 
 
@@ -49,9 +52,12 @@ def main(argv=None):
     ap.add_argument("--headed", action="store_true", help="show the browser")
     ap.add_argument("--offline-design", action="store_true", help="design the API without Nemotron")
     ap.add_argument("--full", action="store_true", help="page through every list to the end (slow on big sites)")
-    ap.add_argument("--no-live", action="store_true", help="don't write to SpacetimeDB during step 1")
+    ap.add_argument("--no-live", action="store_true", help="don't write to SpacetimeDB during the run")
+    ap.add_argument("--no-serve", action="store_true", help="self-test the API + MCP server, then exit instead of serving")
+    ap.add_argument("--port", type=int, default=8000)
     a = ap.parse_args(argv)
-    run(a.url, login=a.login, headed=a.headed, offline_design=a.offline_design, full=a.full, live=not a.no_live)
+    run(a.url, login=a.login, headed=a.headed, offline_design=a.offline_design, full=a.full, live=not a.no_live,
+        serve=not a.no_serve, port=a.port)
 
 
 if __name__ == "__main__":
