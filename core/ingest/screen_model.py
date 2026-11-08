@@ -34,7 +34,7 @@ UIA_TO_ARIA = {
     "Calendar": "grid", "Custom": "custom", "ToolTip": "tooltip", "AppBar": "toolbar",
 }
 SKIP_UIA = {"TitleBar", "Thumb"}                 # window chrome the overlay never redraws
-TEXT_ROLES = {"label", "button", "status", "link", "tab", "menuitem", "option", "listitem", "columnheader"}
+TEXT_ROLES = {"label", "button", "status", "link", "tab", "menuitem", "option", "listitem", "columnheader", "heading"}
 INTERACTIVE = {"button", "checkbox", "radio", "textbox", "combobox", "listbox", "option", "listitem", "table",
                "tab", "menuitem", "link", "slider", "spinbutton", "treeitem"}
 GENERIC = {"custom", "group", "option", "listitem"}  # roles Nemotron may refine
@@ -100,7 +100,8 @@ def original_theme(style, label_colors):
     from .style import hls, is_chromatic, luminance
 
     if not style:
-        return {"palette": {}, "font": {"family": None, "size": None}, "density": "normal", "assets": []}
+        return {"palette": {k: None for k in ("background", "text", "accent", "error", "disabled")},
+                "font": {"family": None, "size": None}, "density": "normal", "assets": [], "modern": {}}
     pal = style.get("palette_share") or [{"hex": h, "share": 0} for h in style.get("source_palette", [])]
     hexes = [p["hex"] for p in pal]
     neutrals = [h for h in hexes if not is_chromatic(h)]
@@ -158,6 +159,7 @@ def build(snapshot, labels=None, style=None, out_dir=None, screenshot_path=None)
     controls = labels.get("controls", {})
     win = snapshot.get("window_rect", {"x": 0, "y": 0, "w": 0, "h": 0})
     nodes = [n for n in snapshot.get("nodes", [])]
+    is_dom = snapshot.get("source") == "dom"
     by_id = {n["id"]: n for n in nodes}
     root_id = nodes[0]["id"] if nodes else None
     screen_id = labels.get("screen_type") if labels.get("screen_type") not in (None, "unknown") \
@@ -185,7 +187,7 @@ def build(snapshot, labels=None, style=None, out_dir=None, screenshot_path=None)
     sid, used = {}, set()
     for n in nodes:
         base = n["automation_id"] if n.get("automation_id") and aid_counts[n["automation_id"]] == 1 \
-            else f'{UIA_TO_ARIA.get(n["role"], "node")}_{_slug(n.get("name"), str(n["id"]))}'
+            else f'{(n["role"] if is_dom else UIA_TO_ARIA.get(n["role"], "node"))}_{_slug(n.get("name"), str(n["id"]))}'
         cand, k = base, 2
         while cand in used:
             cand, k = f"{base}_{k}", k + 1
@@ -196,11 +198,11 @@ def build(snapshot, labels=None, style=None, out_dir=None, screenshot_path=None)
     def aria_role(n):
         if n["role"] in SKIP_UIA:
             return None
-        role = UIA_TO_ARIA.get(n["role"], "custom")
+        role = n["role"] if is_dom else UIA_TO_ARIA.get(n["role"], "custom")  # web roles are already ARIA
         parent = by_id.get(n.get("parent"))
-        if role == "option" and (not parent or parent["role"] not in ("List", "ComboBox")):
+        if role == "option" and not is_dom and (not parent or parent["role"] not in ("List", "ComboBox")):
             role = "listitem"
-        if role == "label" and parent and parent["role"] == "StatusBar":
+        if role == "label" and parent and parent["role"] in ("StatusBar", "status"):
             role = "status"
         has_kids = any(m.get("parent") == n["id"] for m in nodes)
         r = n.get("rect", {})
@@ -286,8 +288,16 @@ def build(snapshot, labels=None, style=None, out_dir=None, screenshot_path=None)
             node["label_for"] = sid[label_for[n["id"]]]
         if n.get("options"):
             node["options"] = n["options"]
+        if n.get("href"):
+            node["href"] = n["href"]
+        if n.get("level"):
+            node["level"] = n["level"]
 
         tbl = n.get("table")
+        if is_dom and role == "table" and not tbl:
+            wt = next((t for t in snapshot.get("web", {}).get("tables", []) if t.get("css") == n.get("css")), None)
+            if wt:
+                tbl = {"columns": wt["headers"], "sample_rows": wt["sample_rows"], "row_count": wt["row_count"]}
         if role in ("table", "listbox") and tbl:
             rows = tbl.get("sample_rows", [])
             cols = tbl.get("columns") or [f"col{k}" for k in range(len(rows[0]) if rows else 0)]
@@ -318,8 +328,13 @@ def build(snapshot, labels=None, style=None, out_dir=None, screenshot_path=None)
             else:
                 node["crop"] = rel
 
-        loc = {"automation_id": n["automation_id"]} if n.get("automation_id") \
-            else {"name": name, "control_type": n["role"]}
+        if is_dom:  # Playwright-friendly: get_by_role(role, name=...) first, css as backup
+            loc = {"role": role, "name": name, "css": n.get("css")}
+            if role in ("textbox", "combobox", "listbox", "spinbutton", "checkbox", "radio") and name:
+                loc["label"] = name
+        else:
+            loc = {"automation_id": n["automation_id"]} if n.get("automation_id") \
+                else {"name": name, "control_type": n["role"]}
         if role not in ("label", "status", "group", "custom", "img", "separator"):
             node["locator"] = loc
         elif n.get("automation_id"):
@@ -334,7 +349,10 @@ def build(snapshot, labels=None, style=None, out_dir=None, screenshot_path=None)
             node["children"] = kids
         return node
 
-    top = [n for n in nodes if n.get("parent") == root_id] if root_id is not None else nodes
+    if is_dom:  # web pages have no window node: every element without a parent is top level
+        top = [n for n in nodes if n.get("parent") is None]
+    else:
+        top = [n for n in nodes if n.get("parent") == root_id] if root_id is not None else nodes
     tree = [t for t in (make(n) for n in top) if t]
 
     # Nemotron vision regions that don't match an existing custom node become custom nodes
@@ -380,6 +398,7 @@ def build(snapshot, labels=None, style=None, out_dir=None, screenshot_path=None)
             },
             "screenshot": shots_rel or snapshot.get("screenshot_path"),
             "app": snapshot.get("app", {}).get("process"),
+            "url": snapshot.get("app", {}).get("url"),
             "fingerprint": snapshot.get("fingerprint"),
             "ai": {
                 "mode": labels.get("mode", "assist"),
@@ -404,7 +423,10 @@ def build(snapshot, labels=None, style=None, out_dir=None, screenshot_path=None)
 
 # ---------- validation (used by selftest; frontend can rely on these guarantees) ----------
 
-ARIA_ROLES = set(UIA_TO_ARIA.values()) | {"listitem", "custom", "status", "textbox", "spinbutton"}
+ARIA_ROLES = set(UIA_TO_ARIA.values()) | {"listitem", "custom", "status", "textbox", "spinbutton", "heading", "form",
+                                          "navigation", "link", "img", "listbox", "alert", "dialog", "main", "banner",
+                                          "region", "search", "cell", "gridcell", "list", "article", "contentinfo",
+                                          "complementary", "presentation", "none", "switch", "searchbox", "menu"}
 
 
 def check(model):

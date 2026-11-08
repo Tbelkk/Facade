@@ -22,6 +22,7 @@ load_dotenv()  # also allow a .env in the current folder
 
 BASE_URL = os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")
 MODEL_VISION = os.getenv("MODEL_VISION", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
+MODEL_AGENT = os.getenv("MODEL_AGENT", "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning")
 REASONING_BUDGET = int(os.getenv("REASONING_BUDGET", "1024"))
 MAX_IMAGE_WIDTH = int(os.getenv("MAX_IMAGE_WIDTH", "1600"))
 TIMEOUT_S = float(os.getenv("NEMOTRON_TIMEOUT", "90"))
@@ -30,6 +31,8 @@ TIMEOUT_S = float(os.getenv("NEMOTRON_TIMEOUT", "90"))
 CALL_LOG = []
 
 _client = None
+_NO_BUDGET = set()  # models that rejected the reasoning_budget parameter
+_UNAVAILABLE = set()  # models that returned 404 for this account (we fall back to MODEL_VISION)
 
 
 def client():
@@ -80,6 +83,8 @@ def chat(messages, purpose="call", model=None, budget=None, answer_tokens=2000,
          temperature=0.6, top_p=0.95, retries=2):
     """One Nemotron call with retries. Returns {"text", "ms", "usage", "model"}."""
     model = model or MODEL_VISION
+    if model in _UNAVAILABLE:
+        model = MODEL_VISION
     budget = REASONING_BUDGET if budget is None else budget
     api = client()  # fails fast (no retries) if the key is missing
     last_err = None
@@ -92,7 +97,7 @@ def chat(messages, purpose="call", model=None, budget=None, answer_tokens=2000,
                 max_tokens=budget + answer_tokens,
                 temperature=temperature,
                 top_p=top_p,
-                extra_body={"reasoning_budget": budget},
+                extra_body={} if model in _NO_BUDGET else {"reasoning_budget": budget},
             )
             ms = int((time.time() - t0) * 1000)
             text = strip_reasoning(r.choices[0].message.content or "")
@@ -103,9 +108,27 @@ def chat(messages, purpose="call", model=None, budget=None, answer_tokens=2000,
         except Exception as e:  # rate limits, timeouts, 5xx
             last_err = e
             status = getattr(e, "status_code", None)
-            retryable = status in (408, 429, 500, 502, 503, 504) or status is None
+            if status in (400, 422) and model not in _NO_BUDGET:
+                _NO_BUDGET.add(model)  # the model may not accept reasoning_budget: retry once without it
+                if True:
+                    try:
+                        r = api.chat.completions.create(model=model, messages=messages, max_tokens=answer_tokens + 2000,
+                                                        temperature=temperature, top_p=top_p)
+                        ms = int((time.time() - t0) * 1000)
+                        text = strip_reasoning(r.choices[0].message.content or "")
+                        CALL_LOG.append({"model": model, "purpose": purpose, "ms": ms, "ok": True, "ts": time.time()})
+                        return {"text": text, "ms": ms, "usage": None, "model": model}
+                    except Exception as e2:
+                        last_err = e2
+            retryable = status in (408, 429, 500, 502, 503, 504) or (status is None and "404" not in str(e))
             CALL_LOG.append({"model": model, "purpose": purpose, "ms": int((time.time() - t0) * 1000),
                              "ok": False, "error": str(e)[:200], "ts": time.time()})
+            if status == 404 and model != MODEL_VISION and model not in _UNAVAILABLE:
+                # model not available on this account/endpoint: fall back to the vision model (it handles text too)
+                _UNAVAILABLE.add(model)
+                print(f"  ! {model} is not available for this NVIDIA account; falling back to {MODEL_VISION}")
+                return chat(messages, purpose=purpose, model=MODEL_VISION, budget=budget, answer_tokens=answer_tokens,
+                            temperature=temperature, top_p=top_p, retries=retries)
             if not retryable or attempt == retries:
                 break
             time.sleep(2 ** attempt)

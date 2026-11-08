@@ -1,0 +1,59 @@
+{
+  "operations": [
+    {
+      "name": "search_patients",
+      "kind": "list",
+      "entity": "Patient",
+      "source": "database",
+      "inputs": {
+        "name": "string?"
+      }
+    },
+    {
+      "name": "get_patient",
+      "kind": "get",
+      "entity": "Patient",
+      "source": "database",
+      "inputs": {
+        "legacy_id": "string"
+      }
+    },
+    {
+      "name": "update_patient_phone",
+      "kind": "update",
+      "entity": "Patient",
+      "source": "legacy",
+      "risk": "write",
+      "inputs": {
+        "legacy_id": "string",
+        "phone": "string"
+      },
+      "steps": [
+        "goto patient_edit(legacy_id)",
+        "fill Phone",
+        "click Save",
+        "verify: patient_detail shows new phone"
+      ]
+    },
+    {
+      "name": "create_appointment",
+      "kind": "create",
+      "entity": "Appointment",
+      "source": "legacy",
+      "risk": "write",
+      "inputs": {
+        "patient_id": "string",
+        "date": "date",
+        "time": "string",
+        "provider": "enum",
+        "reason": "string?"
+      },
+      "steps": [
+        "goto appt_new(patient_id)",
+        "fill date/time/provider/reason",
+        "click Book",
+        "verify: success message, else return the error text"
+      ]
+    }
+  ]
+}

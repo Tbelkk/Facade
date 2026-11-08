@@ -241,7 +241,18 @@ def label_screen(snapshot, snapshot_dir=None, use_cache=True, budget=None):
              f'Window size: {snapshot.get("window_rect", {}).get("w")}x{snapshot.get("window_rect", {}).get("h")}\n'
              f"Accessibility table ({snapshot.get('node_count', len(snapshot.get('nodes', [])))} rows"
              f"{', truncated' if snapshot.get('truncated') else ''}):\n")
-    content = [{"type": "text", "text": intro + compact_tree(snapshot)}]
+    text = intro + compact_tree(snapshot)
+    web = snapshot.get("web")
+    if web:  # web pages: forms, data tables and messages say a lot about what the page is for
+        extra = {"url": web.get("url"), "forms": [{k: f[k] for k in ("action", "method", "submit")} |
+                                                  {"fields": [{k: x[k] for k in ("label", "name", "type", "required", "options")}
+                                                              for x in f["fields"]]} for f in web.get("forms", [])],
+                 "tables": [{k: t[k] for k in ("headers", "row_count", "link_column", "sample_rows")}
+                            for t in web.get("tables", [])],
+                 "pagination": {k: (v or {}).get("text") for k, v in (web.get("pagination") or {}).items()},
+                 "alerts": web.get("alerts", [])}
+        text += "\n\nWeb page details (JSON):\n" + json.dumps(extra, ensure_ascii=False)[:8000]
+    content = [{"type": "text", "text": text}]
 
     scale = 1.0
     shot = resolve(snapshot.get("screenshot_path"), snapshot_dir)
